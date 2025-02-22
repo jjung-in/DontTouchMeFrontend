@@ -14,7 +14,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
-        <BrowserRouter>
+        <BrowserRouter future={{ v7_startTransition: false, v7_relativeSplatPath: false }}>
           <Routes>
             {routes.map(({ path, element, children }) => (
               <Route key={path} path={path} element={element}>
