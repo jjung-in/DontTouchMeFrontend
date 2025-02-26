@@ -3,8 +3,8 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { routes } from './routes';
 import { ThemeProvider } from 'styled-components';
-import { GlobalStyle } from '@styles/global';
-import theme from '@styles/theme';
+import { GlobalStyle } from '@_styles/global';
+import theme from '@_styles/theme';
 
 const queryClient = new QueryClient();
 

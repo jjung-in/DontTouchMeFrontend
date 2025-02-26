@@ -24,16 +24,16 @@
 
     "baseUrl": ".",
     "paths": {
-      "@api/*": ["src/api/*"],
-      "@assets/*": ["src/assets/*"],
-      "@components/*": ["src/components/*"],
-      "@hooks/*": ["src/hooks/*"],
-      "@pages/*": ["src/pages/*"],
-      "@routes/*": ["src/routes/*"],
-      "@store/*": ["src/store/*"],
-      "@styles/*": ["src/styles/*"],
-      "@types/*": ["src/types/*"],
-      "@utils/*": ["src/utils/*"],
+      "@_api/*": ["src/api/*"],
+      "@_assets/*": ["src/assets/*"],
+      "@_components/*": ["src/components/*"],
+      "@_hooks/*": ["src/hooks/*"],
+      "@_pages/*": ["src/pages/*"],
+      "@_routes/*": ["src/routes/*"],
+      "@_store/*": ["src/store/*"],
+      "@_styles/*": ["src/styles/*"],
+      "@_types/*": ["src/types/*"],
+      "@_utils/*": ["src/utils/*"],
       "@/*": ["src/*"]
     }
   },
