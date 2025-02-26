@@ -1,7 +1,7 @@
-import Layout from '../components/Layout/Layout';
-import Home from '../pages/Home';
-import NotFound from '../pages/NotFound';
-import SignUp from '../pages/SignUp';
+import Layout from '@components/Layout/Layout';
+import Home from '@pages/Home';
+import SignUp from '@pages/SignUp';
+import NotFound from '@pages/NotFound';
 
 export const routes = [
   {
