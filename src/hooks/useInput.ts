@@ -12,7 +12,7 @@ const useInput = <T>(initialValue: T, validator: (value: T) => string | null = (
   const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value as T;
+    const newValue = e.target.type === 'checkbox' ? (e.target.checked as T) : (e.target.value as T);
     setValue(newValue);
 
     if (typeof validator === 'function') {
