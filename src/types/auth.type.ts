@@ -1,8 +1,8 @@
 export interface SignUpProps {
     Email : string;
     Password : string;
-    ComfirmPassword : string;
-    PhoneNumber : number;
+    ConfirmPassword : string;
+    PhoneNumber : string;
 };
 
 export interface LogInProps {
