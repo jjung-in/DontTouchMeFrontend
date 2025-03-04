@@ -11,7 +11,7 @@ export const PostSignUp = async (SignUpData : SignUpProps ): Promise<SignUpProps
     };
 };
 
-export const PostLogIn = async (LogInData : LogInProps ) : promise<LogInProps> => {
+export const PostLogIn = async (LogInData : LogInProps ) : Promise<LogInProps> => {
     try {
         const { data } = await instance.post('./member/login', LogInData);
         return data;
@@ -21,7 +21,7 @@ export const PostLogIn = async (LogInData : LogInProps ) : promise<LogInProps> =
     };
 };
 
-export const EmailDuplicateCheck = async (Email : string) : promise<boolean> => {
+export const EmailDuplicateCheck = async (Email : string) : Promise<boolean> => {
     try {
         const { data } = await instance.get('./member/check-email-duplicate', Email);
         return data;
@@ -31,7 +31,7 @@ export const EmailDuplicateCheck = async (Email : string) : promise<boolean> => 
     };
 };
 
-export const GetTemporaryPassword = async (Email : string) : promise<string> => {
+export const GetTemporaryPassword = async (Email : string) : Promise<string> => {
     try {
         const { data } = await instance.post('./member/issue-temp-password', Email);
         return data;
@@ -41,7 +41,7 @@ export const GetTemporaryPassword = async (Email : string) : promise<string> => 
     };
 };
 
-export const SendAuthenticationNumber = async (Email : string) : promise<string> => {
+export const SendAuthNumber = async (Email : string) : Promise<string> => {
     try {
         const { data } = await instance.post('./mail/send-verification', Email);
         return data;
@@ -51,12 +51,32 @@ export const SendAuthenticationNumber = async (Email : string) : promise<string>
     };
 };
 
-export const CheckSendAuthenticationNumber = async (Email : string, number : string) => {
+export const CheckAuthNumber = async (Email : string, number : string) : Promise<string> => {
     try {
         const { data } = await instance.post('./mail/verify', { email, number });
         return data;
     } catch (error) {
         console.error("CheckSendAuthenticationNumber Error", error);
         throw new Error("인증번호 확인 오류");
+    };
+};
+
+export const NaverSignUp = async () => {
+    try {
+        const {data} = await instance.post('oauth2/authorization/naver')
+        return data;
+    } catch (error) {
+        console.error("NaverSignUp Error", error);
+        throw new Error("네이버 회원가입 오류");
+    };
+};
+
+export const GoogleSignUp = async () => {
+    try {
+        const {data} = await instance.post('oauth2/authorization/google')
+        return data;
+    } catch (error) {
+        console.error("GoogleSignUp Error", error);
+        throw new Error("구글 회원가입 오류");
     };
 };
