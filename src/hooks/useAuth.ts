@@ -9,6 +9,7 @@ import {
   CheckAuthNumber,
 } from '@_api/auth';
 
+//로그인
 export const useLogIn = (LogInData: LogInProps) => {
   const { data } = useQuery<LogInProps[]>({
     queryKey: ['logIn', LogInData],
@@ -21,6 +22,7 @@ export const useLogIn = (LogInData: LogInProps) => {
   return { data };
 };
 
+//회원가입
 export const useSignUp = (SignUpData: SignUpProps) => {
   const { data } = useMutation<SignUpProps[]>({
     mutationKey: ['signUp', SignUpData],
@@ -35,6 +37,7 @@ export const useSignUp = (SignUpData: SignUpProps) => {
   return { data };
 };
 
+//이메일 중복 확인
 export const useEmailDuplicateCheck = (email: string) => {
   const { data } = useQuery<boolean>({
     queryKey: ['login', email],
@@ -52,6 +55,7 @@ export const useEmailDuplicateCheck = (email: string) => {
   return { data };
 };
 
+//임시 비밀번호 발급
 export const useGetTemporaryPassword = (email: string) => {
   const { data } = useQuery<string>({
     queryKey: ['password', email],
@@ -63,6 +67,7 @@ export const useGetTemporaryPassword = (email: string) => {
   return { data };
 };
 
+//이메일 인증번호 발급
 export const useSendAuthNumber = (email: string) => {
   const { data } = useQuery<string[]>({
     queryKey: ['number', email],
@@ -74,6 +79,7 @@ export const useSendAuthNumber = (email: string) => {
   return { data };
 };
 
+//이메일 인증번호 확인
 export const useCheckAuthNumber = (email: string, number: string) => {
   const { data } = useQuery<string[]>({
     queryKey: ['number', { email, number }],
