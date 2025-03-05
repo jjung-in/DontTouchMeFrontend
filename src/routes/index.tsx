@@ -1,7 +1,7 @@
 import Layout from '@_components/Layout/Layout';
 import Home from '@_pages/Home';
-import SignUp from '@_pages/SignUp';
-import LogIn from '@_pages/LogIn';
+import SignUp from '@_pages/Auth/SignUp/SignUp';
+import LogIn from '@_pages/Auth/LogIn/LogIn';
 import NotFound from '@_pages/NotFound';
 
 export const routes = [

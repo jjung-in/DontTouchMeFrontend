@@ -15,11 +15,13 @@ const LogIn = () => {
       
       if (!FormData.Email || !FormData.Password ) {
         console.log("모든 칸을 채워주세요.");
-      };
+      } else {
+        console.log("로그인 성공!");
+        navigate("../");
+      }
     };
 
     const HandleSignUp = () => {
-      navigate("../SignUp");
     }
     
     return (
