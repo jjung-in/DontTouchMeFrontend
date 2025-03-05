@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SignUpProps } from '@_types/auth.type';
+import { useSignUp } from '@_hooks/useAuth';
 
 const SignUp = () => {
   const [FormData, setFormData] = useState<SignUpProps>({
@@ -12,17 +13,25 @@ const SignUp = () => {
   });
 
   const navigate = useNavigate();
+  const { data, mutate: signUp } = useSignUp(FormData);
 
   const HandleSignUp = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!FormData.Email || !FormData.Password || !FormData.ConfirmPassword || !FormData.PhoneNumber || !FormData.Name) {
-      console.log('모든 필드을 채워주세요.');
-    } else if (FormData.Password !== FormData.ConfirmPassword) {
+      console.log('모든 필드를 채워주세요.');
+      return;
+    }
+    if (FormData.Password !== FormData.ConfirmPassword) {
       console.log('비밀번호가 일치하지 않습니다.');
+      return;
     } else {
-      console.log('회원가입 성공!');
-      navigate('../');
+      signUp({
+        Name: FormData.Name,
+        Email: FormData.Email,
+        Password: FormData.Password,
+        PhoneNumber: FormData.PhoneNumber,
+      });
     }
   };
 
@@ -41,6 +50,13 @@ const SignUp = () => {
       }));
     }
   }, [FormData.PhoneNumber]);
+
+  useEffect(() => {
+    if (data) {
+      console.log('회원가입 성공!', data);
+      navigate('../');
+    }
+  }, [data, navigate]);
 
   return (
     <div>
@@ -82,7 +98,7 @@ const SignUp = () => {
           onChange={(e) => setFormData({ ...FormData, PhoneNumber: e.target.value })}
         />
 
-        <button onClick={HandleSignUp}>회원가입</button>
+        <button type="submit">회원가입</button>
       </form>
     </div>
   );
