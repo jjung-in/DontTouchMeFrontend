@@ -1,4 +1,5 @@
 export interface SignUpProps {
+    Name : string;
     Email : string;
     Password : string;
     ConfirmPassword : string;
