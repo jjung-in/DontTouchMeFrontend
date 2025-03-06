@@ -1,5 +1,5 @@
 export interface TEvent extends TCreateEvent {
-  id: string;
+  id: number;
   status: 'draft' | 'active' | 'archived';
 }
 
