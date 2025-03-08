@@ -4,6 +4,7 @@ import SignUp from '@_pages/SignUp';
 import NotFound from '@_pages/NotFound';
 import EventList from '@_pages/EventList/EventList';
 import EventCreate from '@_pages/EventCreate/EventCreate';
+import EventDetail from '@_pages/EventDetail/EventDetail';
 
 export const routes = [
   {
@@ -21,6 +22,10 @@ export const routes = [
       {
         path: '/events',
         element: <EventList />,
+      },
+      {
+        path: '/events/:eventId',
+        element: <EventDetail />,
       },
       {
         path: '/events/create',
