@@ -1,6 +1,16 @@
 import { TCreateEvent, TEvent } from '@_types/events.type';
 import { instance } from './instance';
 
+export const getTest = async (): Promise<TEvent[]> => {
+  try {
+    const { data } = await instance.get('/test');
+    return data;
+  } catch (error) {
+    console.error('Error Test Request:', error);
+    throw error;
+  }
+};
+
 export const getEventList = async (): Promise<TEvent[]> => {
   try {
     const { data } = await instance.get('/event/list');

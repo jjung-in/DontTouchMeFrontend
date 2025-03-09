@@ -1,6 +1,13 @@
-import { createEvent, deleteEvent, getEventDetail, getEventList, updateEvent } from '@_api/events';
+import { createEvent, deleteEvent, getEventDetail, getEventList, getTest, updateEvent } from '@_api/events';
 import { TCreateEvent, TEvent } from '@_types/events.type';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+
+export const useTestRequest = () => {
+  return useQuery({
+    queryKey: ['test'],
+    queryFn: getTest,
+  });
+};
 
 export const useEventList = () => {
   return useQuery<TEvent[], Error>({
