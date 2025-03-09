@@ -2,10 +2,10 @@ import Layout from '@_components/Layout/Layout';
 import Home from '@_pages/Home';
 import SignUp from '@_pages/SignUp';
 import NotFound from '@_pages/NotFound';
-import EventList from '@_pages/EventList/EventList';
-import EventCreate from '@_pages/EventCreate/EventCreate';
-import EventDetail from '@_pages/EventDetail/EventDetail';
-import EventEdit from '@_pages/EventEdit/EventEdit';
+import EventList from '@_pages/Event/EventList/EventList';
+import EventCreate from '@_pages/Event/EventCreate/EventCreate';
+import EventDetail from '@_pages/Event/EventDetail/EventDetail';
+import EventEdit from '@_pages/Event/EventEdit/EventEdit';
 
 export const routes = [
   {
