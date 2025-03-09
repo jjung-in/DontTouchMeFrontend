@@ -1,5 +1,5 @@
 import { createEvent, deleteEvent, getEventDetail, getEventList, getTest, updateEvent } from '@_api/events';
-import { TCreateEvent, TEvent } from '@_types/events.type';
+import { TCreateEvent, TEvent, TEventDetail } from '@_types/events.type';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const useTestRequest = () => {
@@ -17,7 +17,7 @@ export const useEventList = () => {
 };
 
 export const useEventDetail = (eventId: number) => {
-  return useQuery<TEvent, Error>({
+  return useQuery<TEventDetail, Error>({
     queryKey: ['event', eventId],
     queryFn: () => getEventDetail(eventId),
   });

@@ -1,4 +1,4 @@
-import { TCreateEvent, TEvent } from '@_types/events.type';
+import { TCreateEvent, TEvent, TEventDetail } from '@_types/events.type';
 import { instance } from './instance';
 
 export const getTest = async (): Promise<TEvent[]> => {
@@ -21,7 +21,7 @@ export const getEventList = async (): Promise<TEvent[]> => {
   }
 };
 
-export const getEventDetail = async (eventId: number): Promise<TEvent> => {
+export const getEventDetail = async (eventId: number): Promise<TEventDetail> => {
   try {
     const { data } = await instance.get(`/event/${eventId}`);
     return data;

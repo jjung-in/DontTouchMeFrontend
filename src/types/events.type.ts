@@ -25,14 +25,12 @@ export interface TCreateEvent {
   sendTypeValid: boolean;
 }
 
-export interface TEventDetails {
-  transactionCategory: boolean;
-  transactionName: boolean;
-  amount: boolean;
-  name: boolean;
-  tag: boolean;
-  photoAttachment: boolean;
-  depositTarget: boolean;
-  thankYouCard: boolean;
-  thankYouCardType?: 'email' | 'sms' | null;
+export interface TEventDetail {
+  thumbnailUrl: string;
+  eventName: string;
+  eventType: string;
+  eventDate: string;
+  address: string;
+  participants: number;
+  eventInfoItems: string[];
 }
