@@ -40,3 +40,5 @@ export const DateInput = styled.input``;
 export const RadioInput = styled.input``;
 
 export const RadioGroup = styled.div``;
+
+export const ErrorText = styled.span``;

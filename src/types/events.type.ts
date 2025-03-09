@@ -4,14 +4,25 @@ export interface TEvent extends TCreateEvent {
 }
 
 export interface TCreateEvent {
-  thumbnail: string | null;
-  name: string;
-  type: 'wedding' | 'funeral' | 'other';
-  otherTypeName?: string | null;
-  date: string;
-  location: string;
-  guests: number;
-  details: TEventDetails;
+  memberId: number;
+  thumbnailUrl: string;
+  eventName: string;
+  eventType: string;
+  eventDate: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  participants: number | null;
+  isType: boolean;
+  isHistory: boolean;
+  isPrice: boolean;
+  isName: boolean;
+  tags: string[];
+  isImage: boolean;
+  targets: string[];
+  isSend: boolean;
+  sendType: 'EMAIL' | 'PHONE' | null;
+  sendTypeValid: boolean;
 }
 
 export interface TEventDetails {
