@@ -33,7 +33,7 @@ export const getEventDetail = async (eventId: number): Promise<TEventDetail> => 
 
 export const createEvent = async (eventData: TCreateEvent): Promise<number> => {
   try {
-    const { data } = await instance.post('/event', eventData);
+    const { data } = await instance.post('/event/', eventData);
     return data;
   } catch (error) {
     console.error('Error creating event:', error);

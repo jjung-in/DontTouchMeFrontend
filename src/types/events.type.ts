@@ -12,7 +12,7 @@ export interface TCreateEvent {
   address: string;
   latitude: number;
   longitude: number;
-  participants: number | null;
+  participants: number | '';
   isType: boolean;
   isHistory: boolean;
   isPrice: boolean;
