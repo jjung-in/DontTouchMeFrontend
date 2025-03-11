@@ -14,7 +14,7 @@ export const useLogIn = (LogInData: LogInProps) => {
   const { data } = useQuery<LogInProps[]>({
     queryKey: ['logIn', LogInData],
     queryFn: () => PostLogIn(LogInData),
-    enabled: !!logInData.username && !!logInData.password,
+    enabled: !!LogInData.Email && !!LogInData.Password,
     onError: (error) => {
       console.error('LogIn Error', error);
     },
@@ -90,3 +90,4 @@ export const useCheckAuthNumber = (email: string, number: string) => {
   });
   return { data };
 };
+
