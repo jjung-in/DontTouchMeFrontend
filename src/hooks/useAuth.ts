@@ -11,16 +11,22 @@ import {
 
 //로그인
 export const useLogIn = (LogInData: LogInProps) => {
-  const { data } = useQuery<LogInProps[]>({
+  const { data, error } = useQuery<LogInProps[]>({
     queryKey: ['logIn', LogInData],
-    queryFn: () => PostLogIn(LogInData),
+    queryFn: async () => {
+      const result = await PostLogIn(LogInData);
+      const { accessToken, refreshToken } = result;
+      localStorage.setItem('access', accessToken);
+      localStorage.setItem('refresh', refreshToken);
+      return result;
+    },
     enabled: !!LogInData.Email && !!LogInData.Password,
     onError: (error) => {
       console.error('LogIn Error', error);
     },
   });
-  return { data };
-};
+  return { data, error };
+}
 
 //회원가입
 export const useSignUp = (SignUpData: SignUpProps) => {
