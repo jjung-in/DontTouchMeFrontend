@@ -1,9 +1,9 @@
 import { SignUpProps, LogInProps } from '@_types/auth.type';
 import { instance } from '@_api/interface';
 
-export const PostSignUp = async (SignUpData: SignUpProps): Promise<SignUpProps[]> => {
+export const PostSignUp = async (): Promise<SignUpProps[]> => {
   try {
-    const { data } = await instance.post('./member/sign-up', SignUpData);
+    const { data } = await instance.post(`/member/sign-up`);
     return data;
   } catch (error) {
     console.error('SignUp Error', error);
@@ -11,12 +11,12 @@ export const PostSignUp = async (SignUpData: SignUpProps): Promise<SignUpProps[]
   }
 };
 
-export const PostLogIn = async (LogInData: LogInProps): Promise<LogInProps> => {
+export const PostLogIn = async (): Promise<LogInProps[]> => {
   try {
-    const { data } = await instance.post('./member/login', LogInData);
+    const { data } = await instance.post(`/member/login`);
     return data;
   } catch (error) {
-    console.error('LogIn Error', error);
+    console.error('LogIn Error:', error);
     throw new Error('로그인 오류');
   }
 };
