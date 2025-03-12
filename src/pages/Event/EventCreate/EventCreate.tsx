@@ -1,3 +1,4 @@
+import AddressModal from '@_components/Layout/Modal/AddressModal/AddressModal';
 import { useCreateEvent } from '@_hooks/useEvents';
 import { TCreateEvent } from '@_types/events.type';
 import { useState } from 'react';
@@ -33,6 +34,7 @@ const EventCreate = () => {
     sendType: null,
     sendTypeValid: false,
   });
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleChange = (key: keyof TCreateEvent, value: string | number | boolean) => {
     setFormValues((prev) => ({ ...prev, [key]: value }));
@@ -51,6 +53,8 @@ const EventCreate = () => {
     e.preventDefault();
 
     // if (!validateEventForm(formValues)) return;
+
+    // 위도 경도 변환해서 setFormValues
 
     createEvent(
       { ...formValues, thumbnailUrl: thumbnail.url },
@@ -140,7 +144,12 @@ const EventCreate = () => {
           </div>
           <div>
             <span>장소</span>
-            <input type="text" value={formValues.address} onChange={(e) => handleChange('address', e.target.value)} />
+            <input type="text" readOnly value={formValues.address} onClick={() => setIsModalOpen(true)} />
+            <AddressModal
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+              onSelectAddress={(selectedAddress) => handleChange('address', selectedAddress)}
+            />
           </div>
           <div>
             <span>인원</span>
