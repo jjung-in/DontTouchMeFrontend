@@ -1,23 +1,16 @@
-import { createEvent, deleteEvent, getEventDetail, getEventList, getTest, updateEvent } from '@_api/events';
-import { TCreateEvent, TEvent, TEventDetail } from '@_types/events.type';
+import { createEvent, deleteEvent, getEventDetail, getEventList, updateEvent } from '@_api/events';
+import { TEventDetailResponse, TEventListResponse } from '@_types/events.type';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-export const useTestRequest = () => {
-  return useQuery({
-    queryKey: ['test'],
-    queryFn: getTest,
-  });
-};
-
 export const useEventList = () => {
-  return useQuery<TEvent[], Error>({
+  return useQuery<TEventListResponse, Error>({
     queryKey: ['events'],
     queryFn: getEventList,
   });
 };
 
 export const useEventDetail = (eventId: number) => {
-  return useQuery<TEventDetail, Error>({
+  return useQuery<TEventDetailResponse, Error>({
     queryKey: ['event', eventId],
     queryFn: () => getEventDetail(eventId),
   });
@@ -26,7 +19,7 @@ export const useEventDetail = (eventId: number) => {
 export const useCreateEvent = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (newEvent: TCreateEvent) => createEvent(newEvent),
+    mutationFn: createEvent,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['events'],
@@ -38,14 +31,13 @@ export const useCreateEvent = () => {
   });
 };
 
-export const useUpdateEvent = () => {
+export const useUpdateEvent = (eventId: number) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ eventId, updatedEvent }: { eventId: number; updatedEvent: TCreateEvent }) =>
-      updateEvent(eventId, updatedEvent),
+    mutationFn: updateEvent,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['events'],
+        queryKey: ['events', eventId],
       });
     },
     onError: (error) => {
@@ -57,7 +49,7 @@ export const useUpdateEvent = () => {
 export const useDeleteEvent = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (eventId: number) => deleteEvent(eventId),
+    mutationFn: deleteEvent,
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['events'],

@@ -1,4 +1,4 @@
-export interface TGeocode {
+export interface TGeocodeResponse {
   address: string;
   latitude: number;
   longitude: number;

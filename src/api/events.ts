@@ -1,62 +1,39 @@
-import { TCreateEvent, TEvent, TEventDetail } from '@_types/events.type';
+import {
+  TCreateEventRequest,
+  TCreateEventResponse,
+  TEventDetailResponse,
+  TEventListResponse,
+  TUpdateEventRequest,
+} from '@_types/events.type';
 import { instance } from './instance';
 
-export const getTest = async (): Promise<TEvent[]> => {
-  try {
-    const { data } = await instance.get('/test');
-    return data;
-  } catch (error) {
-    console.error('Error Test Request:', error);
-    throw error;
-  }
+export const getEventList = async (): Promise<TEventListResponse> => {
+  const { data } = await instance.get('/event/list');
+  return data;
 };
 
-export const getEventList = async (): Promise<TEvent[]> => {
-  try {
-    const { data } = await instance.get('/event/list');
-    return data;
-  } catch (error) {
-    console.error('Error fetching event list:', error);
-    throw error;
-  }
+export const getEventDetail = async (eventId: number): Promise<TEventDetailResponse> => {
+  const { data } = await instance.get(`/event/${eventId}`);
+  return data;
 };
 
-export const getEventDetail = async (eventId: number): Promise<TEventDetail> => {
-  try {
-    const { data } = await instance.get(`/event/${eventId}`);
-    return data;
-  } catch (error) {
-    console.error('Error fetching event details:', error);
-    throw error;
-  }
+export const createEvent = async (eventData: TCreateEventRequest): Promise<TCreateEventResponse> => {
+  const { data } = await instance.post('/event/', eventData);
+  return data;
 };
 
-export const createEvent = async (eventData: TCreateEvent): Promise<number> => {
-  try {
-    const { data } = await instance.post('/event/', eventData);
-    return data;
-  } catch (error) {
-    console.error('Error creating event:', error);
-    throw error;
-  }
+export const updateEvent = async ({
+  eventId,
+  eventData,
+}: {
+  eventId: number;
+  eventData: TUpdateEventRequest;
+}): Promise<void> => {
+  const { data } = await instance.patch(`/event/${eventId}`, eventData);
+  return data;
 };
 
-export const updateEvent = async (eventId: number, eventData: TCreateEvent): Promise<TEvent> => {
-  try {
-    const { data } = await instance.patch(`/event/${eventId}`, eventData);
-    return data;
-  } catch (error) {
-    console.error('Error updating event:', error);
-    throw error;
-  }
-};
-
-export const deleteEvent = async (eventId: number): Promise<void> => {
-  try {
-    const { data } = await instance.delete(`/event/${eventId}`);
-    console.log(data);
-  } catch (error) {
-    console.error('Error deleting event:', error);
-    throw error;
-  }
+export const deleteEvent = async ({ eventId }: { eventId: number }): Promise<void> => {
+  const { data } = await instance.delete(`/event/${eventId}`);
+  return data;
 };

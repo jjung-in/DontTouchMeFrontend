@@ -1,52 +1,54 @@
-import { TEvent } from '@_types/events.type';
-import { MainContainer, Title } from './EventList.styles';
-import { useEventList } from '@_hooks/useEvents';
+import { TEventListResponse } from '@_types/events.type';
 import { Link } from 'react-router-dom';
 
-const data: TEvent[] = [
-  {
-    id: 0,
-    status: 'active',
-    thumbnail: null,
-    name: '이벤트 리스트 1',
-    type: 'wedding',
-    otherTypeName: null,
-    date: '2025-03-30',
-    location: '서울',
-    guests: 100,
-    details: {
-      transactionCategory: true,
-      transactionName: true,
-      amount: true,
-      name: true,
-      tag: true,
-      photoAttachment: true,
-      depositTarget: true,
-      thankYouCard: true,
-      thankYouCardType: 'email',
+const data: TEventListResponse = {
+  events: [
+    {
+      eventId: 8,
+      eventName: '이벤트 8',
+      eventDate: '2025-03-30',
+      eventType: '결혼식',
+      thumbnailUrl: '',
+      address: '서울시 강남구',
     },
-  },
-];
+    {
+      eventId: 6,
+      eventName: '이벤트 6',
+      eventDate: '2025-03-31',
+      eventType: '장례식',
+      thumbnailUrl: '',
+      address: '서울시 강남구',
+    },
+  ],
+  lastEventId: 6,
+};
 
 const EventList = () => {
-  // const { data, isFetching } = useEventList();
-
   return (
-    <MainContainer>
+    <div>
+      <hr />
       <div>
-        <Title>이벤트 목록</Title>
+        <h2>이벤트 목록</h2>
       </div>
+      <hr />
       <div>
-        {data && data.length ? (
+        <Link to="/events/create">생성</Link>
+      </div>
+      <hr />
+      <div>
+        {data.events.length ? (
           <div>
             <ul>
-              {data.map((event) => (
-                <li key={event.id}>
-                  <Link to={`/events/${event.id}`}>
-                    <span>{event.name}</span>
-                    <span>{event.status}</span>
-                    <span>{event.type}</span>
-                    <span>{event.location}</span>
+              {data.events.map((event) => (
+                <li key={event.eventId}>
+                  <Link to={`/events/${event.eventId}`}>
+                    <span>{event.eventName}</span>
+                    &emsp;
+                    <span>{event.eventDate}</span>
+                    &emsp;
+                    <span>{event.eventType}</span>
+                    &emsp;
+                    <span>{event.address}</span>
                   </Link>
                 </li>
               ))}
@@ -56,7 +58,8 @@ const EventList = () => {
           <span>등록된 이벤트가 없습니다.</span>
         )}
       </div>
-    </MainContainer>
+      <hr />
+    </div>
   );
 };
 

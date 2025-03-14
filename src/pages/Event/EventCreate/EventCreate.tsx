@@ -1,7 +1,7 @@
 import { getGeocode } from '@_api/map';
 import AddressModal from '@_components/Layout/Modal/AddressModal/AddressModal';
 import { useCreateEvent } from '@_hooks/useEvents';
-import { TCreateEvent } from '@_types/events.type';
+import { TCreateEventRequest } from '@_types/events.type';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -14,7 +14,7 @@ const EventCreate = () => {
   const [otherEventType, setOtherEventType] = useState('');
   const [isTag, setIsTag] = useState(false);
   const [isTarget, setIsTarget] = useState(false);
-  const [formValues, setFormValues] = useState<TCreateEvent>({
+  const [formValues, setFormValues] = useState<TCreateEventRequest>({
     memberId: memberId,
     thumbnailUrl: '',
     eventName: '',
@@ -37,7 +37,7 @@ const EventCreate = () => {
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleChange = (key: keyof TCreateEvent, value: string | number | boolean) => {
+  const handleChange = (key: keyof TCreateEventRequest, value: string | number | boolean) => {
     setFormValues((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -60,7 +60,12 @@ const EventCreate = () => {
     setFormValues((prev) => ({ ...prev, latitude, longitude }));
 
     createEvent(
-      { ...formValues, thumbnailUrl: thumbnail.url },
+      {
+        ...formValues,
+        thumbnailUrl: thumbnail.url,
+        eventType: formValues.eventType === '기타' ? otherEventType : formValues.eventType,
+        sendType: formValues.isSend ? formValues.sendType : null,
+      },
       {
         onSuccess: () => {
           navigate('/events');
@@ -81,6 +86,7 @@ const EventCreate = () => {
       <hr />
       <div>
         <Link to="/events">목록</Link>
+        &emsp;
         <button form="event">저장</button>
       </div>
       <hr />
