@@ -6,5 +6,6 @@ export const useGetGeocode = (address: string) => {
   return useQuery<TGeocode, Error>({
     queryKey: ['geocode', address],
     queryFn: () => getGeocode(address),
+    enabled: !!address,
   });
 };

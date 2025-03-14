@@ -1,3 +1,4 @@
+import { getGeocode } from '@_api/map';
 import AddressModal from '@_components/Layout/Modal/AddressModal/AddressModal';
 import { useCreateEvent } from '@_hooks/useEvents';
 import { TCreateEvent } from '@_types/events.type';
@@ -49,12 +50,14 @@ const EventCreate = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // 유효성 검사
     // if (!validateEventForm(formValues)) return;
 
-    // 위도 경도 변환해서 setFormValues
+    const { latitude, longitude } = await getGeocode(formValues.address);
+    setFormValues((prev) => ({ ...prev, latitude, longitude }));
 
     createEvent(
       { ...formValues, thumbnailUrl: thumbnail.url },
