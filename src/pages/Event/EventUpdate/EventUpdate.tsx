@@ -1,5 +1,5 @@
 import { getGeocode } from '@_api/map';
-import AddressModal from '@_components/Layout/Modal/AddressModal/AddressModal';
+import AddressModal from '@_components/AddressModal/AddressModal';
 import { useEventDetail, useUpdateEvent } from '@_hooks/useEvents';
 import { TUpdateEventRequest } from '@_types/events.type';
 import { useEffect, useState } from 'react';
