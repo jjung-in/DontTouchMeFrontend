@@ -1,3 +1,9 @@
 {
-  "routes": [{ "handle": "filesystem" }, { "src": "/.*", "dest": "/index.html" }]
+  "routes": [{ "handle": "filesystem" }, { "src": "/.*", "dest": "/index.html" }],
+  "rewrites": [
+    {
+      "source": "/api/v1/:path*",
+      "destination": "http://13.209.40.51:8080/api/v1/:path*"
+    }
+  ]
 }
