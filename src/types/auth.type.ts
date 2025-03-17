@@ -1,12 +1,27 @@
 export interface SignUpProps {
-  Name: string;
-  Email: string;
-  Password: string;
-  ConfirmPassword: string;
-  PhoneNumber: string;
+  name: string;
+  email: string;
+  password: string;
+  contact: string;
+}
+
+export interface SignUpResponse {
+  id: number;
+  name: string;
+  email: string;
 }
 
 export interface LogInProps {
-  Email: string;
-  Password: string;
+  email: string;
+  password: string;
+}
+
+export interface LogInResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: {
+    id: number;
+    name: string;
+    email: string;
+  };
 }
