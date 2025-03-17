@@ -1,9 +1,9 @@
-import { SignUpProps, LogInProps } from '@_types/auth.type';
+import { LogInProps, LogInResponse, SignUpProps, SignUpResponse } from '@_types/auth.type';
 import { instance } from '@_api/interface';
 
-export const PostSignUp = async (): Promise<SignUpProps[]> => {
+export const PostSignUp = async (signUpData: SignUpProps): Promise<SignUpResponse> => {
   try {
-    const { data } = await instance.post(`/member/sign-up`);
+    const { data } = await instance.post(`/member/sign-up`, signUpData);
     return data;
   } catch (error) {
     console.error('SignUp Error', error);
@@ -11,9 +11,9 @@ export const PostSignUp = async (): Promise<SignUpProps[]> => {
   }
 };
 
-export const PostLogIn = async (): Promise<LogInProps[]> => {
+export const PostLogIn = async (loginData: LogInProps): Promise<LogInResponse> => {
   try {
-    const { data } = await instance.post(`/member/login`);
+    const { data } = await instance.post(`/member/login`, loginData);
     return data;
   } catch (error) {
     console.error('LogIn Error:', error);
