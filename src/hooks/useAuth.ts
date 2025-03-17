@@ -1,4 +1,3 @@
-import { SignUpProps, LogInProps } from '@_types/auth.type';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import {
   PostSignUp,
@@ -10,37 +9,32 @@ import {
 } from '@_api/auth';
 
 //로그인
-export const useLogIn = (LogInData: LogInProps) => {
-  const { data, error } = useQuery<LogInProps[]>({
-    queryKey: ['logIn', LogInData],
-    queryFn: async () => {
-      const result = await PostLogIn(LogInData);
-      const { accessToken, refreshToken } = result;
-      localStorage.setItem('access', accessToken);
-      localStorage.setItem('refresh', refreshToken);
-      return result;
+export const useLogIn = () => {
+  return useMutation({
+    mutationFn: PostLogIn,
+    onSuccess: (result) => {
+      console.log('login success', result);
+      // const { accessToken, refreshToken } = result;
+      // localStorage.setItem('accessToken', accessToken);
+      // localStorage.setItem('refreshToken', refreshToken);
     },
-    enabled: !!LogInData.Email && !!LogInData.Password,
     onError: (error) => {
       console.error('LogIn Error', error);
     },
   });
-  return { data, error };
-}
+};
 
 //회원가입
-export const useSignUp = (SignUpData: SignUpProps) => {
-  const { data } = useMutation<SignUpProps[]>({
-    mutationKey: ['signUp', SignUpData],
-    mutationFn: () => PostSignUp(SignUpData),
-    onSuccess: (data) => {
-      console.log('SignUp Success', data);
+export const useSignUp = () => {
+  return useMutation({
+    mutationFn: PostSignUp,
+    onSuccess: (result) => {
+      console.log('SignUp success', result);
     },
     onError: (error) => {
       console.error('SignUp Error', error);
     },
   });
-  return { data };
 };
 
 //이메일 중복 확인
@@ -67,7 +61,7 @@ export const useGetTemporaryPassword = (email: string) => {
     queryKey: ['password', email],
     queryFn: () => GetTemporaryPassword(email),
     onError: (error) => {
-      console.error(error);
+      console.error('useGetTemporaryPassword', error);
     },
   });
   return { data };
@@ -79,7 +73,7 @@ export const useSendAuthNumber = (email: string) => {
     queryKey: ['number', email],
     queryFn: () => SendAuthNumber(email),
     onError: (error) => {
-      console.error(error);
+      console.error('useSendAuthNumber', error);
     },
   });
   return { data };
@@ -91,9 +85,8 @@ export const useCheckAuthNumber = (email: string, number: string) => {
     queryKey: ['number', { email, number }],
     queryFn: () => CheckAuthNumber(email, number),
     onError: (error) => {
-      console.error(error);
+      console.error('useCheckAuthNumber', error);
     },
   });
   return { data };
 };
-
