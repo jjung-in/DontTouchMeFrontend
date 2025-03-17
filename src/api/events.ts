@@ -18,7 +18,7 @@ export const getEventDetail = async (eventId: number): Promise<TEventDetailRespo
 };
 
 export const createEvent = async (eventData: TCreateEventRequest): Promise<TCreateEventResponse> => {
-  const { data } = await instance.post('/event/', eventData);
+  const { data } = await instance.post('/event', eventData);
   return data;
 };
 
