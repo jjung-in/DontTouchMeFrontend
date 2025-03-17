@@ -1,12 +1,13 @@
 {
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/v1/:path*",
-      "destination": "http://13.209.40.51:8080/api/v1/:path*"
+      "src": "/api/v1/(.*)",
+      "methods": ["POST", "GET", "PUT", "DELETE", "PATCH", "OPTIONS"],
+      "dest": "http://13.209.40.51:8080/api/v1/$1"
     },
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
