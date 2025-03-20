@@ -1,5 +1,6 @@
 import { getGeocode } from '@_api/map';
-import AddressModal from '@_components/Layout/Modal/AddressModal/AddressModal';
+import AddressModal from '@_components/AddressModal/AddressModal';
+import TagInput from '@_components/TagInput/TagInput';
 import { useEventDetail, useUpdateEvent } from '@_hooks/useEvents';
 import { TUpdateEventRequest } from '@_types/events.type';
 import { useEffect, useState } from 'react';
@@ -15,6 +16,8 @@ const EventUpdate = () => {
   const [otherEventType, setOtherEventType] = useState('');
   const [isTag, setIsTag] = useState(false);
   const [isTarget, setIsTarget] = useState(false);
+  const [tags, setTags] = useState<string[]>([]);
+  const [targets, setTargets] = useState<string[]>([]);
   const [formValues, setFormValues] = useState<TUpdateEventRequest>({
     thumbnailUrl: '',
     eventName: '',
@@ -28,9 +31,9 @@ const EventUpdate = () => {
     isHistory: true,
     isPrice: true,
     isName: false,
-    tags: [],
+    tags: tags,
     isImage: false,
-    targets: [],
+    targets: targets,
     isSend: false,
     sendType: null,
     sendTypeValid: false,
@@ -235,7 +238,7 @@ const EventUpdate = () => {
               <div>
                 <span>태그</span>
                 <input type="checkbox" checked={isTag} onChange={(e) => setIsTag(e.target.checked)} />
-                {isTag && <input type="text" />}
+                {isTag && <TagInput tags={tags} setTags={setTags} />}
               </div>
               <div>
                 <span>사진 첨부</span>
@@ -248,7 +251,7 @@ const EventUpdate = () => {
               <div>
                 <span>입금 대상</span>
                 <input type="checkbox" checked={isTarget} onChange={(e) => setIsTarget(e.target.checked)} />
-                {isTarget && <input type="text" />}
+                {isTarget && <TagInput tags={targets} setTags={setTargets} />}
               </div>
               <div>
                 <span>감사장</span>

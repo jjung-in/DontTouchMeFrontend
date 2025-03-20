@@ -1,19 +1,25 @@
 import { getGeocode } from '@_api/map';
-import AddressModal from '@_components/Layout/Modal/AddressModal/AddressModal';
+import AddressModal from '@_components/AddressModal/AddressModal';
+import TagInput from '@_components/TagInput/TagInput';
 import { useCreateEvent } from '@_hooks/useEvents';
 import { TCreateEventRequest } from '@_types/events.type';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { isImageFile } from '@_utils/image';
+import { uploadImage } from '@_api/image';
 
 const EventCreate = () => {
   const navigate = useNavigate();
   const { mutate: createEvent } = useCreateEvent();
 
   const memberId = 1;
-  const [thumbnail, setThumbnail] = useState<{ file: File | null; url: string }>({ file: null, url: '' });
+  const [thumbnail, setThumbnail] = useState<File | null>(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string>('');
   const [otherEventType, setOtherEventType] = useState('');
   const [isTag, setIsTag] = useState(false);
   const [isTarget, setIsTarget] = useState(false);
+  const [tags, setTags] = useState<string[]>([]);
+  const [targets, setTargets] = useState<string[]>([]);
   const [formValues, setFormValues] = useState<TCreateEventRequest>({
     memberId: memberId,
     thumbnailUrl: '',
@@ -28,9 +34,9 @@ const EventCreate = () => {
     isHistory: true,
     isPrice: true,
     isName: false,
-    tags: [],
+    tags: tags,
     isImage: false,
-    targets: [],
+    targets: targets,
     isSend: false,
     sendType: null,
     sendTypeValid: false,
@@ -43,11 +49,23 @@ const EventCreate = () => {
 
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      setThumbnail({ file: selectedFile, url: URL.createObjectURL(selectedFile) });
-    } else {
-      setThumbnail({ file: null, url: '' });
+    if (!selectedFile) return;
+    if (!isImageFile(selectedFile)) {
+      alert('이미지 파일만 업로드 가능');
+      e.target.value = '';
+      return;
     }
+    setThumbnail(selectedFile);
+    setThumbnailPreview(URL.createObjectURL(selectedFile));
+    e.target.value = '';
+  };
+
+  const handleThumbnailReset = () => {
+    if (thumbnailPreview) {
+      URL.revokeObjectURL(thumbnailPreview);
+    }
+    setThumbnail(null);
+    setThumbnailPreview('');
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -56,18 +74,28 @@ const EventCreate = () => {
     // 유효성 검사
     // if (!validateEventForm(formValues)) return;
 
+    let imageUrl = formValues.thumbnailUrl;
+    if (thumbnail) {
+      imageUrl = await uploadImage(thumbnail);
+      if (!imageUrl) {
+        console.error('이미지 업로드 실패');
+        return;
+      }
+    }
+
     const { latitude, longitude } = await getGeocode(formValues.address);
     setFormValues((prev) => ({ ...prev, latitude, longitude }));
 
     createEvent(
       {
         ...formValues,
-        thumbnailUrl: thumbnail.url,
+        thumbnailUrl: imageUrl,
         eventType: formValues.eventType === '기타' ? otherEventType : formValues.eventType,
         sendType: formValues.isSend ? formValues.sendType : null,
       },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
+          console.log(data);
           navigate('/events');
         },
         onError: (error) => {
@@ -94,7 +122,15 @@ const EventCreate = () => {
         <form id="event" onSubmit={handleSubmit}>
           <div>
             <span>썸네일</span>
-            <input type="file" onChange={handleThumbnailChange} />
+            <input type="file" accept="image/*" onChange={handleThumbnailChange} />
+            {thumbnailPreview && (
+              <div>
+                <img src={thumbnailPreview} alt="Thumbnail" style={{ width: 200 }} />
+                <button type="button" onClick={handleThumbnailReset}>
+                  취소
+                </button>
+              </div>
+            )}
           </div>
           <div>
             <span>이벤트명</span>
@@ -193,7 +229,7 @@ const EventCreate = () => {
           <div>
             <span>태그</span>
             <input type="checkbox" checked={isTag} onChange={(e) => setIsTag(e.target.checked)} />
-            {isTag && <input type="text" />}
+            {isTag && <TagInput tags={tags} setTags={setTags} />}
           </div>
           <div>
             <span>사진 첨부</span>
@@ -206,7 +242,7 @@ const EventCreate = () => {
           <div>
             <span>입금 대상</span>
             <input type="checkbox" checked={isTarget} onChange={(e) => setIsTarget(e.target.checked)} />
-            {isTarget && <input type="text" />}
+            {isTarget && <TagInput tags={targets} setTags={setTargets} />}
           </div>
           <div>
             <span>감사장</span>

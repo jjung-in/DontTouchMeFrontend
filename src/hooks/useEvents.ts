@@ -1,17 +1,23 @@
 import { createEvent, deleteEvent, getEventDetail, getEventList, updateEvent } from '@_api/events';
 import { TEventDetailResponse, TEventListResponse } from '@_types/events.type';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { InfiniteData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-export const useEventList = () => {
-  return useQuery<TEventListResponse, Error>({
-    queryKey: ['events'],
-    queryFn: getEventList,
-  });
+export const useEventList = (memberId: number, pageSize: number) => {
+  return useInfiniteQuery<TEventListResponse, Error, InfiniteData<TEventListResponse>, [string, number], number | null>(
+    {
+      queryKey: ['events', memberId],
+      queryFn: ({ pageParam }) => getEventList({ memberId, lastEventId: pageParam, pageSize }),
+      initialPageParam: null,
+      getNextPageParam: (lastPage) => {
+        return lastPage.events.length > 0 ? lastPage.lastEventId : undefined;
+      },
+    },
+  );
 };
 
 export const useEventDetail = (eventId: number) => {
   return useQuery<TEventDetailResponse, Error>({
-    queryKey: ['event', eventId],
+    queryKey: ['events', eventId],
     queryFn: () => getEventDetail(eventId),
   });
 };
