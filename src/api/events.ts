@@ -2,13 +2,14 @@ import {
   TCreateEventRequest,
   TCreateEventResponse,
   TEventDetailResponse,
+  TEventListRequest,
   TEventListResponse,
   TUpdateEventRequest,
 } from '@_types/events.type';
 import { instance } from './instance';
 
-export const getEventList = async (): Promise<TEventListResponse> => {
-  const { data } = await instance.get('/event/list');
+export const getEventList = async (params: TEventListRequest): Promise<TEventListResponse> => {
+  const { data } = await instance.get('/event/list', { params });
   return data;
 };
 

@@ -9,7 +9,7 @@ export interface TEventItem {
 
 export interface TEventListRequest {
   memberId: number;
-  lastEventId: number;
+  lastEventId: number | null;
   pageSize: number;
 }
 

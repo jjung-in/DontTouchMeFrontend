@@ -1,29 +1,33 @@
-import { TEventListResponse } from '@_types/events.type';
+import { useEventList } from '@_hooks/useEvents';
+import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
-const data: TEventListResponse = {
-  events: [
-    {
-      eventId: 8,
-      eventName: '이벤트 8',
-      eventDate: '2025-03-30',
-      eventType: '결혼식',
-      thumbnailUrl: '',
-      address: '서울시 강남구',
-    },
-    {
-      eventId: 6,
-      eventName: '이벤트 6',
-      eventDate: '2025-03-31',
-      eventType: '장례식',
-      thumbnailUrl: '',
-      address: '서울시 강남구',
-    },
-  ],
-  lastEventId: 6,
-};
-
 const EventList = () => {
+  const memberId = 1;
+  const pageSize = 10;
+
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useEventList(memberId, pageSize);
+
+  const observerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const target = observerRef.current;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    });
+
+    if (target) observer.observe(target);
+
+    return () => {
+      if (target) observer.unobserve(target);
+    };
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const events = data?.pages.flatMap((page) => page.events) || [];
+
   return (
     <div>
       <hr />
@@ -31,15 +35,17 @@ const EventList = () => {
         <h2>이벤트 목록</h2>
       </div>
       <hr />
-      <div>
-        <Link to="/events/create">생성</Link>
-      </div>
-      <hr />
-      <div>
-        {data.events.length ? (
+      {isLoading ? (
+        <div>Loading...</div>
+      ) : events.length > 0 ? (
+        <>
+          <div>
+            <Link to="/events/create">생성</Link>
+          </div>
+          <hr />
           <div>
             <ul>
-              {data.events.map((event) => (
+              {events.map((event) => (
                 <li key={event.eventId}>
                   <Link to={`/events/${event.eventId}`}>
                     <span>{event.eventName}</span>
@@ -54,10 +60,12 @@ const EventList = () => {
               ))}
             </ul>
           </div>
-        ) : (
-          <span>등록된 이벤트가 없습니다.</span>
-        )}
-      </div>
+        </>
+      ) : (
+        <div>등록된 이벤트가 없습니다.</div>
+      )}
+      {isFetchingNextPage && <p>다음 페이지 불러오는 중...</p>}
+      <div ref={observerRef} style={{ height: '20px' }} />
       <hr />
     </div>
   );
