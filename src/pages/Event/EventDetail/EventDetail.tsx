@@ -1,6 +1,7 @@
 import { useDeleteEvent, useEventDetail } from '@_hooks/useEvents';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import noimage from '@_assets/images/noimage.png';
 
 const EventDetail = () => {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ const EventDetail = () => {
             <div>
               <span>썸네일:</span>
               &emsp; &emsp;
-              <span>{data.thumbnailUrl}</span>
+              <img src={data.thumbnailUrl || noimage} style={{ width: '100px', height: '100px' }} />
             </div>
             <div>
               <span>이벤트명:</span>
