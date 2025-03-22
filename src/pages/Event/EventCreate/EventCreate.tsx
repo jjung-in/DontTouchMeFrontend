@@ -9,10 +9,10 @@ import { isImageFile } from '@_utils/image';
 import { uploadImage } from '@_api/image';
 
 const EventCreate = () => {
-  const navigate = useNavigate();
-  const { mutate: createEvent } = useCreateEvent();
-
   const memberId = 1;
+  const navigate = useNavigate();
+  const { mutate: createEvent } = useCreateEvent(memberId);
+
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string>('');
   const [otherEventType, setOtherEventType] = useState('');

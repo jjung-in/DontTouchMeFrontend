@@ -4,10 +4,11 @@ import { Link } from 'react-router-dom';
 import noimage from '@_assets/images/noimage.png';
 
 const EventDetail = () => {
+  const memberId = 1;
   const navigate = useNavigate();
   const eventId = Number(useParams().eventId);
   const { data, isFetching } = useEventDetail(eventId);
-  const { mutate: deleteEvent } = useDeleteEvent();
+  const { mutate: deleteEvent } = useDeleteEvent(memberId);
 
   const handleDelete = () => {
     if (confirm('삭제하시겠습니까?')) {
