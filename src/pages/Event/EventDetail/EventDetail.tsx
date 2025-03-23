@@ -44,9 +44,9 @@ const EventDetail = () => {
             &emsp;
             <button onClick={handleDelete}>삭제</button>
             &emsp;
-            <Link to="">입출금 내역 등록</Link>
+            <Link to={`/events/${eventId}/records/create`}>입출금 내역 등록</Link>
             &emsp;
-            <Link to="">입출금 내역 조회</Link>
+            <Link to={`/events/${eventId}/records`}>입출금 내역 조회</Link>
           </div>
           <hr />
           <div>

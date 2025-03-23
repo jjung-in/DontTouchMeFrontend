@@ -1,0 +1,67 @@
+import { createRecord, deleteRecord, updateRecord } from '@_api/records';
+import { useMutation } from '@tanstack/react-query';
+
+export const useCreateRecord = () => {
+  return useMutation({
+    mutationFn: createRecord,
+  });
+};
+
+export const useUpdateRecord = () => {
+  return useMutation({
+    mutationFn: updateRecord,
+  });
+};
+
+export const useDeleteRecord = () => {
+  return useMutation({
+    mutationFn: deleteRecord,
+  });
+};
+
+/*
+export const useCreateRecord = (eventId: number) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createRecord,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['records', eventId],
+      });
+    },
+    onError: (error) => {
+      console.error('Error creating record:', error);
+    },
+  });
+};
+
+export const useUpdateRecord = (eventId: number) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateRecord,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['records', eventId],
+      });
+    },
+    onError: (error) => {
+      console.error('Error updating record:', error);
+    },
+  });
+};
+
+export const useDeleteRecord = (eventId: number) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteRecord,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['records', eventId],
+      });
+    },
+    onError: (error) => {
+      console.error('Error deleting record:', error);
+    },
+  });
+};
+*/
