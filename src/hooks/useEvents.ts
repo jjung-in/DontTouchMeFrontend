@@ -17,18 +17,18 @@ export const useEventList = (memberId: number, pageSize: number) => {
 
 export const useEventDetail = (eventId: number) => {
   return useQuery<TEventDetailResponse, Error>({
-    queryKey: ['events', eventId],
+    queryKey: ['events', 'detail', eventId],
     queryFn: () => getEventDetail(eventId),
   });
 };
 
-export const useCreateEvent = () => {
+export const useCreateEvent = (memberId: number) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createEvent,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['events'],
+        queryKey: ['events', memberId],
       });
     },
     onError: (error) => {
@@ -52,13 +52,13 @@ export const useUpdateEvent = (eventId: number) => {
   });
 };
 
-export const useDeleteEvent = () => {
+export const useDeleteEvent = (memberId: number) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteEvent,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['events'],
+        queryKey: ['events', memberId],
       });
     },
     onError: (error) => {

@@ -1,25 +1,24 @@
+import { uploadImage } from '@_api/image';
 import { getGeocode } from '@_api/map';
 import AddressModal from '@_components/AddressModal/AddressModal';
 import TagInput from '@_components/TagInput/TagInput';
 import { useCreateEvent } from '@_hooks/useEvents';
 import { TCreateEventRequest } from '@_types/events.type';
+import { isImageFile } from '@_utils/image';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { isImageFile } from '@_utils/image';
-import { uploadImage } from '@_api/image';
 
 const EventCreate = () => {
   const navigate = useNavigate();
-  const { mutate: createEvent } = useCreateEvent();
 
   const memberId = 1;
+  const { mutate: createEvent } = useCreateEvent(memberId);
+
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string>('');
   const [otherEventType, setOtherEventType] = useState('');
   const [isTag, setIsTag] = useState(false);
   const [isTarget, setIsTarget] = useState(false);
-  const [tags, setTags] = useState<string[]>([]);
-  const [targets, setTargets] = useState<string[]>([]);
   const [formValues, setFormValues] = useState<TCreateEventRequest>({
     memberId: memberId,
     thumbnailUrl: '',
@@ -34,16 +33,16 @@ const EventCreate = () => {
     isHistory: true,
     isPrice: true,
     isName: false,
-    tags: tags,
+    tags: [],
     isImage: false,
-    targets: targets,
+    targets: [],
     isSend: false,
     sendType: null,
     sendTypeValid: false,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleChange = (key: keyof TCreateEventRequest, value: string | number | boolean) => {
+  const handleChange = (key: keyof TCreateEventRequest, value: string | number | boolean | string[] | null) => {
     setFormValues((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -68,9 +67,7 @@ const EventCreate = () => {
     setThumbnailPreview('');
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const handleSubmit = async () => {
     // 유효성 검사
     // if (!validateEventForm(formValues)) return;
 
@@ -78,24 +75,31 @@ const EventCreate = () => {
     if (thumbnail) {
       imageUrl = await uploadImage(thumbnail);
       if (!imageUrl) {
-        console.error('이미지 업로드 실패');
-        return;
+        console.warn('이미지 업로드 실패');
       }
     }
 
-    const { latitude, longitude } = await getGeocode(formValues.address);
-    setFormValues((prev) => ({ ...prev, latitude, longitude }));
+    let latitude = 0;
+    let longitude = 0;
+    try {
+      const geo = await getGeocode(formValues.address);
+      latitude = geo.latitude;
+      longitude = geo.longitude;
+    } catch {
+      console.warn('주소 변환 실패');
+    }
 
     createEvent(
       {
         ...formValues,
         thumbnailUrl: imageUrl,
+        latitude,
+        longitude,
         eventType: formValues.eventType === '기타' ? otherEventType : formValues.eventType,
         sendType: formValues.isSend ? formValues.sendType : null,
       },
       {
-        onSuccess: (data) => {
-          console.log(data);
+        onSuccess: () => {
           navigate('/events');
         },
         onError: (error) => {
@@ -115,11 +119,11 @@ const EventCreate = () => {
       <div>
         <Link to="/events">목록</Link>
         &emsp;
-        <button form="event">저장</button>
+        <button onClick={handleSubmit}>저장</button>
       </div>
       <hr />
       <div>
-        <form id="event" onSubmit={handleSubmit}>
+        <form id="event">
           <div>
             <span>썸네일</span>
             <input type="file" accept="image/*" onChange={handleThumbnailChange} />
@@ -229,7 +233,14 @@ const EventCreate = () => {
           <div>
             <span>태그</span>
             <input type="checkbox" checked={isTag} onChange={(e) => setIsTag(e.target.checked)} />
-            {isTag && <TagInput tags={tags} setTags={setTags} />}
+            {isTag && (
+              <TagInput
+                tags={formValues.tags}
+                setTags={(newTags) =>
+                  handleChange('tags', typeof newTags === 'function' ? newTags(formValues.tags) : newTags)
+                }
+              />
+            )}
           </div>
           <div>
             <span>사진 첨부</span>
@@ -242,7 +253,14 @@ const EventCreate = () => {
           <div>
             <span>입금 대상</span>
             <input type="checkbox" checked={isTarget} onChange={(e) => setIsTarget(e.target.checked)} />
-            {isTarget && <TagInput tags={targets} setTags={setTargets} />}
+            {isTarget && (
+              <TagInput
+                tags={formValues.targets}
+                setTags={(newTargets) =>
+                  handleChange('targets', typeof newTargets === 'function' ? newTargets(formValues.tags) : newTargets)
+                }
+              />
+            )}
           </div>
           <div>
             <span>감사장</span>

@@ -1,23 +1,25 @@
+import { uploadImage } from '@_api/image';
 import { getGeocode } from '@_api/map';
 import AddressModal from '@_components/AddressModal/AddressModal';
 import TagInput from '@_components/TagInput/TagInput';
 import { useEventDetail, useUpdateEvent } from '@_hooks/useEvents';
 import { TUpdateEventRequest } from '@_types/events.type';
+import { isImageFile } from '@_utils/image';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 
 const EventUpdate = () => {
   const navigate = useNavigate();
+
   const eventId = Number(useParams().eventId);
-  const { data, isFetching } = useEventDetail(Number(eventId));
+  const { data, isFetching } = useEventDetail(eventId);
   const { mutate: updateEvent } = useUpdateEvent(eventId);
 
-  const [thumbnail, setThumbnail] = useState<{ file: File | null; url: string }>({ file: null, url: '' });
+  const [thumbnail, setThumbnail] = useState<File | null>(null);
+  const [thumbnailPreview, setThumbnailPreview] = useState<string>('');
   const [otherEventType, setOtherEventType] = useState('');
   const [isTag, setIsTag] = useState(false);
   const [isTarget, setIsTarget] = useState(false);
-  const [tags, setTags] = useState<string[]>([]);
-  const [targets, setTargets] = useState<string[]>([]);
   const [formValues, setFormValues] = useState<TUpdateEventRequest>({
     thumbnailUrl: '',
     eventName: '',
@@ -31,9 +33,9 @@ const EventUpdate = () => {
     isHistory: true,
     isPrice: true,
     isName: false,
-    tags: tags,
+    tags: [],
     isImage: false,
-    targets: targets,
+    targets: [],
     isSend: false,
     sendType: null,
     sendTypeValid: false,
@@ -57,52 +59,80 @@ const EventUpdate = () => {
         address: data.address || '',
         participants: data.participants || '',
         isName: shouldName,
-        // tags: data.tags || [],
+        tags: data.tags || [],
         isImage: shouldImage,
-        // targets: data.targets || [],
+        targets: data.targets || [],
         isSend: shouldSend,
-        // sendType: data.sendType || null,
+        sendType: data.sendType || null,
         // sendTypeValid: data.sendTypeValid ?? false,
       }));
 
+      if (data.thumbnailUrl) {
+        setThumbnailPreview(data.thumbnailUrl);
+      }
       if (data.eventType !== '결혼식' && data.eventType !== '장례식') {
         setOtherEventType(data.eventType);
       }
-      // setThumbnail({ file: null, url: data.thumbnailUrl || '' });
-      // setOtherEventType(data.eventType === 'other' ? data.otherEventType || '' : '');
       setIsTag(shouldTag);
       setIsTarget(shouldTarget);
     }
   }, [data]);
 
-  const handleChange = (key: keyof TUpdateEventRequest, value: string | number | boolean) => {
+  const handleChange = (key: keyof TUpdateEventRequest, value: string | number | boolean | string[] | null) => {
     setFormValues((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
-    if (selectedFile) {
-      setThumbnail({ file: selectedFile, url: URL.createObjectURL(selectedFile) });
-    } else {
-      setThumbnail({ file: null, url: '' });
+    if (!selectedFile) return;
+    if (!isImageFile(selectedFile)) {
+      alert('이미지 파일만 업로드 가능');
+      e.target.value = '';
+      return;
     }
+    setThumbnail(selectedFile);
+    setThumbnailPreview(URL.createObjectURL(selectedFile));
+    e.target.value = '';
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleThumbnailReset = () => {
+    if (thumbnailPreview) {
+      URL.revokeObjectURL(thumbnailPreview);
+    }
+    setThumbnail(null);
+    setThumbnailPreview('');
+  };
 
+  const handleSubmit = async () => {
     // 유효성 검사
     // if (!validateEventForm(formValues)) return;
 
-    const { latitude, longitude } = await getGeocode(formValues.address);
-    setFormValues((prev) => ({ ...prev, latitude, longitude }));
+    let imageUrl = formValues.thumbnailUrl;
+    if (thumbnail) {
+      imageUrl = await uploadImage(thumbnail);
+      if (!imageUrl) {
+        console.warn('이미지 업로드 실패');
+      }
+    }
+
+    let latitude = 0;
+    let longitude = 0;
+    try {
+      const geo = await getGeocode(formValues.address);
+      latitude = geo.latitude;
+      longitude = geo.longitude;
+    } catch {
+      console.warn('주소 변환 실패');
+    }
 
     updateEvent(
       {
         eventId,
         eventData: {
           ...formValues,
-          thumbnailUrl: thumbnail.url,
+          thumbnailUrl: imageUrl,
+          latitude,
+          longitude,
           eventType: formValues.eventType === '기타' ? otherEventType : formValues.eventType,
           sendType: formValues.isSend ? formValues.sendType : null,
         },
@@ -132,14 +162,22 @@ const EventUpdate = () => {
           <div>
             <Link to={`/events/${eventId}`}>취소</Link>
             &emsp;
-            <button form="event">저장</button>
+            <button onClick={handleSubmit}>저장</button>
           </div>
           <hr />
           <div>
-            <form id="event" onSubmit={handleSubmit}>
+            <form id="event">
               <div>
                 <span>썸네일</span>
-                <input type="file" onChange={handleThumbnailChange} />
+                <input type="file" accept="image/*" onChange={handleThumbnailChange} />
+                {thumbnailPreview && (
+                  <div>
+                    <img src={thumbnailPreview} alt="Thumbnail" style={{ width: 200 }} />
+                    <button type="button" onClick={handleThumbnailReset}>
+                      취소
+                    </button>
+                  </div>
+                )}
               </div>
               <div>
                 <span>이벤트명</span>
@@ -238,7 +276,14 @@ const EventUpdate = () => {
               <div>
                 <span>태그</span>
                 <input type="checkbox" checked={isTag} onChange={(e) => setIsTag(e.target.checked)} />
-                {isTag && <TagInput tags={tags} setTags={setTags} />}
+                {isTag && (
+                  <TagInput
+                    tags={formValues.tags}
+                    setTags={(newTags) =>
+                      handleChange('tags', typeof newTags === 'function' ? newTags(formValues.tags) : newTags)
+                    }
+                  />
+                )}
               </div>
               <div>
                 <span>사진 첨부</span>
@@ -251,7 +296,17 @@ const EventUpdate = () => {
               <div>
                 <span>입금 대상</span>
                 <input type="checkbox" checked={isTarget} onChange={(e) => setIsTarget(e.target.checked)} />
-                {isTarget && <TagInput tags={targets} setTags={setTargets} />}
+                {isTarget && (
+                  <TagInput
+                    tags={formValues.targets}
+                    setTags={(newTargets) =>
+                      handleChange(
+                        'targets',
+                        typeof newTargets === 'function' ? newTargets(formValues.tags) : newTargets,
+                      )
+                    }
+                  />
+                )}
               </div>
               <div>
                 <span>감사장</span>

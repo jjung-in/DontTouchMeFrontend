@@ -1,12 +1,14 @@
 import { useDeleteEvent, useEventDetail } from '@_hooks/useEvents';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import noimage from '@_assets/images/noimage.png';
 
 const EventDetail = () => {
+  const memberId = 1;
   const navigate = useNavigate();
   const eventId = Number(useParams().eventId);
   const { data, isFetching } = useEventDetail(eventId);
-  const { mutate: deleteEvent } = useDeleteEvent();
+  const { mutate: deleteEvent } = useDeleteEvent(memberId);
 
   const handleDelete = () => {
     if (confirm('삭제하시겠습니까?')) {
@@ -51,7 +53,7 @@ const EventDetail = () => {
             <div>
               <span>썸네일:</span>
               &emsp; &emsp;
-              <span>{data.thumbnailUrl}</span>
+              <img src={data.thumbnailUrl || noimage} style={{ width: '100px', height: '100px' }} />
             </div>
             <div>
               <span>이벤트명:</span>
