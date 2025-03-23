@@ -20,6 +20,9 @@ export interface TEventListResponse {
 
 export interface TEventDetailResponse extends TEventItem {
   participants: number;
+  tags: string[];
+  targets: string[];
+  sendType: 'EMAIL' | 'PHONE' | null;
   eventInfoItems: string[];
 }
 
