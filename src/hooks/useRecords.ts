@@ -1,5 +1,14 @@
 import { createRecord, deleteRecord, updateRecord } from '@_api/records';
+import { TCreateRecordRequest } from '@_types/records.type';
 import { useMutation } from '@tanstack/react-query';
+
+export const useCreateRecordsBatch = () => {
+  return useMutation({
+    mutationFn: async (records: TCreateRecordRequest[]) => {
+      return await Promise.all(records.map((record) => createRecord(record)));
+    },
+  });
+};
 
 export const useCreateRecord = () => {
   return useMutation({
