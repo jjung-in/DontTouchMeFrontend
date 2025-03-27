@@ -9,9 +9,10 @@ const SignUp = () => {
     email: '',
     password: '',
     contact: '',
+    verificationCode: '',
   });
 
-  const [mailActivate, setmailActivate] = useState(false)
+  const [mailActivate, setmailActivate] = useState(false);
 
   const { mutate: signUp } = useSignUp();
   const { data: isEmailAvailable } = useEmailDuplicateCheck(FormData.email);
@@ -42,10 +43,10 @@ const SignUp = () => {
       },
     );
   };
-  
+
   useEffect(() => {
     const HyphenPhoneNumber = FormData.contact;
-    
+
     if (HyphenPhoneNumber.length === 4) {
       setFormData((prevData) => ({
         ...prevData,
@@ -61,11 +62,16 @@ const SignUp = () => {
 
   const emailChack = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (isEmailAvailable) {
-      console.log('이메일이 중복되지 않습니다.');
-      setmailActivate(true)
+    if (!FormData.email) {
+      console.log('이메일을 입력해주세요.');
+      return;
     } else {
-      console.log('이미 존재하는 이메일입니다.',mailActivate);
+      if (isEmailAvailable) {
+        console.log('이메일이 중복되지 않습니다.');
+        setmailActivate(true);
+      } else {
+        console.log('이미 존재하는 이메일입니다.', mailActivate);
+      }
     }
   };
 
@@ -87,7 +93,7 @@ const SignUp = () => {
             autoComplete="email"
             onChange={(e) => setFormData({ ...FormData, email: e.target.value })}
           />
-          <button onClick = {emailChack}>인증</button>
+          <button onClick={emailChack}>인증</button>
         </span>
 
         <input
@@ -103,7 +109,6 @@ const SignUp = () => {
           placeholder="비밀번호를 다시 입력하세요"
           autoComplete="new-password"
           value={FormData.confirmPassword}
-          onChange={(e) => setFormData({ ...FormData, confirmPassword: e.target.value })}
         />
 
         <input
@@ -113,7 +118,7 @@ const SignUp = () => {
           onChange={(e) => setFormData({ ...FormData, contact: e.target.value })}
         />
 
-        <button onClick = {HandleSignUp}>회원가입</button>
+        <button onClick={HandleSignUp}>회원가입</button>
       </form>
     </div>
   );
