@@ -23,13 +23,16 @@ export const PostLogIn = async (loginData: LogInProps): Promise<LogInResponse> =
 
 export const EmailDuplicateCheck = async (Email: string): Promise<boolean> => {
   try {
-    const { data } = await instance.get('./member/check-email-duplicate', Email);
+    const { data } = await instance.get('./member/check-email-duplicate', {
+      params: { email: Email },
+    });
     return data;
   } catch (error) {
     console.error('Email DuplicateCheck Error', error);
     throw new Error('이메일 중복 체크 오류');
   }
 };
+
 
 export const GetTemporaryPassword = async (Email: string): Promise<string> => {
   try {
