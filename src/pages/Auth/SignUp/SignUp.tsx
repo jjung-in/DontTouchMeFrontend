@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
 import { SignUpProps } from '@_types/auth.type';
 import { useSignUp, useEmailDuplicateCheck } from '@_hooks/useAuth';
 
@@ -12,10 +11,8 @@ const SignUp = () => {
     verificationCode: '',
   });
 
-  const [mailActivate, setmailActivate] = useState(false);
-
   const { mutate: signUp } = useSignUp();
-  const { data: isEmailAvailable } = useEmailDuplicateCheck(FormData.email);
+  const { mutate } = useEmailDuplicateCheck();
 
   const HandleSignUp = (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,10 +35,18 @@ const SignUp = () => {
       {
         onSuccess: () => {
           console.log('회원가입 성공');
-          // navigate('/');
         },
       },
     );
+  };
+
+  const emailChack = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (!FormData.email) {
+      console.log('이메일을 입력해주세요.');
+    } else {
+      mutate(FormData.email);
+    }
   };
 
   useEffect(() => {
@@ -59,21 +64,6 @@ const SignUp = () => {
       }));
     }
   }, [FormData.contact]);
-
-  const emailChack = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    if (!FormData.email) {
-      console.log('이메일을 입력해주세요.');
-      return;
-    } else {
-      if (isEmailAvailable) {
-        console.log('이메일이 중복되지 않습니다.');
-        setmailActivate(true);
-      } else {
-        console.log('이미 존재하는 이메일입니다.', mailActivate);
-      }
-    }
-  };
 
   return (
     <div>
@@ -109,6 +99,7 @@ const SignUp = () => {
           placeholder="비밀번호를 다시 입력하세요"
           autoComplete="new-password"
           value={FormData.confirmPassword}
+          onChange={(e) => setFormData({ ...FormData, confirmPassword: e.target.value })}
         />
 
         <input
