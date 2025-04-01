@@ -33,7 +33,6 @@ export const EmailDuplicateCheck = async (Email: string): Promise<boolean> => {
   }
 };
 
-
 export const GetTemporaryPassword = async (Email: string): Promise<string> => {
   try {
     const { data } = await instance.post('./member/issue-temp-password', Email);

@@ -37,24 +37,54 @@ export const useSignUp = () => {
   });
 };
 
-//이메일 중복 확인
 export const useEmailDuplicateCheck = () => {
   const mutation = useMutation({
     mutationFn: EmailDuplicateCheck,
     onSuccess: (result) => {
       console.log('이메일 중복 확인 success', result);
-      if (result.isDuplicated) {
-        console.log('이미 존재하는 이메일입니다.');
+      if (!result.isDuplicated) {
+        sendAuthNumber(result.email);
       } else {
-        console.log('이메일이 중복되지 않습니다.');
+        console.log('이미 존재하는 이메일입니다.');
       }
     },
     onError: (error) => {
       console.error('이메일 중복 확인 Error', error);
     },
   });
-  return mutation;
+  // 인증번호 발급
+  const sendAuthNumber = useMutation({
+    mutationFn: SendAuthNumber,
+    onSuccess: (result) => {
+      console.log('인증번호 발급 success', result);
+    },
+    onError: (error) => {
+      console.error('인증번호 발급 Error', error);
+    },
+  });
+
+  return { mutation, sendAuthNumber };
 };
+
+//이메일 중복 확인
+// export const useEmailDuplicateCheck = () => {
+//   const mutation = useMutation({
+//     mutationFn: EmailDuplicateCheck,
+//     onSuccess: (result) => {
+//       console.log('이메일 중복 확인 success', result);
+//       if (result.isDuplicated) {
+//         console.log('이미 존재하는 이메일입니다.');
+//       } else {
+//         console.log('이메일이 중복되지 않습니다.');
+//         useSendAuthNumber(result.email);
+//       }
+//     },
+//     onError: (error) => {
+//       console.error('이메일 중복 확인 Error', error);
+//     },
+//   });
+//   return mutation;
+// };
 
 //임시 비밀번호 발급
 export const useGetTemporaryPassword = (email: string) => {
@@ -76,19 +106,19 @@ export const useGetTemporaryPassword = (email: string) => {
 };
 
 //이메일 인증번호 발급
-export const useSendAuthNumber = (email: string) => {
-  const { data } = useQuery<string[]>({
-    mutationFn: SendAuthNumber,
-    queryKey: ['number', email],
-    onSuccess: (result) => {
-      console.log('인증번호 발급 success', result);
-    },
-    onError: (error) => {
-      console.error('인증번호 발급 Error', error);
-    },
-  });
-  return { data };
-};
+// export const useSendAuthNumber = (email: string) => {
+//   const { data } = useQuery<string[]>({
+//     mutationFn: SendAuthNumber,
+//     queryKey: ['number', email],
+//     onSuccess: (result) => {
+//       console.log('인증번호 발급 success', result);
+//     },
+//     onError: (error) => {
+//       console.error('인증번호 발급 Error', error);
+//     },
+//   });
+//   return { data };
+// };
 
 //이메일 인증번호 확인
 export const useCheckAuthNumber = (email: string, number: string) => {
