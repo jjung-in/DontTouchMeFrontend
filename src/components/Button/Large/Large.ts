@@ -8,13 +8,11 @@ export const Button = styled.button`
   border-radius: 5px;
   border: none;
 
-  font-family: 'Inter';
+  font-family: 'Inter', sans-serif;
   font-style: normal;
   font-weight: 600;
   font-size: 13px;
   line-height: 20px;
-  leading-trim: both;
-  text-edge: cap;
   text-align: center;
   color: #ffffff;
 `;
