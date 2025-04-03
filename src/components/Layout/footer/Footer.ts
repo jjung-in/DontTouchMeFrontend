@@ -6,6 +6,8 @@ export const BottomBar = styled.footer`
   width: 100%;
   height: 22px;
   padding: 24px 0px;
+  position: fixed;
+  bottom: 0;
 
   font-family: 'Inter';
   font-style: normal;
