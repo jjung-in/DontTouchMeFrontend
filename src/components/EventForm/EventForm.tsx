@@ -4,7 +4,7 @@ import * as S from './EventForm.styles';
 import noimage from '@_assets/images/noimage.png';
 import required from '@_assets/images/required.png';
 import { useState } from 'react';
-import AddressModal from '@_components/AddressModal/AddressModal';
+import AddressModal from '@_components/Modal/AddressModal/AddressModal';
 import CustomDatePicker from '@_components/CustomDatePicker/CustomDatePicker';
 import Switch from '@_components/Switch/Switch';
 import TagInput from '@_components/TagInput/TagInput';

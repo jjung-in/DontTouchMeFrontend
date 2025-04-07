@@ -5,6 +5,7 @@ import { routes } from './routes';
 import { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from '@_styles/global';
 import theme from '@_styles/theme';
+import ScrollToTop from '@_components/ScrollToTop/ScrollToTop';
 
 const queryClient = new QueryClient();
 
@@ -14,6 +15,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <GlobalStyle />
         <BrowserRouter future={{ v7_startTransition: false, v7_relativeSplatPath: false }}>
+          <ScrollToTop />
           <Routes>
             {routes.map(({ path, element, children }) => (
               <Route key={path} path={path} element={element}>
