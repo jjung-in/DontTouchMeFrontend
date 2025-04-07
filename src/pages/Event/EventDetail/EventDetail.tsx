@@ -35,7 +35,7 @@ const EventDetail = () => {
           <Spinner />
         </S.Main>
       ) : data ? (
-        <EventForm mode="read" event={data} onDelete={handleDelete} />
+        <EventForm mode="read" event={data} handleDelete={handleDelete} />
       ) : (
         <S.Main>
           <EmptyState />

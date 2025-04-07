@@ -1,17 +1,15 @@
 import styled from 'styled-components';
 
-export const TagInputContainer = styled.div`
+export const TagInput = styled.div<{ $isFocused?: boolean }>`
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
-  padding: 5px 5px;
-  border: 1px solid black;
+  gap: 10px 7px;
+  padding: 10px 15px;
+  border: ${({ $isFocused }) => ($isFocused ? '1px solid #000000' : '1px solid #d9d9d9')};
   border-radius: 5px;
   cursor: text;
-`;
 
-export const Input = styled.input<{ $isFocused?: boolean }>`
-  width: ${({ $isFocused }) => ($isFocused ? '100%' : '0px')};
-  border: none;
-  outline: none;
+  input {
+    width: ${({ $isFocused }) => ($isFocused ? '100%' : '0px')};
+  }
 `;
