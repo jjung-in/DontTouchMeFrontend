@@ -1,5 +1,5 @@
 import DaumPostcode from 'react-daum-postcode';
-import * as S from './AddressModal.styles';
+import Modal from '../Modal';
 
 interface Props {
   isOpen: boolean;
@@ -16,12 +16,9 @@ const AddressModal = ({ isOpen, onClose, onSelectAddress }: Props) => {
   if (!isOpen) return null;
 
   return (
-    <S.Overlay onClick={onClose}>
-      <S.ModalContainer onClick={(e) => e.stopPropagation()}>
-        <S.CloseButton onClick={onClose}>×</S.CloseButton>
-        <DaumPostcode onComplete={handleComplete} />
-      </S.ModalContainer>
-    </S.Overlay>
+    <Modal isOpen={isOpen} onClose={onClose}>
+      <DaumPostcode onComplete={handleComplete} />
+    </Modal>
   );
 };
 

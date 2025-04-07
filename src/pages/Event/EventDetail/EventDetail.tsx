@@ -4,6 +4,8 @@ import * as S from './EventDetail.styles';
 import Spinner from '@_components/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
 import EventForm from '@_components/EventForm/EventForm';
+import { useState } from 'react';
+import AlertModal from '@_components/Modal/AlertModal/AlertModal';
 
 const EventDetail = () => {
   const memberId = 1;
@@ -11,21 +13,22 @@ const EventDetail = () => {
   const navigate = useNavigate();
   const { data, isFetching } = useEventDetail(eventId);
   const { mutate: deleteEvent } = useDeleteEvent(memberId);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleDelete = () => {
-    if (confirm('삭제하시겠습니까?')) {
-      deleteEvent(
-        { eventId },
-        {
-          onSuccess: () => {
-            navigate(`/events`);
-          },
-          onError: (error) => {
-            console.error('Error deleting event:', error);
-          },
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    deleteEvent(
+      { eventId },
+      {
+        onSuccess: () => {
+          navigate(`/events`);
         },
-      );
-    }
+      },
+    );
+    setIsDeleteModalOpen(false);
   };
 
   return (
@@ -35,7 +38,16 @@ const EventDetail = () => {
           <Spinner />
         </S.Main>
       ) : data ? (
-        <EventForm mode="read" event={data} handleDelete={handleDelete} />
+        <>
+          <EventForm mode="read" event={data} handleDelete={handleDelete} />
+          <AlertModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => setIsDeleteModalOpen(false)}
+            title="이벤트 삭제"
+            message="확인 클릭 시 이벤트가 영구 삭제됩니다. 진행하시겠습니까?"
+            onConfirm={confirmDelete}
+          />
+        </>
       ) : (
         <S.Main>
           <EmptyState />

@@ -121,7 +121,7 @@ export const StatusBadge = styled.span<{ $status: '예정' | '진행중' | '완�
 `;
 
 export const CardTitle = styled.p`
-  margin-bottom: 15px;
+  padding-bottom: 15px;
   font-size: 30px;
   white-space: nowrap;
   overflow: hidden;
