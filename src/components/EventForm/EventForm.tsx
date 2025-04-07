@@ -1,4 +1,4 @@
-import { TCreateEventRequest, TEventDetailResponse } from '@_types/events.type';
+import { TCreateEventRequest, TEventDetailResponse, TUpdateEventRequest } from '@_types/events.type';
 import { useParams } from 'react-router-dom';
 import * as S from './EventForm.styles';
 import noimage from '@_assets/images/noimage.png';
@@ -12,11 +12,14 @@ import TagInput from '@_components/TagInput/TagInput';
 interface Props {
   mode: 'create' | 'update' | 'read';
   event?: TEventDetailResponse;
-  formValues?: TCreateEventRequest;
+  formValues?: TCreateEventRequest | TUpdateEventRequest;
   thumbnailPreview?: string;
   handleSubmit?: () => void;
   handleDelete?: () => void;
-  handleChange?: (key: keyof TCreateEventRequest, value: string | number | boolean | string[] | null) => void;
+  handleChange?: (
+    key: keyof (TCreateEventRequest | TUpdateEventRequest),
+    value: string | number | boolean | string[] | null,
+  ) => void;
   handleThumbnailChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleThumbnailReset?: () => void;
   otherEventType?: string;
@@ -306,17 +309,7 @@ const EventForm = ({
           </S.FieldSection>
         </S.FormArea>
         <S.ButtonArea>
-          {mode === 'create' && (
-            <>
-              <S.LinkButton to="/events" $textColor="#3959a5" $borderColor="#3959a5">
-                이전
-              </S.LinkButton>
-              <S.Button onClick={handleSubmit} $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
-                저장
-              </S.Button>
-            </>
-          )}
-          {mode === 'read' && (
+          {mode === 'read' ? (
             <>
               <S.LinkButton to="/events" $textColor="#3959a5" $borderColor="#3959a5">
                 이전
@@ -348,6 +341,19 @@ const EventForm = ({
               >
                 입출금 내역 조회
               </S.LinkButton>
+            </>
+          ) : (
+            <>
+              <S.LinkButton
+                to={mode === 'create' ? '/events' : `/events/${eventId}`}
+                $textColor="#3959a5"
+                $borderColor="#3959a5"
+              >
+                이전
+              </S.LinkButton>
+              <S.Button onClick={handleSubmit} $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
+                저장
+              </S.Button>
             </>
           )}
         </S.ButtonArea>

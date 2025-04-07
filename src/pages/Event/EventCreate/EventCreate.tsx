@@ -48,7 +48,7 @@ const EventCreate = () => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
     if (!isImageFile(selectedFile)) {
-      alert('이미지 파일만 업로드 가능');
+      alert('이미지 형식의 파일만 업로드할 수 있습니다.');
       e.target.value = '';
       return;
     }
@@ -101,9 +101,6 @@ const EventCreate = () => {
       {
         onSuccess: () => {
           navigate('/events');
-        },
-        onError: (error) => {
-          console.error('Error creating event:', error);
         },
       },
     );
