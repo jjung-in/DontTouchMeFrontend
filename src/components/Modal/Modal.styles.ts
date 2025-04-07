@@ -13,18 +13,24 @@ export const Overlay = styled.div`
   z-index: 1000;
 `;
 
-export const ModalContainer = styled.div`
+export const Container = styled.div`
   position: relative;
-  padding: 40px 20px 20px;
-  background: white;
+  width: 750px;
+  padding: 70px 40px 40px;
+  border: 1px solid #000000;
+  border-radius: 10px;
+  background: #ffffff;
+  text-align: center;
 `;
 
 export const CloseButton = styled.button`
   position: absolute;
-  top: 10px;
-  right: 10px;
-  border: none;
-  background: none;
-  font-size: 20px;
+  top: 25px;
+  right: 30px;
   cursor: pointer;
+
+  img {
+    width: 30px;
+    height: 30px;
+  }
 `;

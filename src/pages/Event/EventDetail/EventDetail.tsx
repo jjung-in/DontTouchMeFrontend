@@ -1,102 +1,59 @@
 import { useDeleteEvent, useEventDetail } from '@_hooks/useEvents';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Link } from 'react-router-dom';
-import noimage from '@_assets/images/noimage.png';
+import * as S from './EventDetail.styles';
+import Spinner from '@_components/Spinner/Spinner';
+import EmptyState from '@_components/EmptyState/EmptyState';
+import EventForm from '@_components/EventForm/EventForm';
+import { useState } from 'react';
+import AlertModal from '@_components/Modal/AlertModal/AlertModal';
 
 const EventDetail = () => {
   const memberId = 1;
-  const navigate = useNavigate();
   const eventId = Number(useParams().eventId);
+  const navigate = useNavigate();
   const { data, isFetching } = useEventDetail(eventId);
   const { mutate: deleteEvent } = useDeleteEvent(memberId);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const handleDelete = () => {
-    if (confirm('삭제하시겠습니까?')) {
-      deleteEvent(
-        { eventId },
-        {
-          onSuccess: () => {
-            navigate(`/events`);
-          },
-          onError: (error) => {
-            console.error('Error deleting event:', error);
-          },
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = () => {
+    deleteEvent(
+      { eventId },
+      {
+        onSuccess: () => {
+          navigate(`/events`);
         },
-      );
-    }
+      },
+    );
+    setIsDeleteModalOpen(false);
   };
 
   return (
-    <div>
-      <hr />
-      <div>
-        <h2>이벤트 상세 정보</h2>
-      </div>
-      <hr />
+    <>
       {isFetching ? (
-        <div>Loading...</div>
+        <S.Main>
+          <Spinner />
+        </S.Main>
       ) : data ? (
         <>
-          <div>
-            <Link to="/events">목록</Link>
-            &emsp;
-            <Link to={`/events/${eventId}/update`}>수정</Link>
-            &emsp;
-            <button onClick={handleDelete}>삭제</button>
-            &emsp;
-            <Link to={`/events/${eventId}/records/create`}>입출금 내역 등록</Link>
-            &emsp;
-            <Link to={`/events/${eventId}/records`}>입출금 내역 조회</Link>
-          </div>
-          <hr />
-          <div>
-            <div>
-              <span>썸네일:</span>
-              &emsp; &emsp;
-              <img src={data.thumbnailUrl || noimage} style={{ width: '100px', height: '100px' }} />
-            </div>
-            <div>
-              <span>이벤트명:</span>
-              &emsp; &emsp;
-              <span>{data.eventName}</span>
-            </div>
-            <div>
-              <span>이벤트 유형:</span>
-              &emsp; &emsp;
-              <span>{data.eventType}</span>
-            </div>
-            <div>
-              <span>이벤트 일정:</span>
-              &emsp; &emsp;
-              <span>{data.eventDate}</span>
-            </div>
-            <div>
-              <span>이벤트 장소:</span>
-              &emsp; &emsp;
-              <span>{data.address}</span>
-            </div>
-            <div>
-              <span>예상 인원:</span>
-              &emsp; &emsp;
-              <span>{data.participants}</span>
-            </div>
-            <div>
-              <span>입출금 항목:</span>
-              &emsp; &emsp;
-              {data.eventInfoItems.map((item, index) => (
-                <span key={index}>
-                  <span>{item}</span>
-                  &emsp;
-                </span>
-              ))}
-            </div>
-          </div>
+          <EventForm mode="read" event={data} handleDelete={handleDelete} />
+          <AlertModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => setIsDeleteModalOpen(false)}
+            title="이벤트 삭제"
+            message="확인 클릭 시 이벤트가 영구 삭제됩니다. 진행하시겠습니까?"
+            onConfirm={confirmDelete}
+          />
         </>
       ) : (
-        <div>데이터 없어요</div>
+        <S.Main>
+          <EmptyState />
+        </S.Main>
       )}
-      <hr />
-    </div>
+    </>
   );
 };
 

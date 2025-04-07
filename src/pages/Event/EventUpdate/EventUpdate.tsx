@@ -1,12 +1,14 @@
 import { uploadImage } from '@_api/image';
 import { getGeocode } from '@_api/map';
-import AddressModal from '@_components/AddressModal/AddressModal';
-import TagInput from '@_components/TagInput/TagInput';
+import * as S from './EventUpdate.styles';
 import { useEventDetail, useUpdateEvent } from '@_hooks/useEvents';
 import { TUpdateEventRequest } from '@_types/events.type';
 import { isImageFile } from '@_utils/image';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import EventForm from '@_components/EventForm/EventForm';
+import Spinner from '@_components/Spinner/Spinner';
+import EmptyState from '@_components/EmptyState/EmptyState';
 
 const EventUpdate = () => {
   const navigate = useNavigate();
@@ -17,13 +19,13 @@ const EventUpdate = () => {
 
   const [thumbnail, setThumbnail] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string>('');
-  const [otherEventType, setOtherEventType] = useState('');
-  const [isTag, setIsTag] = useState(false);
-  const [isTarget, setIsTarget] = useState(false);
+  const [otherEventType, setOtherEventType] = useState<string>('');
+  const [isTag, setIsTag] = useState<boolean>(false);
+  const [isTarget, setIsTarget] = useState<boolean>(false);
   const [formValues, setFormValues] = useState<TUpdateEventRequest>({
     thumbnailUrl: '',
     eventName: '',
-    eventType: '',
+    eventType: '결혼식',
     eventDate: '',
     address: '',
     latitude: 0,
@@ -37,10 +39,9 @@ const EventUpdate = () => {
     isImage: false,
     targets: [],
     isSend: false,
-    sendType: null,
+    sendType: 'EMAIL',
     sendTypeValid: false,
   });
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (data) {
@@ -59,12 +60,11 @@ const EventUpdate = () => {
         address: data.address || '',
         participants: data.participants || '',
         isName: shouldName,
-        tags: data.tags || [],
+        tags: shouldTag ? data.tags : [],
         isImage: shouldImage,
-        targets: data.targets || [],
+        targets: shouldTarget ? data.targets : [],
         isSend: shouldSend,
         sendType: data.sendType || null,
-        // sendTypeValid: data.sendTypeValid ?? false,
       }));
 
       if (data.thumbnailUrl) {
@@ -86,7 +86,7 @@ const EventUpdate = () => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
     if (!isImageFile(selectedFile)) {
-      alert('이미지 파일만 업로드 가능');
+      alert('이미지 형식의 파일만 업로드할 수 있습니다.');
       e.target.value = '';
       return;
     }
@@ -101,6 +101,7 @@ const EventUpdate = () => {
     }
     setThumbnail(null);
     setThumbnailPreview('');
+    handleChange('thumbnailUrl', '');
   };
 
   const handleSubmit = async () => {
@@ -111,7 +112,7 @@ const EventUpdate = () => {
     if (thumbnail) {
       imageUrl = await uploadImage(thumbnail);
       if (!imageUrl) {
-        console.warn('이미지 업로드 실패');
+        console.warn('이미지 업로드에 실패했습니다.');
       }
     }
 
@@ -122,7 +123,7 @@ const EventUpdate = () => {
       latitude = geo.latitude;
       longitude = geo.longitude;
     } catch {
-      console.warn('주소 변환 실패');
+      console.warn('주소 변환에 실패했습니다.');
     }
 
     updateEvent(
@@ -134,6 +135,8 @@ const EventUpdate = () => {
           latitude,
           longitude,
           eventType: formValues.eventType === '기타' ? otherEventType : formValues.eventType,
+          tags: isTag ? formValues.tags : [],
+          targets: isTarget ? formValues.targets : [],
           sendType: formValues.isSend ? formValues.sendType : null,
         },
       },
@@ -141,207 +144,38 @@ const EventUpdate = () => {
         onSuccess: () => {
           navigate(`/events/${eventId}`);
         },
-        onError: (error) => {
-          console.error('Error updating event:', error);
-        },
       },
     );
   };
 
   return (
-    <div>
-      <hr />
-      <div>
-        <h2>이벤트 수정</h2>
-      </div>
-      <hr />
+    <>
       {isFetching ? (
-        <div>Loading...</div>
+        <S.Main>
+          <Spinner />
+        </S.Main>
+      ) : data ? (
+        <EventForm
+          mode="update"
+          formValues={formValues}
+          thumbnailPreview={thumbnailPreview}
+          handleSubmit={handleSubmit}
+          handleChange={handleChange}
+          handleThumbnailChange={handleThumbnailChange}
+          handleThumbnailReset={handleThumbnailReset}
+          otherEventType={otherEventType}
+          setOtherEventType={setOtherEventType}
+          isTag={isTag}
+          setIsTag={setIsTag}
+          isTarget={isTarget}
+          setIsTarget={setIsTarget}
+        />
       ) : (
-        <>
-          <div>
-            <Link to={`/events/${eventId}`}>취소</Link>
-            &emsp;
-            <button onClick={handleSubmit}>저장</button>
-          </div>
-          <hr />
-          <div>
-            <form id="event">
-              <div>
-                <span>썸네일</span>
-                <input type="file" accept="image/*" onChange={handleThumbnailChange} />
-                {thumbnailPreview && (
-                  <div>
-                    <img src={thumbnailPreview} alt="Thumbnail" style={{ width: 200 }} />
-                    <button type="button" onClick={handleThumbnailReset}>
-                      취소
-                    </button>
-                  </div>
-                )}
-              </div>
-              <div>
-                <span>이벤트명</span>
-                <input
-                  type="text"
-                  maxLength={100}
-                  value={formValues.eventName}
-                  onChange={(e) => handleChange('eventName', e.target.value)}
-                />
-              </div>
-              <div>
-                <span>유형</span>
-                <label>
-                  <input
-                    type="radio"
-                    value="결혼식"
-                    checked={formValues.eventType === '결혼식'}
-                    onChange={() => handleChange('eventType', '결혼식')}
-                  />
-                  결혼식
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    value="장례식"
-                    checked={formValues.eventType === '장례식'}
-                    onChange={() => handleChange('eventType', '장례식')}
-                  />
-                  장례식
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    value="기타"
-                    checked={formValues.eventType === '기타'}
-                    onChange={() => handleChange('eventType', '기타')}
-                  />
-                  기타
-                </label>
-                {formValues.eventType === '기타' && (
-                  <input
-                    type="text"
-                    maxLength={10}
-                    value={otherEventType}
-                    onChange={(e) => setOtherEventType(e.target.value)}
-                  />
-                )}
-              </div>
-              <div>
-                <span>일정</span>
-                <input
-                  type="date"
-                  value={formValues.eventDate}
-                  onChange={(e) => handleChange('eventDate', e.target.value)}
-                />
-              </div>
-              <div>
-                <span>장소</span>
-                <input type="text" readOnly value={formValues.address} onClick={() => setIsModalOpen(true)} />
-                <AddressModal
-                  isOpen={isModalOpen}
-                  onClose={() => setIsModalOpen(false)}
-                  onSelectAddress={(selectedAddress) => handleChange('address', selectedAddress)}
-                />
-              </div>
-              <div>
-                <span>인원</span>
-                <input
-                  type="number"
-                  min={1}
-                  value={formValues.participants || ''}
-                  onChange={(e) => handleChange('participants', Number(e.target.value))}
-                />
-              </div>
-              <br />
-              <div>
-                <span>입출금 분류</span>
-                <input type="checkbox" defaultChecked disabled />
-              </div>
-              <div>
-                <span>입출금 내역명</span>
-                <input type="checkbox" defaultChecked disabled />
-              </div>
-              <div>
-                <span>금액</span>
-                <input type="checkbox" defaultChecked disabled />
-              </div>
-              <div>
-                <span>이름</span>
-                <input
-                  type="checkbox"
-                  checked={formValues.isName}
-                  onChange={(e) => handleChange('isName', e.target.checked)}
-                />
-              </div>
-              <div>
-                <span>태그</span>
-                <input type="checkbox" checked={isTag} onChange={(e) => setIsTag(e.target.checked)} />
-                {isTag && (
-                  <TagInput
-                    tags={formValues.tags}
-                    setTags={(newTags) =>
-                      handleChange('tags', typeof newTags === 'function' ? newTags(formValues.tags) : newTags)
-                    }
-                  />
-                )}
-              </div>
-              <div>
-                <span>사진 첨부</span>
-                <input
-                  type="checkbox"
-                  checked={formValues.isImage}
-                  onChange={(e) => handleChange('isImage', e.target.checked)}
-                />
-              </div>
-              <div>
-                <span>입금 대상</span>
-                <input type="checkbox" checked={isTarget} onChange={(e) => setIsTarget(e.target.checked)} />
-                {isTarget && (
-                  <TagInput
-                    tags={formValues.targets}
-                    setTags={(newTargets) =>
-                      handleChange(
-                        'targets',
-                        typeof newTargets === 'function' ? newTargets(formValues.tags) : newTargets,
-                      )
-                    }
-                  />
-                )}
-              </div>
-              <div>
-                <span>감사장</span>
-                <input
-                  type="checkbox"
-                  checked={formValues.isSend}
-                  onChange={(e) => handleChange('isSend', e.target.checked)}
-                />
-                <label>
-                  <input
-                    type="radio"
-                    value="EMAIL"
-                    checked={formValues.sendType === 'EMAIL'}
-                    onChange={() => handleChange('sendType', 'EMAIL')}
-                    disabled={!formValues.isSend}
-                  />
-                  이메일
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    value="PHONE"
-                    checked={formValues.sendType === 'PHONE'}
-                    onChange={() => handleChange('sendType', 'PHONE')}
-                    disabled={!formValues.isSend}
-                  />
-                  문자
-                </label>
-              </div>
-            </form>
-          </div>
-          <hr />
-        </>
+        <S.Main>
+          <EmptyState />
+        </S.Main>
       )}
-    </div>
+    </>
   );
 };
 

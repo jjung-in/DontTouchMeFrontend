@@ -1,5 +1,5 @@
 import useInput from '@_hooks/useInput';
-import { Input, TagInputContainer } from './TagInput.styles';
+import * as S from './TagInput.styles';
 import Tag from '@_components/Tag/Tag';
 import { useRef, useState } from 'react';
 
@@ -31,11 +31,11 @@ const TagInput = ({ tags, setTags }: Props) => {
   };
 
   return (
-    <TagInputContainer onClick={handleContainerClick}>
+    <S.TagInput onClick={handleContainerClick} $isFocused={isFocused}>
       {tags.map((tag, index) => (
         <Tag label={tag} key={index} />
       ))}
-      <Input
+      <input
         type="text"
         placeholder="태그를 입력하세요"
         value={value}
@@ -45,9 +45,8 @@ const TagInput = ({ tags, setTags }: Props) => {
         onBlur={() => setIsFocused(false)}
         ref={inputRef}
         maxLength={8}
-        $isFocused={isFocused}
       />
-    </TagInputContainer>
+    </S.TagInput>
   );
 };
 
