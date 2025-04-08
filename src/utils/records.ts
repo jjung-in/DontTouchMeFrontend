@@ -39,7 +39,10 @@ export const getRecordGridTemplate = (mode: string, items: string[]) => {
     mode === 'read'
       ? items.map((item) => recordReadConfig[item]?.width || '120px')
       : items.map((item) => recordFieldConfig[item]?.width || '120px');
-  return [...widths, '104px'].join(' ');
+
+  if (mode === 'create') return [...widths, '104px'].join(' ');
+  if (mode === 'update') return [...widths, '104px', '104px'].join(' ');
+  return widths.join(' ');
 };
 
 export const formatNumber = (value: number | string): string => {

@@ -1,14 +1,14 @@
 import { useParams } from 'react-router-dom';
 import { TEventDetailResponse } from '@_types/events.type';
-import { TCreateRecordRequest, TRecordItem } from '@_types/records.type';
+import { TCreateRecordRequest, TRecordItem, TUpdateRecordRequest } from '@_types/records.type';
 import * as S from './RecordForm.styles';
 import required from '@_assets/images/required.png';
 import CustomSelect from '@_components/Select/CustomSelect/CustomSelect';
 import { downloadExcelTemplate } from '@_api/excel';
 import { downloadBlobFile } from '@_utils/downloadFile';
-import { getRecordGridTemplate, recordFieldConfig, recordReadConfig } from '@_utils/records';
+import { formatNumber, getRecordGridTemplate, recordFieldConfig, recordReadConfig } from '@_utils/records';
 import { useState } from 'react';
-import { useDeleteRecord } from '@_hooks/useRecords';
+import { useDeleteRecord, useUpdateRecord } from '@_hooks/useRecords';
 import AlertModal from '@_components/Modal/AlertModal/AlertModal';
 
 interface Props {
@@ -24,8 +24,11 @@ interface Props {
 const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleChange }: Props) => {
   const eventId = Number(useParams().eventId);
   const { mutate: deleteRecord } = useDeleteRecord(eventId);
+  const { mutate: updateRecord } = useUpdateRecord(eventId);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedRecordId, setSelectedRecordId] = useState<number | null>(null);
+  const [deletedRecordId, setDeletedRecordId] = useState<number | null>(null);
+  const [updatedRecordId, setUpdatedRecordId] = useState<number | null>(null);
+  const [updatedValue, setUpdateValue] = useState<TUpdateRecordRequest | null>(null);
 
   const handleAddRow = () => {
     setRows?.((prev) => [
@@ -62,6 +65,28 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
     setIsDeleteModalOpen(false);
   };
 
+  const handleUpdateRecord = (record: TRecordItem) => {
+    if (updatedRecordId === record.eventDetailId && updatedValue) {
+      updateRecord({ recordId: record.eventDetailId, recordData: updatedValue });
+      setUpdatedRecordId(null);
+    } else {
+      setUpdatedRecordId(record.eventDetailId);
+      setUpdateValue({
+        type: record.type,
+        history: record.history,
+        price: record.price,
+        name: record.name,
+        // tags: record.tags,
+        imageUrl: record.image,
+        contact: record.contact,
+      });
+    }
+  };
+
+  const handleEditChange = <K extends keyof TUpdateRecordRequest>(key: K, value: TUpdateRecordRequest[K]) => {
+    setUpdateValue((prev) => (prev ? { ...prev, [key]: value } : prev));
+  };
+
   const handleDownloadExcel = async () => {
     try {
       const data = await downloadExcelTemplate(eventId);
@@ -74,7 +99,7 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
 
   return (
     <>
-      {records ? (
+      {mode !== 'create' && records ? (
         <S.Grid $gridTemplateColumns={getRecordGridTemplate(mode, event.eventInfoItems)}>
           <>
             {event.eventInfoItems.map((item) => (
@@ -83,42 +108,120 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                 {recordReadConfig[item]?.required && <img src={required} alt="필수 입력" />}
               </S.GridCell>
             ))}
-            <S.GridCell $isHeader />
+            {mode === 'update' && (
+              <>
+                <S.GridCell $isHeader />
+                <S.GridCell $isHeader />
+              </>
+            )}
           </>
           <>
-            {records.map((record) =>
-              event.eventInfoItems
+            {records.map((record) => {
+              const recordId = record.eventDetailId;
+              const isEditing = recordId === updatedRecordId;
+
+              return event.eventInfoItems
                 .map((item) => {
                   const config = recordReadConfig[item];
 
                   if (!config) {
-                    return <S.GridCell key={`${record.eventDetailId}-${item}`}>-</S.GridCell>;
+                    return <S.GridCell key={`${recordId}-${item}`}>-</S.GridCell>;
                   }
 
-                  const value = record[config.type];
+                  const value = isEditing ? updatedValue?.[config.type] : record[config.type];
 
-                  return (
-                    <S.GridCell key={`${record.eventDetailId}-${item}`}>
-                      <S.Text>{value}</S.Text>
-                    </S.GridCell>
-                  );
+                  if (recordId === updatedRecordId) {
+                    if (config.type === 'type') {
+                      return (
+                        <S.GridCell key={`${recordId}-${item}`}>
+                          <CustomSelect
+                            options={['입금', '출금']}
+                            value={value}
+                            onChange={(val) => handleEditChange('type', val.toString())}
+                            isShowArrow={true}
+                          />
+                        </S.GridCell>
+                      );
+                    }
+
+                    if (config.type === 'history') {
+                      return (
+                        <S.GridCell key={`${recordId}-${item}`}>
+                          <S.Input
+                            type="text"
+                            maxLength={10}
+                            value={value}
+                            onChange={(e) => handleEditChange('history', e.target.value)}
+                          />
+                        </S.GridCell>
+                      );
+                    }
+
+                    if (config.type === 'price') {
+                      return (
+                        <S.GridCell key={`${recordId}-${item}`}>
+                          <CustomSelect
+                            options={['50000', '100000', '150000']}
+                            value={value}
+                            onChange={(val) => handleEditChange('price', val.toString())}
+                            isInput={true}
+                            isPrice={true}
+                          />
+                        </S.GridCell>
+                      );
+                    }
+
+                    if (config.type === 'contact') {
+                      return (
+                        <S.GridCell key={`${recordId}-${item}`}>
+                          <S.Input
+                            type="text"
+                            value={value}
+                            onChange={(e) => handleEditChange('contact', e.target.value)}
+                          />
+                        </S.GridCell>
+                      );
+                    }
+                  } else {
+                    return (
+                      <S.GridCell key={`${recordId}-${item}`}>
+                        <S.Text>{config.type === 'price' ? formatNumber(value) : value}</S.Text>
+                      </S.GridCell>
+                    );
+                  }
+
+                  return <S.GridCell key={`${recordId}-${item}`}>-</S.GridCell>;
                 })
                 .concat(
-                  <S.GridCell key={`row-${record.eventDetailId}-action`}>
-                    <S.Button
-                      onClick={() => {
-                        setSelectedRecordId(record.eventDetailId);
-                        setIsDeleteModalOpen(true);
-                      }}
-                      $textColor="#ffffff"
-                      $borderColor="#3959a5"
-                      $bgColor="#3959a5"
-                    >
-                      삭제
-                    </S.Button>
-                  </S.GridCell>,
-                ),
-            )}
+                  ...(mode === 'update'
+                    ? [
+                        <S.GridCell key={`row-${recordId}-update`}>
+                          <S.Button
+                            onClick={() => handleUpdateRecord(record)}
+                            $textColor={updatedRecordId === recordId ? '#3959a5' : '#ffffff'}
+                            $bgColor={updatedRecordId === recordId ? '#ffffff' : '#3959a5'}
+                            $borderColor="#3959a5"
+                          >
+                            {updatedRecordId === recordId ? '저장' : '수정'}
+                          </S.Button>
+                        </S.GridCell>,
+                        <S.GridCell key={`row-${recordId}-delete`}>
+                          <S.Button
+                            onClick={() => {
+                              setDeletedRecordId(recordId);
+                              setIsDeleteModalOpen(true);
+                            }}
+                            $textColor="#ffffff"
+                            $bgColor="#3959a5"
+                            $borderColor="#3959a5"
+                          >
+                            삭제
+                          </S.Button>
+                        </S.GridCell>,
+                      ]
+                    : []),
+                );
+            })}
           </>
         </S.Grid>
       ) : (
@@ -215,6 +318,14 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
             이전
           </S.LinkButton>
           <S.LinkButton
+            to={`/events/${eventId}/records/update`}
+            $textColor="#ffffff"
+            $borderColor="#3959a5"
+            $bgColor="#3959a5"
+          >
+            수정
+          </S.LinkButton>
+          <S.LinkButton
             to={`/events/${eventId}/records/create`}
             $textColor="#ffffff"
             $borderColor="#3959a5"
@@ -222,14 +333,16 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
           >
             입출금 내역 등록
           </S.LinkButton>
+          <S.Button $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
+            엑셀 다운로드
+          </S.Button>
+          <S.LinkButton to={`/events/${eventId}/card`} $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
+            감사장 전송
+          </S.LinkButton>
         </S.ButtonArea>
-      ) : (
+      ) : mode === 'create' ? (
         <S.ButtonArea>
-          <S.LinkButton
-            to={mode === 'create' ? `/events/${eventId}` : `/events/${eventId}/records`}
-            $textColor="#3959a5"
-            $borderColor="#3959a5"
-          >
+          <S.LinkButton to={`/events/${eventId}`} $textColor="#3959a5" $borderColor="#3959a5">
             이전
           </S.LinkButton>
           <S.Button onClick={handleDownloadExcel} $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
@@ -242,8 +355,14 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
             저장
           </S.Button>
         </S.ButtonArea>
+      ) : (
+        <S.ButtonArea>
+          <S.LinkButton to={`/events/${eventId}/records`} $textColor="#3959a5" $borderColor="#3959a5">
+            완료
+          </S.LinkButton>
+        </S.ButtonArea>
       )}
-      {isDeleteModalOpen && selectedRecordId !== null && (
+      {isDeleteModalOpen && deletedRecordId !== null && (
         <AlertModal
           isOpen={isDeleteModalOpen}
           onClose={() => setIsDeleteModalOpen(false)}

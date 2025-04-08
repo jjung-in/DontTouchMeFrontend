@@ -15,7 +15,7 @@ export const Input = styled.input<{ $isShowArrow?: boolean }>`
   border-radius: 6px;
   background-repeat: no-repeat;
   background-position: right 15px center;
-  ${(props) => props.$isShowArrow && `background-image: url(${arrow});`}
+  ${(props) => props.$isShowArrow && `background-image: url(${arrow}); cursor: default;`}
 
   &::-webkit-inner-spin-button,
   &::-webkit-outer-spin-button {

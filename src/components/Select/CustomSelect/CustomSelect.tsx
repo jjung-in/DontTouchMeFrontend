@@ -4,7 +4,7 @@ import { formatNumber } from '@_utils/records';
 
 interface Props {
   options: string[];
-  value: string;
+  value: string | number;
   onChange: (value: string | number) => void;
   isInput?: boolean;
   isPrice?: boolean;
@@ -54,8 +54,9 @@ const CustomSelect = ({ options, value, onChange, isInput, isPrice, isShowArrow 
     const selectedValue = options[index];
     setInputValue(selectedValue);
     setSelectedIndex(index);
+    setHoveredIndex(index);
     onChange(selectedValue);
-    handleClose();
+    setIsOpen(false);
   };
 
   const handleClose = () => {

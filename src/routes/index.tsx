@@ -8,6 +8,7 @@ import EventDetail from '@_pages/Event/EventDetail/EventDetail';
 import EventUpdate from '@_pages/Event/EventUpdate/EventUpdate';
 import RecordList from '@_pages/Records/RecordList/RecordList';
 import RecordCreate from '@_pages/Records/RecordCreate/RecordCreate';
+import RecordUpdate from '@_pages/Records/RecordUpdate/RecordUpdate';
 
 export const routes = [
   {
@@ -45,6 +46,10 @@ export const routes = [
       {
         path: '/events/:eventId/records/create',
         element: <RecordCreate />,
+      },
+      {
+        path: '/events/:eventId/records/update',
+        element: <RecordUpdate />,
       },
     ],
   },
