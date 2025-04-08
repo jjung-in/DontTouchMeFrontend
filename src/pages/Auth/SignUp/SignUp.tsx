@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { SignUpProps } from '@_types/auth.type';
-import { useSignUp, useEmailDuplicateCheck } from '@_hooks/useAuth';
+import { useSignUp, useEmailDuplicateCheck, useCheckAuthNumber } from '@_hooks/useAuth';
 
 const SignUp = () => {
   const [FormData, setFormData] = useState<SignUpProps>({
@@ -85,6 +85,12 @@ const SignUp = () => {
           />
           <button onClick={emailChack}>인증</button>
         </span>
+
+        <input
+          type="mailcode"
+          placeholder="인증번호를 입력하세요"
+          // value=
+        />
 
         <input
           type="password"

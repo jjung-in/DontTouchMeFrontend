@@ -38,6 +38,7 @@ export const useSignUp = () => {
 };
 
 export const useEmailDuplicateCheck = () => {
+  // 이메일 중복 확인
   const mutation = useMutation({
     mutationFn: EmailDuplicateCheck,
     onSuccess: (result) => {
@@ -66,7 +67,7 @@ export const useEmailDuplicateCheck = () => {
   return { mutation, sendAuthNumber };
 };
 
-//이메일 중복 확인
+// 이메일 중복 확인
 // export const useEmailDuplicateCheck = () => {
 //   const mutation = useMutation({
 //     mutationFn: EmailDuplicateCheck,
@@ -76,7 +77,7 @@ export const useEmailDuplicateCheck = () => {
 //         console.log('이미 존재하는 이메일입니다.');
 //       } else {
 //         console.log('이메일이 중복되지 않습니다.');
-//         useSendAuthNumber(result.email);
+//         // useSendAuthNumber(result.email);
 //       }
 //     },
 //     onError: (error) => {
@@ -121,13 +122,20 @@ export const useGetTemporaryPassword = (email: string) => {
 // };
 
 //이메일 인증번호 확인
-export const useCheckAuthNumber = (email: string, number: string) => {
-  const { data } = useQuery<string[]>({
-    queryKey: ['number', { email, number }],
-    queryFn: () => CheckAuthNumber(email, number),
+export const useCheckAuthNumber = () => {
+  const mutation = useMutation({
+    mutationFn: CheckAuthNumber,
+    onSuccess: (result) => {
+      console.log('인증번호 확인 success', result);
+      if (result.message === '인증번호가 일치합니다.') {
+        console.log('인증번호가 일치합니다.');
+      } else {
+        console.log('인증번호가 일치하지 않습니다.');
+      }
+    },
     onError: (error) => {
       console.error('useCheckAuthNumber', error);
     },
   });
-  return { data };
+  return { mutation };
 };
