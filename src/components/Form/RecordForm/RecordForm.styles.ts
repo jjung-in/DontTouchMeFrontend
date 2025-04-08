@@ -24,6 +24,7 @@ const BaseFieldStyle = css`
   padding: 0 15px;
   border-radius: 6px;
   border: 1px solid #cbd2e0;
+  background-color: #ffffff;
 
   &:focus {
     border-color: #000000;
@@ -40,6 +41,11 @@ export const Select = styled.select`
 
 export const Input = styled.input`
   ${BaseFieldStyle}
+`;
+
+export const Text = styled.span`
+  ${BaseFieldStyle}
+  padding: 15px;
 `;
 
 // Button Styles

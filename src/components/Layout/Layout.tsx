@@ -4,7 +4,7 @@ import Footer from './footer/Footer.tsx';
 
 const Layout = () => {
   return (
-    <div>
+    <div style={{ minWidth: '1800px' }}>
       <Header />
       <Outlet />
       <Footer />
