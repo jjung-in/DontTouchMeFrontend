@@ -7,7 +7,7 @@ import { useState } from 'react';
 import AddressModal from '@_components/Modal/AddressModal/AddressModal';
 import CustomDatePicker from '@_components/CustomDatePicker/CustomDatePicker';
 import Switch from '@_components/Switch/Switch';
-import TagInput from '@_components/TagInput/TagInput';
+import TagInput from '@_components/Tag/TagInput/TagInput';
 
 interface Props {
   mode: 'create' | 'update' | 'read';

@@ -10,12 +10,6 @@ export const useCreateRecordsBatch = () => {
   });
 };
 
-export const useCreateRecord = () => {
-  return useMutation({
-    mutationFn: createRecord,
-  });
-};
-
 export const useUpdateRecord = () => {
   return useMutation({
     mutationFn: updateRecord,
@@ -29,21 +23,6 @@ export const useDeleteRecord = () => {
 };
 
 /*
-export const useCreateRecord = (eventId: number) => {
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: createRecord,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ['records', eventId],
-      });
-    },
-    onError: (error) => {
-      console.error('Error creating record:', error);
-    },
-  });
-};
-
 export const useUpdateRecord = (eventId: number) => {
   const queryClient = useQueryClient();
   return useMutation({

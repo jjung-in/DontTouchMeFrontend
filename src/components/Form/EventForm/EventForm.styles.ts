@@ -130,7 +130,6 @@ export const NumberInput = styled.div`
 
 export const Select = styled.select`
   ${BaseFieldStyle}
-  position: relative;
   padding: 18px 15px;
   appearance: none;
   background-image: url(${arrow});
