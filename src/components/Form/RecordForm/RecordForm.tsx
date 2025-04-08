@@ -7,6 +7,9 @@ import CustomSelect from '@_components/Select/CustomSelect/CustomSelect';
 import { downloadExcelTemplate } from '@_api/excel';
 import { downloadBlobFile } from '@_utils/downloadFile';
 import { getRecordGridTemplate, recordFieldConfig, recordReadConfig } from '@_utils/records';
+import { useState } from 'react';
+import { useDeleteRecord } from '@_hooks/useRecords';
+import AlertModal from '@_components/Modal/AlertModal/AlertModal';
 
 interface Props {
   mode: 'create' | 'update' | 'read';
@@ -20,6 +23,9 @@ interface Props {
 
 const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleChange }: Props) => {
   const eventId = Number(useParams().eventId);
+  const { mutate: deleteRecord } = useDeleteRecord(eventId);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedRecordId, setSelectedRecordId] = useState<number | null>(null);
 
   const handleAddRow = () => {
     setRows?.((prev) => [
@@ -46,7 +52,15 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
     setRows?.((prev) => prev.filter((row) => row.id !== id));
   };
 
-  const handleDeleteRecord = (id: number) => {};
+  const handleDeleteRecord = (recordId: number) => {
+    deleteRecord(
+      { recordId },
+      {
+        onSuccess: () => {},
+      },
+    );
+    setIsDeleteModalOpen(false);
+  };
 
   const handleDownloadExcel = async () => {
     try {
@@ -92,7 +106,10 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                 .concat(
                   <S.GridCell key={`row-${record.eventDetailId}-action`}>
                     <S.Button
-                      onClick={() => handleDeleteRecord(record.eventDetailId)}
+                      onClick={() => {
+                        setSelectedRecordId(record.eventDetailId);
+                        setIsDeleteModalOpen(true);
+                      }}
                       $textColor="#ffffff"
                       $borderColor="#3959a5"
                       $bgColor="#3959a5"
@@ -225,6 +242,15 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
             저장
           </S.Button>
         </S.ButtonArea>
+      )}
+      {isDeleteModalOpen && selectedRecordId !== null && (
+        <AlertModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          title="입출금 내역 삭제"
+          message="확인 클릭 시 입출금 내역이 영구 삭제됩니다. 진행하시겠습니까?"
+          onConfirm={() => handleDeleteRecord(selectedRecordId)}
+        />
       )}
     </>
   );

@@ -1,6 +1,6 @@
 import { createRecord, deleteRecord, getRecordDetail, getRecordList, updateRecord } from '@_api/records';
 import { TCreateRecordRequest, TRecordDetailResponse, TRecordListResponse } from '@_types/records.type';
-import { InfiniteData, useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
+import { InfiniteData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const useRecordList = (eventId: number, pageSize: number) => {
   return useInfiniteQuery<
@@ -34,19 +34,6 @@ export const useCreateRecordsBatch = () => {
   });
 };
 
-export const useUpdateRecord = () => {
-  return useMutation({
-    mutationFn: updateRecord,
-  });
-};
-
-export const useDeleteRecord = () => {
-  return useMutation({
-    mutationFn: deleteRecord,
-  });
-};
-
-/*
 export const useUpdateRecord = (eventId: number) => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -76,4 +63,3 @@ export const useDeleteRecord = (eventId: number) => {
     },
   });
 };
-*/
