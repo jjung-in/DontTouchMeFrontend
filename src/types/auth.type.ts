@@ -3,7 +3,7 @@ export interface SignUpProps {
   email: string;
   password: string;
   contact: string;
-  verificationCode : string;
+  verificationCode: string;
 }
 
 export interface SignUpResponse {
@@ -27,8 +27,17 @@ export interface LogInResponse {
   };
 }
 
-export interface EmailVerifyResponse{
-  email : string;
-  verificationCode : string;
+export interface EmailVerifyRequest {
+  email: string;
+  verificationCode: string;
 }
 
+export interface EmailVerifyResponse {
+  email: string;
+  message: string;
+}
+
+export interface SendEmailVerifyResponse {
+  email: 'string';
+  state: 'string';
+}
