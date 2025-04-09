@@ -7,7 +7,6 @@ export const Main = styled.main<{ $isEmpty?: boolean }>`
   justify-content: ${(props) => (props.$isEmpty ? 'center' : 'flex-start')};
   align-items: center;
   gap: ${(props) => (props.$isEmpty ? '30px' : '0')};
-  min-height: calc(100vh - 16px);
   background-color: #e4f0fa;
 `;
 
