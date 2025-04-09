@@ -187,7 +187,11 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                           <S.GridCell key={key}>
                             <CustomSelect
                               options={(type === 'target' ? ['', ...event.targets] : config.options) || []}
-                              value={typeof value === 'string' || typeof value === 'number' ? value : ''}
+                              value={
+                                typeof value === 'string' || typeof value === 'number' || typeof value === 'string'
+                                  ? value
+                                  : ''
+                              }
                               onChange={(val) => handleUpdateChange(type, val.toString())}
                               isShowArrow={type === 'type' || type === 'target'}
                               isInput={type === 'price' && true}
@@ -226,7 +230,9 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                         return (
                           <S.GridCell key={key}>
                             <S.Text>
-                              {config.type === 'price' && typeof value === 'number' ? formatNumber(value) : value}
+                              {config.type === 'price' && (typeof value === 'number' || typeof value === 'string')
+                                ? formatNumber(value)
+                                : value}
                             </S.Text>
                           </S.GridCell>
                         );
