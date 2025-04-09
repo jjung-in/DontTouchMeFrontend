@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import styled, { css } from 'styled-components';
 
 export const Main = styled.main<{ $isEmpty?: boolean }>`
   display: flex;
@@ -25,9 +26,29 @@ export const SubTitle = styled.p`
 export const EmptyBox = styled.div`
   flex: 1;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 30px;
   width: 100%;
-  margin-bottom: 100px;
-  background-color: #e4f0fa;
+`;
+
+interface ButtonProps {
+  $fontWeight?: string | number;
+  $textColor?: string;
+  $bgColor?: string;
+  $borderColor?: string;
+}
+
+const BaseButtonStyle = css<ButtonProps>`
+  padding: 15px 30px;
+  font-weight: ${(props) => props.$fontWeight || 600};
+  color: ${(props) => props.$textColor || 'inherit'};
+  background: ${(props) => props.$bgColor || 'white'};
+  border: ${(props) => props.$borderColor && `1px solid ${props.$borderColor}`};
+  border-radius: 6px;
+`;
+
+export const LinkButton = styled(Link)<ButtonProps>`
+  ${BaseButtonStyle}
 `;

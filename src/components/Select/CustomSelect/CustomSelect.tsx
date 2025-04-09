@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import * as S from './CustomSelect.styles';
 import { formatNumber } from '@_utils/records';
 
 interface Props {
   options: string[];
-  value: string | number;
+  value: string;
   onChange: (value: string | number) => void;
   isInput?: boolean;
   isPrice?: boolean;
@@ -17,28 +17,6 @@ const CustomSelect = ({ options, value, onChange, isInput, isPrice, isShowArrow 
   const [isOpen, setIsOpen] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        handleClose();
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  useEffect(() => {
-    const selected = options.find((options) => options === value);
-    if (selected) {
-      setInputValue(selected);
-      setHoveredIndex(options.indexOf(selected));
-      setSelectedIndex(options.indexOf(selected));
-    }
-  }, [value, options]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
@@ -59,10 +37,10 @@ const CustomSelect = ({ options, value, onChange, isInput, isPrice, isShowArrow 
     setIsOpen(false);
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsOpen(false);
     setHoveredIndex(selectedIndex === null ? null : selectedIndex);
-  };
+  }, [selectedIndex]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'ArrowDown' && e.altKey) {
@@ -103,6 +81,30 @@ const CustomSelect = ({ options, value, onChange, isInput, isPrice, isShowArrow 
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        handleClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [handleClose]);
+
+  useEffect(() => {
+    const selected = options.find((options) => options === value);
+    if (selected) {
+      setInputValue(selected);
+      setHoveredIndex(options.indexOf(selected));
+      setSelectedIndex(options.indexOf(selected));
+    } else {
+      setInputValue(value);
+    }
+  }, [value, options]);
+
   return (
     <S.Container ref={ref}>
       <S.Input
@@ -125,7 +127,7 @@ const CustomSelect = ({ options, value, onChange, isInput, isPrice, isShowArrow 
               $focused={index === hoveredIndex}
               $selected={index === selectedIndex}
             >
-              {isPrice ? formatNumber(option) : option}
+              {option === '' ? '-' : isPrice ? formatNumber(option) : option}
             </S.Option>
           ))}
         </S.Dropdown>

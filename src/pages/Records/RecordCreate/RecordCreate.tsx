@@ -26,15 +26,13 @@ const RecordCreate = () => {
         name: '',
         tags: [],
         imageUrl: '',
-        // target: '',
-        // sendType: '',
+        target: '',
         contact: '',
       },
     },
   ]);
 
   const handleChange = (rowId: number, key: keyof TCreateRecordRequest, value: string | number | string[] | null) => {
-    console.log(rowId, key, value);
     setRows((prev) =>
       prev.map((row) => (row.id === rowId ? { ...row, values: { ...row.values, [key]: value } } : row)),
     );
@@ -44,15 +42,25 @@ const RecordCreate = () => {
     // 유효성 검사
     // if (!validateRecordForm(rows)) return;
 
-    const payload = rows.map((row) => {
-      const cleaned: TCreateRecordRequest = { eventId: eventId, type: '', history: '', price: '' };
-      for (const [key, value] of Object.entries(row.values)) {
-        cleaned[key] = value;
-      }
-      return cleaned;
+    const records: TCreateRecordRequest[] = rows.map((row) => {
+      const filteredRecord: TCreateRecordRequest = {
+        eventId,
+        type: row.values.type,
+        history: row.values.history,
+        price: row.values.price,
+        contact: row.values.contact,
+      };
+
+      if (row.values.name) filteredRecord.name = row.values.name;
+      if (row.values.tags?.length) filteredRecord.tags = row.values.tags;
+      if (row.values.imageUrl) filteredRecord.imageUrl = row.values.imageUrl;
+      if (row.values.target) filteredRecord.target = row.values.target;
+      if (row.values.sendType) filteredRecord.sendType = row.values.sendType;
+
+      return filteredRecord;
     });
 
-    createRecordsBatch(payload, {
+    createRecordsBatch(records, {
       onSuccess: () => {
         navigate(`/events/${eventId}/records`);
       },

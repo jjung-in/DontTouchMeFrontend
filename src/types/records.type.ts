@@ -1,11 +1,6 @@
-export interface TRecordItem {
+export interface TRecordItem extends TUpdateRecordRequest {
   eventDetailId: number;
-  type: string;
-  history: string;
-  price: string;
-  name: string;
   image: string;
-  contact: string;
 }
 
 export interface TRecordListRequest {

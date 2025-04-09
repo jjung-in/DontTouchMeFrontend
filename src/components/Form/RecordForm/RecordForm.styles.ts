@@ -45,6 +45,8 @@ export const Input = styled.input`
 
 export const Text = styled.span`
   ${BaseFieldStyle}
+  display: flex;
+  align-items: center;
   padding: 15px;
 `;
 

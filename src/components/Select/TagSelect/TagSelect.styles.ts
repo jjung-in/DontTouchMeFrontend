@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const Container = styled.div`
   position: relative;
@@ -17,12 +17,17 @@ export const SelectBox = styled.div<{ $focused: boolean }>`
   border-radius: 6px;
   background-color: #ffffff;
   overflow-x: auto;
-  ${(props) => props.$focused && `border-color: #000000;`}
 
-  &:focus {
-    outline: none;
-    border: 1px solid #000000;
-  }
+  ${(props) =>
+    props.$focused &&
+    css`
+      border-color: #000000;
+
+      &:focus {
+        outline: none;
+        border: 1px solid #000000;
+      }
+    `}
 
   &::-webkit-scrollbar {
     height: 6px;

@@ -1,13 +1,15 @@
-import { TCreateRecordRequest, TRecordItem } from '@_types/records.type';
+import { TCreateRecordRequest, TUpdateRecordRequest } from '@_types/records.type';
 
 interface TRecordConfig {
   label: string;
+  element: string;
   width: string;
   required?: boolean;
+  options?: string[];
 }
 
 interface TRecordReadConfig extends TRecordConfig {
-  type: keyof TRecordItem;
+  type: keyof TUpdateRecordRequest;
 }
 
 interface TRecordFieldConfig extends TRecordConfig {
@@ -15,23 +17,115 @@ interface TRecordFieldConfig extends TRecordConfig {
 }
 
 export const recordReadConfig: Record<string, TRecordReadConfig> = {
-  '입출금 분류': { type: 'type', label: '입출금 분류', width: '120px', required: true },
-  '입출금 내역명': { type: 'history', label: '입출금 내역명', width: '180px', required: true },
-  금액: { type: 'price', label: '금액', width: '120px', required: true },
-  이름: { type: 'name', label: '이름', width: '180px' },
-  '사진 첨부': { type: 'image', label: '사진 첨부', width: '120px' },
-  감사장: { type: 'contact', label: '연락처', width: '220px' },
+  '입출금 분류': {
+    type: 'type',
+    label: '입출금 분류',
+    element: 'select',
+    width: '120px',
+    required: true,
+    options: ['입금', '출금'],
+  },
+  '입출금 내역명': {
+    type: 'history',
+    label: '입출금 내역명',
+    element: 'text',
+    width: '180px',
+    required: true,
+  },
+  금액: {
+    type: 'price',
+    label: '금액',
+    element: 'select',
+    width: '120px',
+    required: true,
+    options: ['50000', '100000', '150000'],
+  },
+  이름: {
+    type: 'name',
+    label: '이름',
+    element: 'text',
+    width: '120px',
+  },
+  태그: {
+    type: 'tags',
+    label: '태그',
+    element: 'tagSelect',
+    width: '250px',
+  },
+  '사진 첨부': {
+    type: 'image',
+    label: '사진 첨부',
+    element: 'file',
+    width: '120px',
+  },
+  입금대상: {
+    type: 'target',
+    label: '입금 대상',
+    element: 'select',
+    width: '120px',
+  },
+  감사장: {
+    type: 'contact',
+    label: '연락처',
+    element: 'text',
+    width: '230px',
+  },
 };
 
 export const recordFieldConfig: Record<string, TRecordFieldConfig> = {
-  '입출금 분류': { type: 'type', label: '입출금 분류', width: '120px', required: true },
-  '입출금 내역명': { type: 'history', label: '입출금 내역명', width: '180px', required: true },
-  금액: { type: 'price', label: '금액', width: '120px', required: true },
-  이름: { type: 'name', label: '이름', width: '180px' },
-  태그: { type: 'tags', label: '태그', width: '200px' },
-  '사진 첨부': { type: 'imageUrl', label: '사진 첨부', width: '120px' },
-  입금대상: { type: 'target', label: '입금 대상', width: '100px' },
-  감사장: { type: 'contact', label: '연락처', width: '220px' },
+  '입출금 분류': {
+    type: 'type',
+    label: '입출금 분류',
+    element: 'select',
+    width: '120px',
+    required: true,
+    options: ['입금', '출금'],
+  },
+  '입출금 내역명': {
+    type: 'history',
+    label: '입출금 내역명',
+    element: 'text',
+    width: '180px',
+    required: true,
+  },
+  금액: {
+    type: 'price',
+    label: '금액',
+    element: 'select',
+    width: '120px',
+    required: true,
+    options: ['50000', '100000', '150000'],
+  },
+  이름: {
+    type: 'name',
+    label: '이름',
+    element: 'text',
+    width: '120px',
+  },
+  태그: {
+    type: 'tags',
+    label: '태그',
+    element: 'tagSelect',
+    width: '250px',
+  },
+  '사진 첨부': {
+    type: 'imageUrl',
+    label: '사진 첨부',
+    element: 'file',
+    width: '120px',
+  },
+  입금대상: {
+    type: 'target',
+    label: '입금 대상',
+    element: 'select',
+    width: '120px',
+  },
+  감사장: {
+    type: 'contact',
+    label: '연락처',
+    element: 'text',
+    width: '230px',
+  },
 };
 
 export const getRecordGridTemplate = (mode: string, items: string[]) => {
