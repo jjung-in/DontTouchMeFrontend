@@ -4,13 +4,14 @@ import { TCreateRecordRequest, TRecordItem, TUpdateRecordRequest } from '@_types
 import * as S from './RecordForm.styles';
 import required from '@_assets/images/required.png';
 import CustomSelect from '@_components/Select/CustomSelect/CustomSelect';
-import { downloadExcelTemplate } from '@_api/excel';
+import { downloadExcelTemplate, importExcelFile } from '@_api/excel';
 import { downloadBlobFile } from '@_utils/downloadFile';
 import { formatNumber, getRecordGridTemplate, recordFieldConfig, recordReadConfig } from '@_utils/records';
 import React, { useState } from 'react';
 import { useDeleteRecord, useUpdateRecord } from '@_hooks/useRecords';
 import AlertModal from '@_components/Modal/AlertModal/AlertModal';
 import TagSelect from '@_components/Select/TagSelect/TagSelect';
+import { isExcelFile } from '@_utils/excel';
 
 interface Props {
   mode: 'create' | 'update' | 'read';
@@ -101,6 +102,29 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
       downloadBlobFile(blob, 'PAYble_template.xlsx');
     } catch {
       alert('엑셀 다운로드 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleExcelImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+
+    if (!selectedFile) return;
+
+    if (!isExcelFile(selectedFile)) {
+      alert('엑셀 파일만 업로드할 수 있습니다.');
+      e.target.value = '';
+      return;
+    }
+
+    try {
+      await importExcelFile(eventId, selectedFile);
+      alert('엑셀 데이터가 성공적으로 업로드되었습니다!');
+      navigate(`/events/${eventId}/records`);
+    } catch (error) {
+      alert('엑셀 업로드 중 오류가 발생했습니다.');
+      console.error(error);
+    } finally {
+      e.target.value = '';
     }
   };
 
@@ -377,9 +401,18 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
           <S.Button onClick={handleDownloadExcel} $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
             엑셀 양식 다운로드
           </S.Button>
-          <S.Button $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
-            엑셀 업로드
-          </S.Button>
+          <label htmlFor="excel-upload">
+            <S.ImportButton $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
+              엑셀 업로드
+            </S.ImportButton>
+          </label>
+          <input
+            type="file"
+            id="excel-upload"
+            accept=".xls,.xlsx"
+            onChange={handleExcelImport}
+            style={{ display: 'none' }}
+          />
           <S.Button onClick={handleSubmit} $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
             저장
           </S.Button>

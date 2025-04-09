@@ -81,3 +81,9 @@ export const Button = styled.button<ButtonProps>`
 export const LinkButton = styled(Link)<ButtonProps>`
   ${BaseButtonStyle}
 `;
+
+export const ImportButton = styled.span<ButtonProps>`
+  ${BaseButtonStyle}
+  display: inline-block;
+  cursor: pointer;
+`;
