@@ -39,4 +39,10 @@ export const GlobalStyle = createGlobalStyle`
     border: none;
     outline: none;
   }
+
+  main {
+    min-height: 100vh;
+    padding-top: 250px;
+    padding-bottom: 120px;
+  }
 `;
