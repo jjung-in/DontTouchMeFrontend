@@ -78,14 +78,14 @@ const CustomSelect = ({ options, value, onChange, isInput, isPrice, isShowArrow 
       case 'ArrowDown':
         e.preventDefault();
         setHoveredIndex((prev) => {
-          const next = prev === null ? 0 : (prev + 1) % options.length;
+          const next = prev === null ? 0 : prev + 1 === options.length ? prev : prev + 1;
           return next;
         });
         break;
       case 'ArrowUp':
         e.preventDefault();
         setHoveredIndex((prev) => {
-          const next = prev === null ? options.length - 1 : (prev - 1 + options.length) % options.length;
+          const next = prev === null || prev === 0 ? prev : prev - 1;
           return next;
         });
         break;
@@ -96,6 +96,7 @@ const CustomSelect = ({ options, value, onChange, isInput, isPrice, isShowArrow 
           setIsOpen(false);
         }
         break;
+      case 'Tab':
       case 'Escape':
         handleClose();
         break;

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import arrow from '@_assets/icons/arrow-down.png';
 
 export const Container = styled.div`
   position: relative;
@@ -7,23 +6,34 @@ export const Container = styled.div`
   height: 100%;
 `;
 
-export const Input = styled.input<{ $isShowArrow?: boolean }>`
+export const SelectBox = styled.div<{ $focused: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: 10px 7px;
   width: 100%;
   height: 100%;
-  padding: 0 15px;
+  padding: 0 14px;
   border: 1px solid #cbd2e0;
   border-radius: 6px;
-  background-repeat: no-repeat;
-  background-position: right 15px center;
-  ${(props) => props.$isShowArrow && `background-image: url(${arrow}); cursor: default;`}
-
-  &::-webkit-inner-spin-button,
-  &::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-  }
+  background-color: #ffffff;
+  overflow-x: auto;
+  ${(props) => props.$focused && `border-color: #000000;`}
 
   &:focus {
-    border-color: #000000;
+    outline: none;
+    border: 1px solid #000000;
+  }
+
+  &::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #cbd2e0;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #e4f0fa;
   }
 `;
 
@@ -31,7 +41,7 @@ export const Dropdown = styled.ul`
   position: absolute;
   top: calc(100% + 2px);
   left: 0;
-  min-width: 110px;
+  width: 100%;
   padding: 5px;
   border: 1px solid #cbd2e0;
   border-radius: 6px;
