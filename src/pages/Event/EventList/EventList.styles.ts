@@ -6,7 +6,6 @@ export const Main = styled.main<{ $isEmpty?: boolean }>`
   flex-direction: column;
   justify-content: ${({ $isEmpty }) => ($isEmpty ? 'center' : 'flex-start')};
   align-items: center;
-  min-height: calc(100vh - 16px);
 `;
 
 export const Title = styled.h2`
@@ -25,13 +24,12 @@ export const CardSection = styled.div`
   width: 100%;
   background-color: #e4f0fa;
   padding: 100px 0;
-  margin-bottom: 100px;
 `;
 
 export const CardList = styled.div`
   flex: 1;
   display: grid;
-  grid-template-columns: repeat(3, 383px);
+  grid-template-columns: repeat(3, 324px);
   justify-content: center;
   gap: 50px 60px;
 `;
@@ -39,7 +37,7 @@ export const CardList = styled.div`
 export const Card = styled.div`
   position: relative;
   width: 100%;
-  height: 472px;
+  height: 400px;
   border-radius: 10px;
   background-color: white;
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
@@ -52,7 +50,7 @@ export const ImageSection = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 250px;
+  height: 210px;
   overflow: hidden;
   background-color: #f1f3f7;
 `;
@@ -122,14 +120,14 @@ export const StatusBadge = styled.span<{ $status: '예정' | '진행중' | '완�
 
 export const CardTitle = styled.p`
   padding-bottom: 15px;
-  font-size: 30px;
+  font-size: 24px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `;
 
 export const CardDate = styled.p`
-  font-size: 24px;
+  font-size: 18px;
   color: #9d9d9d;
 `;
 
