@@ -189,7 +189,7 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                               options={(type === 'target' ? ['', ...event.targets] : config.options) || []}
                               value={typeof value === 'string' || typeof value === 'number' ? value : ''}
                               onChange={(val) => handleUpdateChange(type, val.toString())}
-                              isShowArrow={true}
+                              isShowArrow={type === 'type' || type === 'target'}
                               isInput={type === 'price' && true}
                               isPrice={type === 'price' && true}
                             />
@@ -316,7 +316,7 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                             options={(type === 'target' ? ['', ...event.targets] : config.options) || []}
                             value={typeof value === 'string' ? value : ''}
                             onChange={(val) => handleChange?.(rowId, type, val)}
-                            isShowArrow={type === 'type' || (type === 'target' && true)}
+                            isShowArrow={type === 'type' || type === 'target'}
                             isInput={type === 'price' && true}
                             isPrice={type === 'price' && true}
                           />
