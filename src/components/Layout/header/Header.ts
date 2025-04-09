@@ -41,6 +41,11 @@ export const NavLink = styled(Link)`
   color: #6d758f;
 `;
 
+export const AnchorLink = styled.a`
+  font-size: 24px;
+  color: #6d758f;
+`;
+
 export const CreateLink = styled(Link)`
   padding: 18px 20px;
   font-size: 20px;

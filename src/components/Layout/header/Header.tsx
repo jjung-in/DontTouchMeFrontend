@@ -11,7 +11,13 @@ const Header = () => {
           <img src={textLogo} alt="PAYble 텍스트 로고" />
         </S.Logo>
         <S.Nav>
-          <S.NavLink to="/about">About</S.NavLink>
+          <S.AnchorLink
+            href="https://sleet-literature-5ab.notion.site/PAYble-1c4b4128bae2808ba3ace5b11679a509"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            About
+          </S.AnchorLink>
           <S.NavLink to="/events">Event</S.NavLink>
           {/* <S.LoginLink to="/login">Login</S.LoginLink> */}
           <S.LogoutButton>Logout</S.LogoutButton>
