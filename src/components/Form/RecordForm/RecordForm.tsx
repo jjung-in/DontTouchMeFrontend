@@ -4,8 +4,8 @@ import { TCreateRecordRequest, TRecordItem, TUpdateRecordRequest } from '@_types
 import * as S from './RecordForm.styles';
 import required from '@_assets/images/required.png';
 import CustomSelect from '@_components/Select/CustomSelect/CustomSelect';
-import { downloadExcelTemplate, importExcelFile } from '@_api/excel';
-import { downloadBlobFile } from '@_utils/downloadFile';
+import { downloadExcelTemplate, exportExcelFile, importExcelFile } from '@_api/excel';
+import { downloadBlobFile } from '@_utils/excel.ts';
 import { formatNumber, getRecordGridTemplate, recordFieldConfig, recordReadConfig } from '@_utils/records';
 import React, { useState } from 'react';
 import { useDeleteRecord, useUpdateRecord } from '@_hooks/useRecords';
@@ -125,6 +125,16 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
       console.error(error);
     } finally {
       e.target.value = '';
+    }
+  };
+
+  const handleExcelExport = async () => {
+    try {
+      const data = await exportExcelFile(eventId);
+      const blob = new Blob([data], { type: 'application/vnd.ms-excel' });
+      downloadBlobFile(blob, `PAYble_${eventId}.xlsx`);
+    } catch {
+      alert('엑셀 다운로드 중 오류가 발생했습니다.');
     }
   };
 
@@ -385,7 +395,7 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
           >
             수정
           </S.LinkButton>
-          <S.Button $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
+          <S.Button onClick={handleExcelExport} $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
             엑셀 다운로드
           </S.Button>
           <S.LinkButton to={`/events/${eventId}/card`} $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">

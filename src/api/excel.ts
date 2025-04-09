@@ -21,3 +21,11 @@ export const importExcelFile = async (eventId: number, file: File) => {
 
   return data;
 };
+
+export const exportExcelFile = async (eventId: number) => {
+  const { data } = await instance.get('/excel', {
+    params: { eventId },
+    responseType: 'blob',
+  });
+  return data;
+};
