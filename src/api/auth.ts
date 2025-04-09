@@ -1,4 +1,4 @@
-import { LogInProps, LogInResponse, SignUpProps, SignUpResponse } from '@_types/auth.type';
+import { LogInProps, LogInResponse, SignUpProps, SignUpResponse, EmailVerifyResponse, SendEmailVerifyResponse } from '@_types/auth.type';
 import { instance } from '@_api/interface';
 
 export const PostSignUp = async (signUpData: SignUpProps): Promise<SignUpResponse> => {
@@ -21,10 +21,10 @@ export const PostLogIn = async (loginData: LogInProps): Promise<LogInResponse> =
   }
 };
 
-export const EmailDuplicateCheck = async (Email: string): Promise<boolean> => {
+export const EmailDuplicateCheck = async (email: string): Promise<boolean> => {
   try {
     const { data } = await instance.get('./member/check-email-duplicate', {
-      params: { email: Email },
+      params: { email: email },
     });
     return data;
   } catch (error) {
@@ -33,9 +33,9 @@ export const EmailDuplicateCheck = async (Email: string): Promise<boolean> => {
   }
 };
 
-export const GetTemporaryPassword = async (Email: string): Promise<string> => {
+export const GetTemporaryPassword = async (email: string): Promise<string> => {
   try {
-    const { data } = await instance.post('./member/issue-temp-password', Email);
+    const { data } = await instance.post('./member/issue-temp-password', email);
     return data;
   } catch (error) {
     console.error('TemporaryPassword Error', error);
@@ -43,17 +43,19 @@ export const GetTemporaryPassword = async (Email: string): Promise<string> => {
   }
 };
 
-export const SendAuthNumber = async (Email: string): Promise<string> => {
+export const SendAuthNumber = async (email: string): Promise<SendEmailVerifyResponse> => {
   try {
-    const { data } = await instance.post('./mail/send-verification', Email);
+    const { data } = await instance.post('./mail/send-verification', {
+      email: email,
+    });
     return data;
   } catch (error) {
     console.error('SendAuthenticationNumber Error', error);
-    throw new Error('인증번호 전송 오류');
+    throw new Error('인증번호 발급 오류');
   }
 };
 
-export const CheckAuthNumber = async (Email: string, number: string): Promise<string> => {
+export const CheckAuthNumber = async (Email: string, number: string): Promise<EmailVerifyResponse> => {
   try {
     const { data } = await instance.post('./mail/verify', { email, number });
     return data;
