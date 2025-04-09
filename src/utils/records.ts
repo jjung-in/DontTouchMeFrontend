@@ -53,7 +53,7 @@ export const recordReadConfig: Record<string, TRecordReadConfig> = {
     width: '250px',
   },
   '사진 첨부': {
-    type: 'image',
+    type: 'imageUrl',
     label: '사진 첨부',
     element: 'file',
     width: '120px',
