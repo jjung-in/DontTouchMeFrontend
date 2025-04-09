@@ -1,19 +1,17 @@
 import styled from 'styled-components';
 
-export const BottomBar = styled.footer`
-  border-top: 1px solid #e1e4ed;
-  margin: 0 auto;
+export const FooterWrapper = styled.footer`
   width: 100%;
-  height: 22px;
-  padding: 24px 0px;
-  position: fixed;
-  bottom: 0;
+  height: 60px;
+  min-width: 1024px;
+`;
 
-  font-family: 'Inter';
-  font-style: normal;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 22px;
-  text-align: center;
+export const FooterInner = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
   color: #b4b9c9;
+  background-color: #ffffff;
 `;
