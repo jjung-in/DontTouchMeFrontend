@@ -43,7 +43,7 @@ export const useUpdateEvent = (eventId: number) => {
     mutationFn: updateEvent,
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['events', eventId],
+        queryKey: ['events', 'detail', eventId],
       });
     },
     onError: (error) => {

@@ -1,6 +1,6 @@
 import { uploadImage } from '@_api/image';
 import { getGeocode } from '@_api/map';
-import EventForm from '@_components/EventForm/EventForm';
+import EventForm from '@_components/Form/EventForm/EventForm';
 import { useCreateEvent } from '@_hooks/useEvents';
 import { TCreateEventRequest } from '@_types/events.type';
 import { isImageFile } from '@_utils/image';

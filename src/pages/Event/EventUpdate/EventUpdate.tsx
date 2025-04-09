@@ -6,7 +6,7 @@ import { TUpdateEventRequest } from '@_types/events.type';
 import { isImageFile } from '@_utils/image';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import EventForm from '@_components/EventForm/EventForm';
+import EventForm from '@_components/Form/EventForm/EventForm';
 import Spinner from '@_components/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
 
