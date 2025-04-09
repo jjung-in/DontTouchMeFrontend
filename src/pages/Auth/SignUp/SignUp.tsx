@@ -1,51 +1,32 @@
-import { useState, useEffect } from 'react';
-import { SignUpProps } from '@_types/auth.type';
-import { useSignUp, useEmailDuplicateCheck, useCheckAuthNumber } from '@_hooks/useAuth';
+import { useEffect } from 'react';
+import { useSignUpFlow } from '@_hooks/useAuth';
 
 const SignUp = () => {
-  const [FormData, setFormData] = useState<SignUpProps>({
-    name: '',
-    email: '',
-    password: '',
-    contact: '',
-    verificationCode: '',
-  });
+  const {
+    FormData,
+    setFormData,
+    EmailNumber,
+    setEmailNumber,
+    emailMutation,
+    authNumberMutation,
+    handleSignUp,
+  } = useSignUpFlow();
 
-  const { mutate: signUp } = useSignUp();
-  const { mutate } = useEmailDuplicateCheck();
-
-  const HandleSignUp = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!FormData.email || !FormData.password || !FormData.contact || !FormData.name) {
-      console.log('모든 필드를 채워주세요.');
-      return;
-    }
-    if (FormData.password !== FormData.confirmPassword) {
-      console.log('비밀번호가 일치하지 않습니다.');
-      return;
-    }
-    signUp(
-      {
-        name: FormData.name,
-        email: FormData.email,
-        password: FormData.password,
-        contact: FormData.contact,
-      },
-      {
-        onSuccess: () => {
-          console.log('회원가입 성공');
-        },
-      },
-    );
-  };
-
-  const emailChack = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const emailCheck = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (!FormData.email) {
       console.log('이메일을 입력해주세요.');
     } else {
-      mutate(FormData.email);
+      emailMutation.mutate(FormData.email);
+    }
+  };
+
+  const handleVerifyCode = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (!FormData.verificationCode) {
+      console.log('인증번호를 입력해주세요.');
+    } else {
+      authNumberMutation.mutate(EmailNumber);
     }
   };
 
@@ -83,14 +64,16 @@ const SignUp = () => {
             autoComplete="email"
             onChange={(e) => setFormData({ ...FormData, email: e.target.value })}
           />
-          <button onClick={emailChack}>인증</button>
+          <button onClick={emailCheck}>인증</button>
         </span>
 
         <input
-          type="mailcode"
+          type="text"
           placeholder="인증번호를 입력하세요"
-          // value=
+          value={EmailNumber.verificationCode}
+          onChange={(e) => setEmailNumber({ ...EmailNumber, verificationCode: e.target.value })}
         />
+        <button onClick={handleVerifyCode}>인증번호 확인</button>
 
         <input
           type="password"
@@ -115,7 +98,7 @@ const SignUp = () => {
           onChange={(e) => setFormData({ ...FormData, contact: e.target.value })}
         />
 
-        <button onClick={HandleSignUp}>회원가입</button>
+        <button onClick={handleSignUp}>회원가입</button>
       </form>
     </div>
   );
