@@ -3,7 +3,7 @@ export interface SignUpProps {
   email: string;
   password: string;
   contact: string;
-  verificationCode: string;
+  confirmPassword: string;
 }
 
 export interface SignUpResponse {
