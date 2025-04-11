@@ -59,6 +59,13 @@ export const useSignUpFlow = () => {
     },
   });
 
+  useEffect(() => {
+    setEmailNumber(prevState => ({
+      ...prevState,
+      email: FormData.email,
+    }));
+  }, [FormData.email]);
+
   // 인증번호 확인
   const authNumberMutation = useMutation({
     mutationFn: CheckAuthNumber,
