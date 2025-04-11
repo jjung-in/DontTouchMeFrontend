@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { PostSignUp, EmailDuplicateCheck, SendAuthNumber, CheckAuthNumber } from '@_api/auth';
 import { SignUpProps, EmailVerifyRequest } from '@_types/auth.type';
@@ -25,7 +25,7 @@ export const useSignUpFlow = () => {
     email: '',
     password: '',
     contact: '',
-    verificationCode: '',
+    confirmPassword: '',
   });
 
   const [EmailNumber, setEmailNumber] = useState<EmailVerifyRequest>({
@@ -97,7 +97,7 @@ export const useSignUpFlow = () => {
       console.log('비밀번호가 일치하지 않습니다.');
       return;
     }
-    if (!FormData.verificationCode) {
+    if (!EmailNumber.verificationCode) {
       console.log('인증번호를 입력해주세요.');
       return;
     }
