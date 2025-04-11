@@ -63,13 +63,12 @@ export const useSignUpFlow = () => {
   const authNumberMutation = useMutation({
     mutationFn: CheckAuthNumber,
     onSuccess: (result) => {
-      if (result.message === '인증번호가 일치합니다.') {
+      if (result.message == "인증이 완료 되었습니다.") {
         console.log('인증번호가 일치합니다.');
-      } else {
-        console.log('인증번호가 일치하지 않습니다.', result);
       }
     },
     onError: (error) => {
+      console.log('인증번호 확인 success', result);
       console.error('인증번호 확인 Error', error);
     },
   });
