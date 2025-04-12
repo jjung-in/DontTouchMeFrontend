@@ -15,7 +15,7 @@ export const PostSignUp = async (signUpData: SignUpProps): Promise<SignUpRespons
   } catch (error) {
     if (error.response) {
       if (error.response.status == 400) {
-        console.log('이미 가입된 계정입니다')
+        console.log('이미 가입된 계정입니다');
       }
     } else {
       console.error('SignUp Error', error);
@@ -68,13 +68,12 @@ export const SendAuthNumber = async (email: string): Promise<SendEmailVerifyResp
   }
 };
 
-export const CheckAuthNumber = async ( verify : string ): Promise<EmailVerifyResponse> => {
+export const CheckAuthNumber = async (verify: string): Promise<EmailVerifyResponse> => {
   try {
-    const { data } = await instance.post('./mail/verify',
-      {
-        email: verify.email,
-        verificationCode: verify.verificationCode,
-      });
+    const { data } = await instance.post('./mail/verify', {
+      email: verify.email,
+      verificationCode: verify.verificationCode,
+    });
     return data;
   } catch (error) {
     if (error.response) {

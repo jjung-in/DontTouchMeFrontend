@@ -60,7 +60,7 @@ export const useSignUpFlow = () => {
   });
 
   useEffect(() => {
-    setEmailNumber(prevState => ({
+    setEmailNumber((prevState) => ({
       ...prevState,
       email: FormData.email,
     }));
@@ -70,7 +70,7 @@ export const useSignUpFlow = () => {
   const authNumberMutation = useMutation({
     mutationFn: CheckAuthNumber,
     onSuccess: (result) => {
-      if (result.message == "인증이 완료 되었습니다.") {
+      if (result.message == '인증이 완료 되었습니다.') {
         console.log('인증번호가 일치합니다.');
       }
     },
