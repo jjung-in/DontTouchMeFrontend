@@ -23,7 +23,7 @@ const SignUp = () => {
 
   const handleVerifyCode = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    if (!FormData.verificationCode) {
+    if (!EmailNumber.verificationCode) {
       console.log('인증번호를 입력해주세요.');
     } else {
       authNumberMutation.mutate(EmailNumber);
@@ -31,18 +31,21 @@ const SignUp = () => {
   };
 
   useEffect(() => {
-    const HyphenPhoneNumber = FormData.contact;
+    let contact = FormData.contact.replace(/[^0-9]/g, '');
+    if (contact.length > 11) contact = contact.slice(0, 11);
 
-      setFormData((prevData) => ({
-        ...prevData,
-        contact: HyphenPhoneNumber.replace(/(\d{3})(\d{1})/, '$1-$2'),
-      }));
-    } else if (HyphenPhoneNumber.length === 9) {
-      setFormData((prevData) => ({
-        ...prevData,
-        contact: HyphenPhoneNumber.replace(/-/g, '').replace(/(\d{3})(\d{4})(\d{1})/, '$1-$2-$3'),
-      }));
+    if (contact.length <= 3) {
+      contact = FormData.contact;
+    } else if (contact.length <= 7) {
+      contact = `${contact.slice(0, 3)}-${contact.slice(3)}`;
+    } else if (contact.length <= 11) {
+      contact = `${contact.slice(0, 3)}-${contact.slice(3, 7)}-${contact.slice(7, 11)}`;
     }
+
+    setFormData((prevData) => ({
+      ...prevData,
+      contact,
+    }));
   }, [FormData.contact]);
 
   return (
@@ -94,7 +97,10 @@ const SignUp = () => {
           type="tel"
           placeholder="전화번호를 입력하세요"
           value={FormData.contact}
-          onChange={(e) => setFormData({ ...FormData, contact: e.target.value })}
+          onInput={(e) => {
+            const value = e.target.value.replace(/[^0-9]/g, '');
+            setFormData({ ...FormData, contact: value });
+          }}
         />
 
         <button onClick={handleSignUp}>회원가입</button>
