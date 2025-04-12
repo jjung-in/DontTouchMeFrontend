@@ -33,7 +33,6 @@ const SignUp = () => {
   useEffect(() => {
     const HyphenPhoneNumber = FormData.contact;
 
-    if (HyphenPhoneNumber.length === 4) {
       setFormData((prevData) => ({
         ...prevData,
         contact: HyphenPhoneNumber.replace(/(\d{3})(\d{1})/, '$1-$2'),
