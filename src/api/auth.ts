@@ -61,9 +61,13 @@ export const SendAuthNumber = async (email: string): Promise<SendEmailVerifyResp
   }
 };
 
-export const CheckAuthNumber = async (Email: string, number: string): Promise<EmailVerifyResponse> => {
+export const CheckAuthNumber = async ( verify : string ): Promise<EmailVerifyResponse> => {
   try {
-    const { data } = await instance.post('./mail/verify', { email, number });
+    const { data } = await instance.post('./mail/verify',
+      {
+        email: verify.email,
+        verificationCode: verify.verificationCode,
+      });
     return data;
   } catch (error) {
     if (error.response) {
