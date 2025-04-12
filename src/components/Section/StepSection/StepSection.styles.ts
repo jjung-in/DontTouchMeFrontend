@@ -118,7 +118,7 @@ export const LinkButton = styled(Link)`
   background-color: #3959a5;
   box-shadow: inset 6px 6px 50px #5db3ff;
 
-  &:hover img {
-    animation: ${pulse} 1.5s ease-in-out infinite;
+  img {
+    animation: ${pulse} 2s ease-in-out infinite;
   }
 `;
