@@ -13,7 +13,7 @@ export const Section = styled.section`
   background-color: #ffffff;
 `;
 
-export const TextBlock = styled.p`
+export const Title = styled.p`
   font-size: 48px;
   font-weight: 700;
   line-height: 1.5;

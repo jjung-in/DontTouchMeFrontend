@@ -11,7 +11,7 @@ interface Props {
   delay?: number;
 }
 
-const FadeIn = ({ children, delay = 0 }: Props) => {
+const FadeInUp = ({ children, delay = 0 }: Props) => {
   const { observerRef, visible } = useIntersectionObserver(0.8, true);
 
   return (
@@ -21,4 +21,4 @@ const FadeIn = ({ children, delay = 0 }: Props) => {
   );
 };
 
-export default FadeIn;
+export default FadeInUp;

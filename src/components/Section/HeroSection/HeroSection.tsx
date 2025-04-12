@@ -9,11 +9,11 @@ const HeroSection = () => {
   return (
     <S.Section>
       <FadeInUp>
-        <S.TextBlock>
+        <S.Title>
           번거로운 비용정산?
           <br />
           <S.HighlightText>한 번의 클릭</S.HighlightText>으로 끝!
-        </S.TextBlock>
+        </S.Title>
       </FadeInUp>
       <S.FloatingGroup>
         <Floating>

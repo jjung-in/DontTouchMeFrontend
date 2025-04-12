@@ -10,7 +10,7 @@ export const Section = styled.section`
   background-color: #e4f0fa;
 `;
 
-export const TextBlock = styled.p`
+export const Title = styled.p`
   font-size: 48px;
 `;
 
