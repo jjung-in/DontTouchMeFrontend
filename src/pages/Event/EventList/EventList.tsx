@@ -1,46 +1,31 @@
 import { useEventList } from '@_hooks/useEvents';
-import { useEffect, useRef } from 'react';
-import noimage from '@_assets/images/noimage.png';
+import { useIntersectionObserver } from '@_hooks/observer/useIntersectionObserver';
+import { getEventStatus } from '@_utils/events';
 import * as S from './EventList.styles';
 import Spinner from '@_components/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
-import { getEventStatus } from '@_utils/events';
+import noimage from '@_assets/images/noimage.png';
 
 const EventList = () => {
   const memberId = 1;
   const pageSize = 9;
-
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useEventList(memberId, pageSize);
   const events = data?.pages.flatMap((page) => page.events) || [];
-  const observerRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const target = observerRef.current;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
-        }
-      },
-      { threshold: 1.0 },
-    );
-
-    if (target) observer.observe(target);
-
-    return () => {
-      if (target) observer.unobserve(target);
-    };
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+  const { observerRef } = useIntersectionObserver({
+    onIntersect: () => {
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+    threshold: 0.1,
+  });
 
   return (
-    <>
+    <S.Main $isEmpty={isLoading ? true : false}>
       {isLoading ? (
-        <S.Main $isEmpty>
-          <Spinner />
-        </S.Main>
+        <Spinner />
       ) : (
-        <S.Main>
+        <>
           <S.Title>
             <S.BlueText>이벤트</S.BlueText> 목록
           </S.Title>
@@ -48,10 +33,10 @@ const EventList = () => {
           {events.length > 0 ? (
             <S.CardSection>
               <S.CardList>
-                {events.map((event, index) => {
+                {events.map((event) => {
                   const status = getEventStatus(event.eventDate);
                   return (
-                    <div key={event.eventId} ref={index === events.length - 1 ? observerRef : null}>
+                    <div key={event.eventId}>
                       <S.Card>
                         <S.ImageSection>
                           {event.thumbnailUrl ? <S.CardImage src={event.thumbnailUrl} /> : <S.NoImage src={noimage} />}
@@ -85,9 +70,10 @@ const EventList = () => {
               <EmptyState message="등록된 이벤트가 없습니다." />
             </S.EmptyBox>
           )}
-        </S.Main>
+        </>
       )}
-    </>
+      <div ref={observerRef} style={{ height: 1 }} />
+    </S.Main>
   );
 };
 
