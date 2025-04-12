@@ -1,4 +1,11 @@
-import { LogInProps, LogInResponse, SignUpProps, SignUpResponse, EmailVerifyResponse, SendEmailVerifyResponse } from '@_types/auth.type';
+import {
+  LogInProps,
+  LogInResponse,
+  SignUpProps,
+  SignUpResponse,
+  EmailVerifyResponse,
+  SendEmailVerifyResponse,
+} from '@_types/auth.type';
 import { instance } from '@_api/interface';
 
 export const PostSignUp = async (signUpData: SignUpProps): Promise<SignUpResponse> => {
