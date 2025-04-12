@@ -6,8 +6,14 @@ export const PostSignUp = async (signUpData: SignUpProps): Promise<SignUpRespons
     const { data } = await instance.post(`/member/sign-up`, signUpData);
     return data;
   } catch (error) {
-    console.error('SignUp Error', error);
-    throw new Error('회원가입 오류');
+    if (error.response) {
+      if (error.response.status == 400) {
+        console.log('이미 가입된 계정입니다')
+      }
+    } else {
+      console.error('SignUp Error', error);
+      throw new Error('회원가입 오류');
+    }
   }
 };
 
@@ -60,8 +66,14 @@ export const CheckAuthNumber = async (Email: string, number: string): Promise<Em
     const { data } = await instance.post('./mail/verify', { email, number });
     return data;
   } catch (error) {
-    console.error('CheckSendAuthenticationNumber Error', error);
-    throw new Error('인증번호 확인 오류');
+    if (error.response) {
+      if (error.response.status === 400) {
+        console.log('인증번호가 일치하지 않습니다.');
+      }
+    } else {
+      console.error('에러 응답:', error?.response?.data || error.message);
+      throw new Error('인증번호 확인 오류');
+    }
   }
 };
 
