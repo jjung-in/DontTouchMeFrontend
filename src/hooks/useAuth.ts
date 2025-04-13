@@ -99,10 +99,18 @@ export const useSignUpFlow = () => {
       console.log('모든 필드를 채워주세요.');
       return;
     }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    if (!passwordRegex.test(FormData.password)) {
+      console.log('비밀번호는 대소문자, 숫자, 특수문자를 포함한 8자 이상이어야 합니다.');
+      return;
+    }
+
     if (FormData.password !== FormData.confirmPassword) {
       console.log('비밀번호가 일치하지 않습니다.');
       return;
     }
+
     if (!EmailNumber.verificationCode) {
       console.log('인증번호를 입력해주세요.');
       return;
