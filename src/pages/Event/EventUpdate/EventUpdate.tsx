@@ -7,7 +7,7 @@ import { isImageFile } from '@_utils/image';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import EventForm from '@_components/Form/EventForm/EventForm';
-import Spinner from '@_components/Spinner/Spinner';
+import Spinner from '@_components/Common/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
 import { validateEventForm } from '@_utils/events';
 

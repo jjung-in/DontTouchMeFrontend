@@ -6,7 +6,7 @@ import required from '@_assets/images/required.png';
 import { useState } from 'react';
 import AddressModal from '@_components/Modal/AddressModal/AddressModal';
 import CustomDatePicker from '@_components/Common/CustomDatePicker/CustomDatePicker';
-import Switch from '@_components/Switch/Switch';
+import Switch from '@_components/Common/Switch/Switch';
 import TagInput from '@_components/Common/TagInput/TagInput';
 import Button from '@_components/Common/Button/Button';
 import { Link } from 'react-router-dom';

@@ -4,12 +4,11 @@ interface SwitchStyleProps {
   checked: boolean;
 }
 
-export const Container = styled.div<{ $checked: boolean }>`
+export const SwitchContainer = styled.div<{ $checked: boolean }>`
   width: 40px;
   height: 24px;
   border-radius: 9999px;
-  background-color: #ccc;
-  background-color: ${(props) => (props.$checked ? '#3959a5' : '#d9d9d9')};
+  background-color: ${({ theme, $checked }) => ($checked ? theme.color.primary[500] : theme.color.gray[100])};
   position: relative;
   cursor: pointer;
   transition: background-color 0.2s ease;
@@ -22,7 +21,7 @@ export const SwitchHandle = styled.div<SwitchStyleProps>`
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background-color: #ffffff;
+  background-color: ${({ theme }) => theme.color.primary[100]};
   transition: left 0.2s ease;
   box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
 `;

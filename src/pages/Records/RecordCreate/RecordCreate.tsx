@@ -4,7 +4,7 @@ import { TCreateRecordRequest } from '@_types/records.type';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as S from './RecordCreate.styles';
-import Spinner from '@_components/Spinner/Spinner';
+import Spinner from '@_components/Common/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
 import RecordForm from '@_components/Form/RecordForm/RecordForm';
 import Button from '@_components/Common/Button/Button';

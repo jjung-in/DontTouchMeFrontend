@@ -1,7 +1,7 @@
 import { useDeleteEvent, useEventDetail } from '@_hooks/useEvents';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as S from './EventDetail.styles';
-import Spinner from '@_components/Spinner/Spinner';
+import Spinner from '@_components/Common/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
 import EventForm from '@_components/Form/EventForm/EventForm';
 import { useState } from 'react';

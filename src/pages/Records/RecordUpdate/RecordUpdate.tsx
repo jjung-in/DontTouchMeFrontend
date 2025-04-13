@@ -3,7 +3,7 @@ import { useEventDetail } from '@_hooks/useEvents';
 import { useRecordList } from '@_hooks/useRecords';
 import { useIntersectionObserver } from '@_hooks/observer/useIntersectionObserver';
 import * as S from './RecordUpdate.styles';
-import { Spinner } from '@_components/Spinner/Spinner.styles';
+import { Spinner } from '@_components/Common/Spinner/Spinner.styles';
 import RecordForm from '@_components/Form/RecordForm/RecordForm';
 import EmptyState from '@_components/EmptyState/EmptyState';
 

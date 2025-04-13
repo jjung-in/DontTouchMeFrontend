@@ -2,7 +2,7 @@ import { useEventList } from '@_hooks/useEvents';
 import { useIntersectionObserver } from '@_hooks/observer/useIntersectionObserver';
 import { getEventStatus } from '@_utils/events';
 import * as S from './EventList.styles';
-import Spinner from '@_components/Spinner/Spinner';
+import Spinner from '@_components/Common/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
 import noimage from '@_assets/images/noimage.png';
 import Button from '@_components/Common/Button/Button';
