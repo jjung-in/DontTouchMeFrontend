@@ -9,9 +9,10 @@ interface Props {
   isInput?: boolean;
   isPrice?: boolean;
   isShowArrow?: boolean;
+  isError?: boolean;
 }
 
-const CustomSelect = ({ options, value, onChange, isInput, isPrice, isShowArrow }: Props) => {
+const CustomSelect = ({ options, value, onChange, isInput, isPrice, isShowArrow, isError }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const [inputValue, setInputValue] = useState('');
   const [isOpen, setIsOpen] = useState(false);
@@ -117,6 +118,7 @@ const CustomSelect = ({ options, value, onChange, isInput, isPrice, isShowArrow 
         onFocus={() => setIsOpen(true)}
         onChange={handleChange}
         $isShowArrow={isShowArrow}
+        $isError={isError}
       ></S.Input>
       {isOpen && options.length > 0 && (
         <S.Dropdown>

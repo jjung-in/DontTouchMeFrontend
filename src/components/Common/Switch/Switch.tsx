@@ -7,9 +7,9 @@ interface Props {
 
 const Switch = ({ checked, onChange }: Props) => {
   return (
-    <S.Container onClick={() => onChange?.(!checked)} $checked={checked}>
+    <S.SwitchContainer onClick={() => onChange?.(!checked)} $checked={checked}>
       <S.SwitchHandle checked={checked} />
-    </S.Container>
+    </S.SwitchContainer>
   );
 };
 

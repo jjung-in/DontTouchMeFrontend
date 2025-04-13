@@ -1,6 +1,4 @@
-import { Link } from 'react-router-dom';
-import styled, { css } from 'styled-components';
-import arrow from '@_assets/icons/arrow-down.png';
+import styled from 'styled-components';
 
 export const Main = styled.main`
   display: flex;
@@ -87,36 +85,8 @@ export const Label = styled.label`
   font-size: 20px;
 `;
 
-const BaseFieldStyle = css`
-  padding: 15px;
-  border: 1px solid #d9d9d9;
-  border-radius: 5px;
-
-  &:focus {
-    border-color: #000000;
-  }
-`;
-
-export const Input = styled.input`
-  ${BaseFieldStyle}
-
-  &::placeholder {
-    color: #9d9d9d;
-  }
-`;
-
-export const NumberInput = styled.div`
+export const NumberInputWrapper = styled.div<{ $isError?: boolean }>`
   position: relative;
-
-  input {
-    ${BaseFieldStyle}
-    width: 100%;
-  }
-
-  input::-webkit-inner-spin-button,
-  input::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-  }
 
   &::after {
     position: absolute;
@@ -127,28 +97,9 @@ export const NumberInput = styled.div`
   }
 `;
 
-export const Select = styled.select`
-  ${BaseFieldStyle}
-  padding: 18px 15px;
-  appearance: none;
-  background-image: url(${arrow});
-  background-repeat: no-repeat;
-  background-position: right 15px center;
+export const ErrorText = styled.span`
+  color: #ff3a44;
 `;
-
-export const Text = styled.span`
-  ${BaseFieldStyle}
-  appearance: none;
-`;
-
-export const TextBox = styled.div`
-  ${BaseFieldStyle}
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-`;
-
-// Button Styles
 
 export const ButtonArea = styled.div`
   display: flex;
@@ -156,44 +107,7 @@ export const ButtonArea = styled.div`
   gap: 20px;
 `;
 
-interface ButtonProps {
-  $fontWeight?: string | number;
-  $textColor?: string;
-  $bgColor?: string;
-  $borderColor?: string;
-}
-
-const BaseButtonStyle = css<ButtonProps>`
-  padding: 15px 30px;
-  font-weight: ${(props) => props.$fontWeight || 600};
-  color: ${(props) => props.$textColor || 'inherit'};
-  background: ${(props) => props.$bgColor || 'white'};
-  border: ${(props) => props.$borderColor && `1px solid ${props.$borderColor}`};
-  border-radius: 6px;
-`;
-
-export const Button = styled.button<ButtonProps>`
-  ${BaseButtonStyle}
-`;
-
-export const LinkButton = styled(Link)<ButtonProps>`
-  ${BaseButtonStyle}
-`;
-
-export const FileButton = styled.div<ButtonProps>`
-  ${BaseButtonStyle}
-  cursor: pointer;
-`;
-
 // Detail Styles
-
-export const DetailBox = styled.div`
-  ${BaseFieldStyle}
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 15px 30px;
-`;
 
 export const DetailGroup = styled.div`
   display: flex;
@@ -209,18 +123,4 @@ export const DetailSwitchBox = styled.div`
 
 export const DetailText = styled.span<{ $readonly?: boolean }>`
   color: ${(props) => (props.$readonly ? '#9d9d9d' : 'inherit')};
-`;
-
-export const DetailInput = styled.input`
-  ${BaseFieldStyle}
-  width: 100%;
-  margin-top: 10px;
-`;
-
-export const DetailSelect = styled.select`
-  ${BaseFieldStyle}
-  appearance: none;
-  background-image: url(${arrow});
-  background-repeat: no-repeat;
-  background-position: right 15px center;
 `;

@@ -3,9 +3,11 @@ import { useRecordList } from '@_hooks/useRecords';
 import { useParams } from 'react-router-dom';
 import { useIntersectionObserver } from '@_hooks/observer/useIntersectionObserver';
 import * as S from './RecordList.styles';
-import Spinner from '@_components/Spinner/Spinner';
+import Spinner from '@_components/Common/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
 import RecordForm from '@_components/Form/RecordForm/RecordForm';
+import Button from '@_components/Common/Button/Button';
+import { Link } from 'react-router-dom';
 
 const RecordList = () => {
   const eventId = Number(useParams().eventId);
@@ -35,9 +37,9 @@ const RecordList = () => {
           ) : (
             <S.EmptyBox>
               <EmptyState message="등록된 내역이 없습니다." />
-              <S.LinkButton to={`/events/${eventId}`} $textColor="#3959a5" $borderColor="#3959a5">
+              <Button as={Link} to={`/events/${eventId}`} variant="secondary" fontWeight="semibold">
                 돌아가기
-              </S.LinkButton>
+              </Button>
             </S.EmptyBox>
           )}
         </>

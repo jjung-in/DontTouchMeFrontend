@@ -1,3 +1,4 @@
+import Button from '@_components/Common/Button/Button';
 import Modal from '../Modal';
 import * as S from './AlertModal.styles';
 
@@ -14,7 +15,9 @@ const AlertModal = ({ isOpen, onClose, title, message, onConfirm }: Props) => {
     <Modal isOpen={isOpen} onClose={onClose}>
       <S.Title>{title}</S.Title>
       <S.Message>{message}</S.Message>
-      <S.ConfirmButton onClick={onConfirm}>확인</S.ConfirmButton>
+      <Button onClick={onConfirm} variant="primary" fontWeight="semibold">
+        확인
+      </Button>
     </Modal>
   );
 };

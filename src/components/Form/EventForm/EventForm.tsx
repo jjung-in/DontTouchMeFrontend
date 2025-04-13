@@ -1,18 +1,22 @@
-import { TCreateEventRequest, TEventDetailResponse, TUpdateEventRequest } from '@_types/events.type';
+import { TCreateEventRequest, TEventDetailResponse, TFormErrors, TUpdateEventRequest } from '@_types/events.type';
 import { useParams } from 'react-router-dom';
 import * as S from './EventForm.styles';
 import noimage from '@_assets/images/noimage.png';
 import required from '@_assets/images/required.png';
 import { useState } from 'react';
 import AddressModal from '@_components/Modal/AddressModal/AddressModal';
-import CustomDatePicker from '@_components/CustomDatePicker/CustomDatePicker';
-import Switch from '@_components/Switch/Switch';
-import TagInput from '@_components/Tag/TagInput/TagInput';
+import CustomDatePicker from '@_components/Common/CustomDatePicker/CustomDatePicker';
+import Switch from '@_components/Common/Switch/Switch';
+import TagInput from '@_components/Common/TagInput/TagInput';
+import Button from '@_components/Common/Button/Button';
+import { Link } from 'react-router-dom';
+import Input from '@_components/Common/Input/Input';
 
 interface Props {
   mode: 'create' | 'update' | 'read';
   event?: TEventDetailResponse;
   formValues?: TCreateEventRequest | TUpdateEventRequest;
+  formErrors?: TFormErrors;
   thumbnailPreview?: string;
   handleSubmit?: () => void;
   handleDelete?: () => void;
@@ -34,6 +38,7 @@ const EventForm = ({
   mode,
   event,
   formValues,
+  formErrors,
   thumbnailPreview,
   handleSubmit,
   handleDelete,
@@ -76,20 +81,12 @@ const EventForm = ({
                   {thumbnailPreview ? <S.ThumbnailImage src={thumbnailPreview} /> : <S.NoImage src={noimage} />}
                 </S.Thumbnail>
                 {thumbnailPreview ? (
-                  <S.Button
-                    onClick={handleThumbnailReset}
-                    $fontWeight="normal"
-                    $textColor="#ffffff"
-                    $bgColor="#3959a5"
-                    $borderColor="#3959a5"
-                  >
+                  <Button onClick={handleThumbnailReset} variant="primary">
                     취소
-                  </S.Button>
+                  </Button>
                 ) : (
                   <label htmlFor="thumbnail">
-                    <S.FileButton $fontWeight="normal" $borderColor="#3959a5">
-                      사진 등록하기
-                    </S.FileButton>
+                    <Button as="p">사진 등록하기</Button>
                   </label>
                 )}
                 <input
@@ -109,16 +106,18 @@ const EventForm = ({
                 <img src={required} alt="필수 입력" />
               </S.Label>
               {mode === 'read' ? (
-                <S.Text>{event?.eventName}</S.Text>
+                <Input as="span">{event?.eventName}</Input>
               ) : (
-                <S.Input
+                <Input
                   type="text"
                   maxLength={100}
                   placeholder="이벤트명을 입력하세요."
                   value={formValues?.eventName}
                   onChange={(e) => handleChange?.('eventName', e.target.value)}
+                  state={formErrors?.eventName ? 'error' : 'default'}
                 />
               )}
+              {formErrors?.eventName && <S.ErrorText>{formErrors?.eventName}</S.ErrorText>}
             </S.FieldGroup>
             <S.FieldGroup>
               <S.Label>
@@ -126,25 +125,31 @@ const EventForm = ({
                 <img src={required} alt="필수 입력" />
               </S.Label>
               {mode === 'read' ? (
-                <S.Text>{event?.eventType}</S.Text>
+                <Input as="span">{event?.eventType}</Input>
               ) : (
                 <>
-                  <S.Select value={formValues?.eventType} onChange={(e) => handleChange?.('eventType', e.target.value)}>
+                  <Input
+                    as="select"
+                    value={formValues?.eventType}
+                    onChange={(e) => handleChange?.('eventType', e.target.value)}
+                  >
                     <option value="결혼식">결혼식</option>
                     <option value="장례식">장례식</option>
                     <option value="기타">기타</option>
-                  </S.Select>
+                  </Input>
                   {formValues?.eventType === '기타' && (
-                    <S.Input
+                    <Input
                       type="text"
                       maxLength={10}
                       placeholder="ex) 모임"
                       value={otherEventType}
                       onChange={(e) => setOtherEventType?.(e.target.value)}
+                      state={formErrors?.eventType ? 'error' : 'default'}
                     />
                   )}
                 </>
               )}
+              {formErrors?.eventName && <S.ErrorText>{formErrors?.eventType}</S.ErrorText>}
             </S.FieldGroup>
             <S.FieldGroup>
               <S.Label>
@@ -152,13 +157,15 @@ const EventForm = ({
                 <img src={required} alt="필수 입력" />
               </S.Label>
               {mode === 'read' ? (
-                <S.Text>{event?.eventDate}</S.Text>
+                <Input as="span">{event?.eventDate}</Input>
               ) : (
                 <CustomDatePicker
                   date={formValues?.eventDate || null}
                   onChange={(value) => handleChange?.('eventDate', value)}
+                  isError={!!formErrors?.eventDate || false}
                 />
               )}
+              {formErrors?.eventDate && <S.ErrorText>{formErrors?.eventDate}</S.ErrorText>}
             </S.FieldGroup>
             <S.FieldGroup>
               <S.Label>
@@ -166,10 +173,10 @@ const EventForm = ({
                 <img src={required} alt="필수 입력" />
               </S.Label>
               {mode === 'read' ? (
-                <S.Text>{event?.address}</S.Text>
+                <Input as="span">{event?.address}</Input>
               ) : (
                 <>
-                  <S.Input
+                  <Input
                     type="text"
                     placeholder="장소를 입력하세요."
                     readOnly
@@ -178,6 +185,7 @@ const EventForm = ({
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') setIsModalOpen(true);
                     }}
+                    state={formErrors?.address ? 'error' : 'default'}
                   />
                   <AddressModal
                     isOpen={isModalOpen}
@@ -186,34 +194,39 @@ const EventForm = ({
                   />
                 </>
               )}
+              {formErrors?.address && <S.ErrorText>{formErrors?.address}</S.ErrorText>}
             </S.FieldGroup>
             {mode === 'read' ? (
               event &&
               event.participants > 0 && (
                 <S.FieldGroup>
                   <S.Label>예상 인원</S.Label>
-                  <S.Text>{event?.participants}명</S.Text>
+                  <Input as="span">{event?.participants}명</Input>
                 </S.FieldGroup>
               )
             ) : (
               <S.FieldGroup>
                 <S.Label>예상 인원</S.Label>
-                <S.NumberInput>
-                  <input
+                <S.NumberInputWrapper>
+                  <Input
                     type="number"
                     min={1}
                     value={formValues?.participants || ''}
                     onChange={(e) => handleChange?.('participants', Number(e.target.value))}
+                    variant="number"
+                    fullWidth={true}
                   />
-                </S.NumberInput>
+                </S.NumberInputWrapper>
               </S.FieldGroup>
             )}
             <S.FieldGroup>
               <S.Label>입출금 항목</S.Label>
               {mode === 'read' ? (
-                <S.TextBox>{event?.eventInfoItems.map((item, index) => <span key={index}>{item}</span>)}</S.TextBox>
+                <Input as="div" variant="textbox">
+                  {event?.eventInfoItems.map((item, index) => <span key={index}>{item}</span>)}
+                </Input>
               ) : (
-                <S.DetailBox>
+                <Input as="div" variant="box">
                   <S.DetailGroup>
                     <S.DetailSwitchBox>
                       <S.DetailText $readonly={true}>입출금 분류</S.DetailText>
@@ -248,15 +261,19 @@ const EventForm = ({
                       <Switch checked={isTag || false} onChange={(checked) => setIsTag?.(checked)} />
                     </S.DetailSwitchBox>
                     {isTag && (
-                      <TagInput
-                        tags={formValues?.tags || []}
-                        setTags={(newTags) =>
-                          handleChange?.(
-                            'tags',
-                            typeof newTags === 'function' ? newTags(formValues?.tags || []) : newTags,
-                          )
-                        }
-                      />
+                      <>
+                        <TagInput
+                          tags={formValues?.tags || []}
+                          setTags={(newTags) =>
+                            handleChange?.(
+                              'tags',
+                              typeof newTags === 'function' ? newTags(formValues?.tags || []) : newTags,
+                            )
+                          }
+                          isError={!!formErrors?.tags || false}
+                        />
+                        {formErrors?.tags && <S.ErrorText>{formErrors?.tags}</S.ErrorText>}
+                      </>
                     )}
                   </S.DetailGroup>
                   <S.DetailGroup>
@@ -274,15 +291,19 @@ const EventForm = ({
                       <Switch checked={isTarget || false} onChange={(checked) => setIsTarget?.(checked)} />
                     </S.DetailSwitchBox>
                     {isTarget && (
-                      <TagInput
-                        tags={formValues?.targets || []}
-                        setTags={(newTargets) =>
-                          handleChange?.(
-                            'targets',
-                            typeof newTargets === 'function' ? newTargets(formValues?.targets || []) : newTargets,
-                          )
-                        }
-                      />
+                      <>
+                        <TagInput
+                          tags={formValues?.targets || []}
+                          setTags={(newTargets) =>
+                            handleChange?.(
+                              'targets',
+                              typeof newTargets === 'function' ? newTargets(formValues?.targets || []) : newTargets,
+                            )
+                          }
+                          isError={!!formErrors?.targets || false}
+                        />
+                        {formErrors?.targets && <S.ErrorText>{formErrors?.targets}</S.ErrorText>}
+                      </>
                     )}
                   </S.DetailGroup>
                   <S.DetailGroup>
@@ -294,16 +315,17 @@ const EventForm = ({
                       />
                     </S.DetailSwitchBox>
                     {formValues?.isSend && (
-                      <S.DetailSelect
+                      <Input
+                        as="select"
                         value={formValues?.sendType || undefined}
                         onChange={(e) => handleChange?.('sendType', e.target.value)}
                       >
                         <option value="EMAIL">이메일</option>
                         <option value="PHONE">문자</option>
-                      </S.DetailSelect>
+                      </Input>
                     )}
                   </S.DetailGroup>
-                </S.DetailBox>
+                </Input>
               )}
             </S.FieldGroup>
           </S.FieldSection>
@@ -311,49 +333,35 @@ const EventForm = ({
         <S.ButtonArea>
           {mode === 'read' ? (
             <>
-              <S.LinkButton to="/events" $textColor="#3959a5" $borderColor="#3959a5">
+              <Button as={Link} to="/events" variant="secondary" fontWeight="semibold">
                 이전
-              </S.LinkButton>
-              <S.LinkButton
-                to={`/events/${eventId}/update`}
-                $textColor="#ffffff"
-                $borderColor="#3959a5"
-                $bgColor="#3959a5"
-              >
+              </Button>
+              <Button as={Link} to={`/events/${eventId}/update`} variant="primary" fontWeight="semibold">
                 수정
-              </S.LinkButton>
-              <S.Button onClick={handleDelete} $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
+              </Button>
+              <Button onClick={handleDelete} variant="primary" fontWeight="semibold">
                 삭제
-              </S.Button>
-              <S.LinkButton
-                to={`/events/${eventId}/records/create`}
-                $textColor="#ffffff"
-                $borderColor="#3959a5"
-                $bgColor="#3959a5"
-              >
+              </Button>
+              <Button as={Link} to={`/events/${eventId}/records/create`} variant="primary" fontWeight="semibold">
                 입출금 내역 등록
-              </S.LinkButton>
-              <S.LinkButton
-                to={`/events/${eventId}/records`}
-                $textColor="#ffffff"
-                $borderColor="#3959a5"
-                $bgColor="#3959a5"
-              >
+              </Button>
+              <Button as={Link} to={`/events/${eventId}/records`} variant="primary" fontWeight="semibold">
                 입출금 내역 조회
-              </S.LinkButton>
+              </Button>
             </>
           ) : (
             <>
-              <S.LinkButton
+              <Button
+                as={Link}
                 to={mode === 'create' ? '/events' : `/events/${eventId}`}
-                $textColor="#3959a5"
-                $borderColor="#3959a5"
+                variant="secondary"
+                fontWeight="semibold"
               >
                 이전
-              </S.LinkButton>
-              <S.Button onClick={handleSubmit} $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
+              </Button>
+              <Button onClick={handleSubmit} variant="primary" fontWeight="semibold">
                 저장
-              </S.Button>
+              </Button>
             </>
           )}
         </S.ButtonArea>

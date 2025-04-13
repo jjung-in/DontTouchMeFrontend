@@ -1,5 +1,4 @@
-import { Link } from 'react-router-dom';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 export const Main = styled.main<{ $isEmpty?: boolean }>`
   display: flex;
@@ -20,24 +19,4 @@ export const Title = styled.h2`
 export const SubTitle = styled.p`
   margin-bottom: 70px;
   font-size: 20px;
-`;
-
-interface ButtonProps {
-  $fontWeight?: string | number;
-  $textColor?: string;
-  $bgColor?: string;
-  $borderColor?: string;
-}
-
-const BaseButtonStyle = css<ButtonProps>`
-  padding: 15px 30px;
-  font-weight: ${(props) => props.$fontWeight || 600};
-  color: ${(props) => props.$textColor || 'inherit'};
-  background: ${(props) => props.$bgColor || 'white'};
-  border: ${(props) => props.$borderColor && `1px solid ${props.$borderColor}`};
-  border-radius: 6px;
-`;
-
-export const LinkButton = styled(Link)<ButtonProps>`
-  ${BaseButtonStyle}
 `;

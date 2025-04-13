@@ -2,13 +2,14 @@ import { uploadImage } from '@_api/image';
 import { getGeocode } from '@_api/map';
 import * as S from './EventUpdate.styles';
 import { useEventDetail, useUpdateEvent } from '@_hooks/useEvents';
-import { TUpdateEventRequest } from '@_types/events.type';
+import { TFormErrors, TUpdateEventRequest } from '@_types/events.type';
 import { isImageFile } from '@_utils/image';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import EventForm from '@_components/Form/EventForm/EventForm';
-import Spinner from '@_components/Spinner/Spinner';
+import Spinner from '@_components/Common/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
+import { validateEventForm } from '@_utils/events';
 
 const EventUpdate = () => {
   const navigate = useNavigate();
@@ -42,6 +43,7 @@ const EventUpdate = () => {
     sendType: 'EMAIL',
     sendTypeValid: false,
   });
+  const [formErrors, setFormErrors] = useState<TFormErrors>({});
 
   useEffect(() => {
     if (data) {
@@ -80,6 +82,11 @@ const EventUpdate = () => {
 
   const handleChange = (key: keyof TUpdateEventRequest, value: string | number | boolean | string[] | null) => {
     setFormValues((prev) => ({ ...prev, [key]: value }));
+    setFormErrors((prevErrors) => {
+      if (!prevErrors[key]) return prevErrors;
+      const { [key]: _, ...rest } = prevErrors;
+      return rest;
+    });
   };
 
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,8 +112,9 @@ const EventUpdate = () => {
   };
 
   const handleSubmit = async () => {
-    // 유효성 검사
-    // if (!validateEventForm(formValues)) return;
+    const errors = validateEventForm(formValues, otherEventType, isTag, isTarget);
+    setFormErrors(errors);
+    if (Object.keys(errors).length > 0) return;
 
     let imageUrl = formValues.thumbnailUrl;
     if (thumbnail) {
@@ -135,8 +143,8 @@ const EventUpdate = () => {
           latitude,
           longitude,
           eventType: formValues.eventType === '기타' ? otherEventType : formValues.eventType,
-          tags: isTag ? formValues.tags : [],
-          targets: isTarget ? formValues.targets : [],
+          tags: isTag ? formValues.tags : null,
+          targets: isTarget ? formValues.targets : null,
           sendType: formValues.isSend ? formValues.sendType : null,
         },
       },
@@ -158,6 +166,7 @@ const EventUpdate = () => {
         <EventForm
           mode="update"
           formValues={formValues}
+          formErrors={formErrors}
           thumbnailPreview={thumbnailPreview}
           handleSubmit={handleSubmit}
           handleChange={handleChange}

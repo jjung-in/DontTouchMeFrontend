@@ -8,13 +8,14 @@ import * as S from './CustomDatePicker.styles';
 interface Props {
   date: string | null;
   onChange: (date: string) => void;
+  isError?: boolean;
 }
 
-const CustomDatePicker = ({ date, onChange }: Props) => {
+const CustomDatePicker = ({ date, onChange, isError }: Props) => {
   const parsedDate = date ? parseISO(date) : null;
 
   return (
-    <S.Wrapper>
+    <S.Wrapper $isError={isError}>
       <DatePicker
         locale={ko}
         selected={parsedDate}
@@ -26,7 +27,7 @@ const CustomDatePicker = ({ date, onChange }: Props) => {
           }
         }}
         dateFormat="yyyy-MM-dd"
-        placeholderText="일정을 선택해주세요."
+        placeholderText="일정을 선택하세요."
       />
       <S.Icon src={calendar} />
     </S.Wrapper>

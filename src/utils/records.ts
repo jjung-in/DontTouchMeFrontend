@@ -144,3 +144,43 @@ export const formatNumber = (value: number | string): string => {
   if (isNaN(num)) return String(value);
   return new Intl.NumberFormat('ko-KR').format(num);
 };
+
+/**
+ * 단일 입출금 입력값을 검사하여 유효하지 않은 필드명을 배열로 반환
+ * @param record - 단일 입출금 입력값 객체
+ * @returns
+ *  - invalidFields: 유효하지 않은 필드명을 담은 배열
+ */
+
+export const validateSingleRecord = <T extends TCreateRecordRequest | TUpdateRecordRequest>(record: T): (keyof T)[] => {
+  const invalidFields: (keyof T)[] = [];
+
+  if (!record.type) invalidFields.push('type');
+  if (!record.history?.trim()) invalidFields.push('history');
+  if (!record.price) invalidFields.push('price');
+
+  return invalidFields;
+};
+
+/**
+ * 입출금 입력 행들을 검사하여 유효하지 필드를 가진 행만 추려낸 객체를 반환
+ * @param rows - 각 행의 id와 입력값을 담은 배열
+ * @returns
+ *  - result: 유효하지 않은 필드를 가진 행만 추려낸 객체
+ *            key(행의 id), value(유효하지 않은 필드명을 담은 배열)
+ */
+
+export const validateRecordForm = (
+  rows: { id: number; values: TCreateRecordRequest }[],
+): Record<number, (keyof TCreateRecordRequest)[]> => {
+  const result: Record<number, (keyof TCreateRecordRequest)[]> = {};
+
+  for (const row of rows) {
+    const invalidFields = validateSingleRecord(row.values);
+    if (invalidFields.length) {
+      result[row.id] = invalidFields;
+    }
+  }
+
+  return result;
+};

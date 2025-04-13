@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import * as S from './TagSelect.styles';
-import Tag from '@_components/Tag/Tag';
+import Tag from '@_components/Common/Tag/Tag';
 
 interface Props {
   options: string[];

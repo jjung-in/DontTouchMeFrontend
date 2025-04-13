@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const Main = styled.main`
@@ -22,12 +21,4 @@ export const ErrorMessage = styled.p`
   margin-top: 30px;
   margin-bottom: 40px;
   line-height: 1.5;
-`;
-
-export const LinkButton = styled(Link)`
-  padding: 15px 30px;
-  font-weight: 600;
-  color: #ffffff;
-  background-color: #3959a5;
-  border-radius: 6px;
 `;

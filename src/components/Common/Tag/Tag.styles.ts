@@ -4,9 +4,9 @@ export const TagContainer = styled.span`
   display: flex;
   align-items: center;
   padding: 5px 10px;
-  background-color: #e4f0fa;
+  background-color: ${({ theme }) => theme.color.primary[200]};
   border-radius: 20px;
-  color: #000000;
+  color: ${({ theme }) => theme.color.text.black};
   cursor: default;
 `;
 

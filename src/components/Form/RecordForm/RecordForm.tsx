@@ -3,15 +3,24 @@ import { TEventDetailResponse } from '@_types/events.type';
 import { TCreateRecordRequest, TRecordItem, TUpdateRecordRequest } from '@_types/records.type';
 import * as S from './RecordForm.styles';
 import required from '@_assets/images/required.png';
-import CustomSelect from '@_components/Select/CustomSelect/CustomSelect';
+import CustomSelect from '@_components/Common/CustomSelect/CustomSelect';
 import { downloadExcelTemplate, exportExcelFile, importExcelFile } from '@_api/excel';
 import { downloadBlobFile } from '@_utils/excel.ts';
-import { formatNumber, getRecordGridTemplate, recordFieldConfig, recordReadConfig } from '@_utils/records';
+import {
+  formatNumber,
+  getRecordGridTemplate,
+  recordFieldConfig,
+  recordReadConfig,
+  validateSingleRecord,
+} from '@_utils/records';
 import React, { useState } from 'react';
 import { useDeleteRecord, useUpdateRecord } from '@_hooks/useRecords';
 import AlertModal from '@_components/Modal/AlertModal/AlertModal';
-import TagSelect from '@_components/Select/TagSelect/TagSelect';
+import TagSelect from '@_components/Common/TagSelect/TagSelect';
 import { isExcelFile } from '@_utils/excel';
+import { Link } from 'react-router-dom';
+import Button from '@_components/Common/Button/Button';
+import Input from '@_components/Common/Input/Input';
 
 interface Props {
   mode: 'create' | 'update' | 'read';
@@ -19,11 +28,12 @@ interface Props {
   records?: TRecordItem[];
   rows?: { id: number; values: TCreateRecordRequest }[];
   setRows?: React.Dispatch<React.SetStateAction<{ id: number; values: TCreateRecordRequest }[]>>;
+  errors?: Record<number, (keyof TCreateRecordRequest)[]>;
   handleSubmit?: () => void;
   handleChange?: (id: number, key: keyof TCreateRecordRequest, value: string | number | string[] | null) => void;
 }
 
-const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleChange }: Props) => {
+const RecordForm = ({ mode, event, records, rows, setRows, errors, handleSubmit, handleChange }: Props) => {
   const navigate = useNavigate();
   const eventId = Number(useParams().eventId);
   const { mutate: deleteRecord } = useDeleteRecord(eventId);
@@ -32,6 +42,7 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
   const [deletedRecordId, setDeletedRecordId] = useState<number | null>(null);
   const [updatedRecordId, setUpdatedRecordId] = useState<number | null>(null);
   const [updatedValue, setUpdateValue] = useState<TUpdateRecordRequest | null>(null);
+  const [updateError, setUpdateError] = useState<(keyof TUpdateRecordRequest)[] | null>(null);
 
   const handleBack = () => {
     navigate(-1);
@@ -67,7 +78,12 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
 
   const handleUpdateRecord = (record: TRecordItem) => {
     if (updatedRecordId === record.eventDetailId && updatedValue) {
-      // 유효성 검사
+      const invalidFields = validateSingleRecord(updatedValue);
+      if (invalidFields.length > 0) {
+        setUpdateError(invalidFields);
+        return;
+      }
+
       updateRecord({ recordId: record.eventDetailId, recordData: updatedValue });
       setUpdatedRecordId(null);
     } else {
@@ -196,6 +212,7 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                               isShowArrow={type === 'type' || type === 'target'}
                               isInput={type === 'price' && true}
                               isPrice={type === 'price' && true}
+                              isError={updateError?.includes(type)}
                             />
                           </S.GridCell>
                         );
@@ -204,11 +221,13 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                       if (element === 'text') {
                         return (
                           <S.GridCell key={key}>
-                            <S.Input
+                            <Input
                               type="text"
                               value={value ?? ''}
                               onChange={(e) => handleUpdateChange(type, e.target.value)}
                               maxLength={type === 'contact' ? 20 : 10}
+                              formType="record"
+                              state={updateError?.includes(type) ? 'error' : 'default'}
                             />
                           </S.GridCell>
                         );
@@ -229,11 +248,11 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                       if (element !== 'tagSelect') {
                         return (
                           <S.GridCell key={key}>
-                            <S.Text>
+                            <Input as="span" variant="recordtext" fullWidth={true}>
                               {config.type === 'price' && (typeof value === 'number' || typeof value === 'string')
                                 ? formatNumber(value)
                                 : value}
-                            </S.Text>
+                            </Input>
                           </S.GridCell>
                         );
                       }
@@ -252,27 +271,23 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                   {mode === 'update' && (
                     <>
                       <S.GridCell key={`row-${recordId}-update`}>
-                        <S.Button
+                        <Button
                           onClick={() => handleUpdateRecord(record)}
-                          $textColor={updatedRecordId === recordId ? '#3959a5' : '#ffffff'}
-                          $bgColor={updatedRecordId === recordId ? '#ffffff' : '#3959a5'}
-                          $borderColor="#3959a5"
+                          variant={updatedRecordId === recordId ? 'secondary' : 'primary'}
                         >
                           {updatedRecordId === recordId ? '저장' : '수정'}
-                        </S.Button>
+                        </Button>
                       </S.GridCell>
                       <S.GridCell key={`row-${recordId}-delete`}>
-                        <S.Button
+                        <Button
                           onClick={() => {
                             setDeletedRecordId(recordId);
                             setIsDeleteModalOpen(true);
                           }}
-                          $textColor="#ffffff"
-                          $bgColor="#3959a5"
-                          $borderColor="#3959a5"
+                          variant="primary"
                         >
                           삭제
-                        </S.Button>
+                        </Button>
                       </S.GridCell>
                     </>
                   )}
@@ -325,6 +340,7 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                             isShowArrow={type === 'type' || type === 'target'}
                             isInput={type === 'price' && true}
                             isPrice={type === 'price' && true}
+                            isError={errors?.[rowId]?.includes(type)}
                           />
                         </S.GridCell>
                       );
@@ -333,11 +349,13 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                     if (element === 'text') {
                       return (
                         <S.GridCell key={key}>
-                          <S.Input
+                          <Input
                             type="text"
                             value={value}
                             onChange={(e) => handleChange?.(rowId, type, e.target.value)}
                             maxLength={type === 'contact' ? 20 : 10}
+                            formType="record"
+                            state={errors?.[rowId]?.includes(type) ? 'error' : 'default'}
                           />
                         </S.GridCell>
                       );
@@ -359,18 +377,13 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                   })}
                   <S.GridCell key={`row-${rowId}-action`}>
                     {index === 0 ? (
-                      <S.Button
-                        onClick={() => handleAddRow()}
-                        $textColor="#ffffff"
-                        $bgColor="#3959a5"
-                        $borderColor="#3959a5"
-                      >
+                      <Button onClick={() => handleAddRow()} variant="primary">
                         추가
-                      </S.Button>
+                      </Button>
                     ) : (
-                      <S.Button onClick={() => handleDeleteRow(row.id)} $borderColor="#b4b9c9">
+                      <Button onClick={() => handleDeleteRow(row.id)} variant="default">
                         삭제
-                      </S.Button>
+                      </Button>
                     )}
                   </S.GridCell>
                 </React.Fragment>
@@ -382,45 +395,35 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
       {/* 버튼 영역 */}
       {mode === 'read' && (
         <S.ButtonArea>
-          <S.LinkButton to={`/events/${eventId}`} $textColor="#3959a5" $borderColor="#3959a5">
+          <Button as={Link} to={`/events/${eventId}`} variant="secondary" fontWeight="semibold">
             이전
-          </S.LinkButton>
-          <S.LinkButton
-            to={`/events/${eventId}/records/create`}
-            $textColor="#ffffff"
-            $borderColor="#3959a5"
-            $bgColor="#3959a5"
-          >
+          </Button>
+          <Button as={Link} to={`/events/${eventId}/records/create`} variant="primary" fontWeight="semibold">
             등록
-          </S.LinkButton>
-          <S.LinkButton
-            to={`/events/${eventId}/records/update`}
-            $textColor="#ffffff"
-            $borderColor="#3959a5"
-            $bgColor="#3959a5"
-          >
+          </Button>
+          <Button as={Link} to={`/events/${eventId}/records/update`} variant="primary" fontWeight="semibold">
             수정
-          </S.LinkButton>
-          <S.Button onClick={handleExcelExport} $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
+          </Button>
+          <Button onClick={handleExcelExport} variant="primary" fontWeight="semibold">
             엑셀 다운로드
-          </S.Button>
-          <S.LinkButton to={`/events/${eventId}/card`} $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
+          </Button>
+          <Button as={Link} to={`/events/${eventId}/card`} variant="primary" fontWeight="semibold">
             감사장 전송
-          </S.LinkButton>
+          </Button>
         </S.ButtonArea>
       )}
       {mode === 'create' && (
         <S.ButtonArea>
-          <S.Button onClick={handleBack} $textColor="#3959a5" $borderColor="#3959a5">
+          <Button onClick={handleBack} variant="secondary" fontWeight="semibold">
             이전
-          </S.Button>
-          <S.Button onClick={handleDownloadExcel} $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
+          </Button>
+          <Button onClick={handleDownloadExcel} variant="primary" fontWeight="semibold">
             엑셀 양식 다운로드
-          </S.Button>
+          </Button>
           <label htmlFor="excel-upload">
-            <S.ImportButton $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
+            <Button as="p" variant="primary" fontWeight="semibold">
               엑셀 업로드
-            </S.ImportButton>
+            </Button>
           </label>
           <input
             type="file"
@@ -429,16 +432,16 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
             onChange={handleExcelImport}
             style={{ display: 'none' }}
           />
-          <S.Button onClick={handleSubmit} $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
+          <Button onClick={handleSubmit} variant="primary" fontWeight="semibold">
             저장
-          </S.Button>
+          </Button>
         </S.ButtonArea>
       )}
       {mode === 'update' && (
         <S.ButtonArea>
-          <S.LinkButton to={`/events/${eventId}/records`} $textColor="#3959a5" $borderColor="#3959a5">
+          <Button as={Link} to={`/events/${eventId}/records`} variant="secondary" fontWeight="semibold">
             완료
-          </S.LinkButton>
+          </Button>
         </S.ButtonArea>
       )}
       {/* 삭제 모달 */}

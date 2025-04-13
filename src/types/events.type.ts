@@ -45,10 +45,12 @@ export interface TUpdateEventRequest {
   isHistory: boolean;
   isPrice: boolean;
   isName: boolean;
-  tags: string[];
+  tags: string[] | null;
   isImage: boolean;
-  targets: string[];
+  targets: string[] | null;
   isSend: boolean;
   sendType: 'EMAIL' | 'PHONE' | null;
   sendTypeValid: boolean;
 }
+
+export type TFormErrors = Partial<Record<keyof TCreateEventRequest, string>>;
