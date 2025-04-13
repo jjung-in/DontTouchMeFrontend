@@ -1,7 +1,4 @@
-import styled, { css } from 'styled-components';
-import arrow from '@_assets/icons/arrow-down.png';
-
-// Grid Styles
+import styled from 'styled-components';
 
 export const Grid = styled.div<{ $gridTemplateColumns?: string }>`
   display: grid;
@@ -15,38 +12,6 @@ export const GridCell = styled.div<{ $isHeader?: boolean }>`
   align-items: start;
   padding: ${({ $isHeader }) => ($isHeader ? '10px 10px 15px' : '10px 5px')};
   font-weight: ${({ $isHeader }) => ($isHeader ? '600' : 'normal')};
-`;
-
-const BaseFieldStyle = css`
-  width: 100%;
-  height: 100%;
-  padding: 0 15px;
-  border-radius: 6px;
-  border: 1px solid #cbd2e0;
-  background-color: #ffffff;
-
-  &:focus {
-    border-color: #000000;
-  }
-`;
-
-export const Select = styled.select`
-  ${BaseFieldStyle}
-  appearance: none;
-  background-image: url(${arrow});
-  background-repeat: no-repeat;
-  background-position: right 15px center;
-`;
-
-export const Input = styled.input`
-  ${BaseFieldStyle}
-`;
-
-export const Text = styled.span`
-  ${BaseFieldStyle}
-  display: flex;
-  align-items: center;
-  padding: 15px;
 `;
 
 export const ButtonArea = styled.div`

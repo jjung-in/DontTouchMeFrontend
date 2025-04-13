@@ -3,9 +3,12 @@ import { TStyledInputProps } from './Input.type';
 import arrow from '@_assets/icons/arrow-down.png';
 
 const VARIANTS = {
-  default: css``,
-  number: css``,
-  text: css``,
+  default: css`
+    padding: 15px;
+  `,
+  number: css`
+    padding: 15px;
+  `,
   box: css`
     display: flex;
     flex-direction: column;
@@ -16,6 +19,12 @@ const VARIANTS = {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    padding: 15px;
+  `,
+  recordtext: css`
+    display: flex;
+    align-items: center;
+    padding: 15px;
   `,
 };
 
@@ -33,7 +42,6 @@ export const StyledInput = styled.input<TStyledInputProps>`
   ${({ $state }) => STATE[$state]}
 
   width: ${({ $fullWidth }) => ($fullWidth ? '100%' : 'auto')};
-  padding: 15px;
   border-radius: 5px;
   background-color: #ffffff;
 
@@ -64,5 +72,13 @@ export const StyledInput = styled.input<TStyledInputProps>`
       &::-webkit-outer-spin-button {
         -webkit-appearance: none;
       }
+    `}
+
+    ${({ $formType }) =>
+    $formType === 'record' &&
+    css`
+      width: 100%;
+      height: 100%;
+      padding: 0 15px;
     `}
 `;

@@ -1,15 +1,18 @@
-export type TInputVariant = 'default' | 'number' | 'text' | 'box' | 'textbox';
+export type TInputVariant = 'default' | 'number' | 'box' | 'textbox' | 'recordtext';
 export type TInputState = 'default' | 'error';
+export type TInputFormType = 'auth' | 'event' | 'record';
 
 export type TStyledInputProps = {
   $variant: TInputVariant;
   $state: TInputState;
+  $formType?: TInputFormType;
   $fullWidth?: boolean;
 };
 
 export type TInputOwnProps = {
   variant?: TInputVariant;
   state?: TInputState;
+  formType?: TInputFormType;
   fullWidth?: boolean;
 };
 

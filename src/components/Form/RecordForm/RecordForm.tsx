@@ -14,6 +14,7 @@ import TagSelect from '@_components/Select/TagSelect/TagSelect';
 import { isExcelFile } from '@_utils/excel';
 import { Link } from 'react-router-dom';
 import Button from '@_components/Common/Button/Button';
+import Input from '@_components/Common/Input/Input';
 
 interface Props {
   mode: 'create' | 'update' | 'read';
@@ -206,11 +207,12 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                       if (element === 'text') {
                         return (
                           <S.GridCell key={key}>
-                            <S.Input
+                            <Input
                               type="text"
                               value={value ?? ''}
                               onChange={(e) => handleUpdateChange(type, e.target.value)}
                               maxLength={type === 'contact' ? 20 : 10}
+                              formType="record"
                             />
                           </S.GridCell>
                         );
@@ -231,11 +233,11 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                       if (element !== 'tagSelect') {
                         return (
                           <S.GridCell key={key}>
-                            <S.Text>
+                            <Input as="span" variant="recordtext" fullWidth={true}>
                               {config.type === 'price' && (typeof value === 'number' || typeof value === 'string')
                                 ? formatNumber(value)
                                 : value}
-                            </S.Text>
+                            </Input>
                           </S.GridCell>
                         );
                       }
@@ -331,11 +333,12 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                     if (element === 'text') {
                       return (
                         <S.GridCell key={key}>
-                          <S.Input
+                          <Input
                             type="text"
                             value={value}
                             onChange={(e) => handleChange?.(rowId, type, e.target.value)}
                             maxLength={type === 'contact' ? 20 : 10}
+                            formType="record"
                           />
                         </S.GridCell>
                       );
