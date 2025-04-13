@@ -4,8 +4,8 @@ import { TButtonProps } from './Button.type';
 const Button = <T extends React.ElementType = 'button'>({
   size = 'md',
   variant = 'default',
-  fullWidth = false,
   fontWeight = 'normal',
+  fullWidth = false,
   as,
   children,
   ...props

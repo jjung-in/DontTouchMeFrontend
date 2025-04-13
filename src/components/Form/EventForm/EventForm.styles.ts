@@ -1,5 +1,4 @@
-import styled, { css } from 'styled-components';
-import arrow from '@_assets/icons/arrow-down.png';
+import styled from 'styled-components';
 
 export const Main = styled.main`
   display: flex;
@@ -86,41 +85,8 @@ export const Label = styled.label`
   font-size: 20px;
 `;
 
-const BaseFieldStyle = css<{ $isError?: boolean }>`
-  padding: 15px;
-  border: 1px solid #d9d9d9;
-  border-radius: 5px;
-  ${({ $isError }) =>
-    $isError &&
-    css`
-      border-color: #ff3a44;
-    `}
-
-  &:focus {
-    border-color: ${({ $isError }) => ($isError ? '#ff3a44' : '#000000')};
-  }
-`;
-
-export const Input = styled.input<{ $isError?: boolean }>`
-  ${BaseFieldStyle}
-
-  &::placeholder {
-    color: #9d9d9d;
-  }
-`;
-
-export const NumberInput = styled.div<{ $isError?: boolean }>`
+export const NumberInputWrapper = styled.div<{ $isError?: boolean }>`
   position: relative;
-
-  input {
-    ${BaseFieldStyle}
-    width: 100%;
-  }
-
-  input::-webkit-inner-spin-button,
-  input::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-  }
 
   &::after {
     position: absolute;
@@ -129,27 +95,6 @@ export const NumberInput = styled.div<{ $isError?: boolean }>`
     transform: translateY(-50%);
     content: '명';
   }
-`;
-
-export const Select = styled.select<{ $isError?: boolean }>`
-  ${BaseFieldStyle}
-  padding: 18px 15px;
-  appearance: none;
-  background-image: url(${arrow});
-  background-repeat: no-repeat;
-  background-position: right 15px center;
-`;
-
-export const Text = styled.span<{ $isError?: boolean }>`
-  ${BaseFieldStyle}
-  appearance: none;
-`;
-
-export const TextBox = styled.div<{ $isError?: boolean }>`
-  ${BaseFieldStyle}
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 `;
 
 export const ErrorText = styled.span`
@@ -163,14 +108,6 @@ export const ButtonArea = styled.div`
 `;
 
 // Detail Styles
-
-export const DetailBox = styled.div<{ $isError?: boolean }>`
-  ${BaseFieldStyle}
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 15px 30px;
-`;
 
 export const DetailGroup = styled.div`
   display: flex;
@@ -186,18 +123,4 @@ export const DetailSwitchBox = styled.div`
 
 export const DetailText = styled.span<{ $readonly?: boolean }>`
   color: ${(props) => (props.$readonly ? '#9d9d9d' : 'inherit')};
-`;
-
-export const DetailInput = styled.input<{ $isError?: boolean }>`
-  ${BaseFieldStyle}
-  width: 100%;
-  margin-top: 10px;
-`;
-
-export const DetailSelect = styled.select<{ $isError?: boolean }>`
-  ${BaseFieldStyle}
-  appearance: none;
-  background-image: url(${arrow});
-  background-repeat: no-repeat;
-  background-position: right 15px center;
 `;

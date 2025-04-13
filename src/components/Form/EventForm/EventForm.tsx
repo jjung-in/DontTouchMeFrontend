@@ -10,6 +10,7 @@ import Switch from '@_components/Switch/Switch';
 import TagInput from '@_components/Tag/TagInput/TagInput';
 import Button from '@_components/Common/Button/Button';
 import { Link } from 'react-router-dom';
+import Input from '@_components/Common/Input/Input';
 
 interface Props {
   mode: 'create' | 'update' | 'read';
@@ -105,15 +106,15 @@ const EventForm = ({
                 <img src={required} alt="필수 입력" />
               </S.Label>
               {mode === 'read' ? (
-                <S.Text>{event?.eventName}</S.Text>
+                <Input as="span">{event?.eventName}</Input>
               ) : (
-                <S.Input
+                <Input
                   type="text"
                   maxLength={100}
                   placeholder="이벤트명을 입력하세요."
                   value={formValues?.eventName}
                   onChange={(e) => handleChange?.('eventName', e.target.value)}
-                  $isError={!!formErrors?.eventName || false}
+                  state={formErrors?.eventName ? 'error' : 'default'}
                 />
               )}
               {formErrors?.eventName && <S.ErrorText>{formErrors?.eventName}</S.ErrorText>}
@@ -124,22 +125,26 @@ const EventForm = ({
                 <img src={required} alt="필수 입력" />
               </S.Label>
               {mode === 'read' ? (
-                <S.Text>{event?.eventType}</S.Text>
+                <Input as="span">{event?.eventType}</Input>
               ) : (
                 <>
-                  <S.Select value={formValues?.eventType} onChange={(e) => handleChange?.('eventType', e.target.value)}>
+                  <Input
+                    as="select"
+                    value={formValues?.eventType}
+                    onChange={(e) => handleChange?.('eventType', e.target.value)}
+                  >
                     <option value="결혼식">결혼식</option>
                     <option value="장례식">장례식</option>
                     <option value="기타">기타</option>
-                  </S.Select>
+                  </Input>
                   {formValues?.eventType === '기타' && (
-                    <S.Input
+                    <Input
                       type="text"
                       maxLength={10}
                       placeholder="ex) 모임"
                       value={otherEventType}
                       onChange={(e) => setOtherEventType?.(e.target.value)}
-                      $isError={!!formErrors?.eventType || false}
+                      state={formErrors?.eventType ? 'error' : 'default'}
                     />
                   )}
                 </>
@@ -152,7 +157,7 @@ const EventForm = ({
                 <img src={required} alt="필수 입력" />
               </S.Label>
               {mode === 'read' ? (
-                <S.Text>{event?.eventDate}</S.Text>
+                <Input as="span">{event?.eventDate}</Input>
               ) : (
                 <CustomDatePicker
                   date={formValues?.eventDate || null}
@@ -168,10 +173,10 @@ const EventForm = ({
                 <img src={required} alt="필수 입력" />
               </S.Label>
               {mode === 'read' ? (
-                <S.Text>{event?.address}</S.Text>
+                <Input as="span">{event?.address}</Input>
               ) : (
                 <>
-                  <S.Input
+                  <Input
                     type="text"
                     placeholder="장소를 입력하세요."
                     readOnly
@@ -180,7 +185,7 @@ const EventForm = ({
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') setIsModalOpen(true);
                     }}
-                    $isError={!!formErrors?.address || false}
+                    state={formErrors?.address ? 'error' : 'default'}
                   />
                   <AddressModal
                     isOpen={isModalOpen}
@@ -196,28 +201,32 @@ const EventForm = ({
               event.participants > 0 && (
                 <S.FieldGroup>
                   <S.Label>예상 인원</S.Label>
-                  <S.Text>{event?.participants}명</S.Text>
+                  <Input as="span">{event?.participants}명</Input>
                 </S.FieldGroup>
               )
             ) : (
               <S.FieldGroup>
                 <S.Label>예상 인원</S.Label>
-                <S.NumberInput>
-                  <input
+                <S.NumberInputWrapper>
+                  <Input
                     type="number"
                     min={1}
                     value={formValues?.participants || ''}
                     onChange={(e) => handleChange?.('participants', Number(e.target.value))}
+                    variant="number"
+                    fullWidth={true}
                   />
-                </S.NumberInput>
+                </S.NumberInputWrapper>
               </S.FieldGroup>
             )}
             <S.FieldGroup>
               <S.Label>입출금 항목</S.Label>
               {mode === 'read' ? (
-                <S.TextBox>{event?.eventInfoItems.map((item, index) => <span key={index}>{item}</span>)}</S.TextBox>
+                <Input as="div" variant="textbox">
+                  {event?.eventInfoItems.map((item, index) => <span key={index}>{item}</span>)}
+                </Input>
               ) : (
-                <S.DetailBox>
+                <Input as="div" variant="box">
                   <S.DetailGroup>
                     <S.DetailSwitchBox>
                       <S.DetailText $readonly={true}>입출금 분류</S.DetailText>
@@ -306,16 +315,17 @@ const EventForm = ({
                       />
                     </S.DetailSwitchBox>
                     {formValues?.isSend && (
-                      <S.DetailSelect
+                      <Input
+                        as="select"
                         value={formValues?.sendType || undefined}
                         onChange={(e) => handleChange?.('sendType', e.target.value)}
                       >
                         <option value="EMAIL">이메일</option>
                         <option value="PHONE">문자</option>
-                      </S.DetailSelect>
+                      </Input>
                     )}
                   </S.DetailGroup>
-                </S.DetailBox>
+                </Input>
               )}
             </S.FieldGroup>
           </S.FieldSection>
