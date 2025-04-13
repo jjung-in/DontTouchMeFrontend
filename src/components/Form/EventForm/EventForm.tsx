@@ -1,4 +1,4 @@
-import { TCreateEventRequest, TEventDetailResponse, TUpdateEventRequest } from '@_types/events.type';
+import { TCreateEventRequest, TEventDetailResponse, TFormErrors, TUpdateEventRequest } from '@_types/events.type';
 import { useParams } from 'react-router-dom';
 import * as S from './EventForm.styles';
 import noimage from '@_assets/images/noimage.png';
@@ -13,6 +13,7 @@ interface Props {
   mode: 'create' | 'update' | 'read';
   event?: TEventDetailResponse;
   formValues?: TCreateEventRequest | TUpdateEventRequest;
+  formErrors?: TFormErrors;
   thumbnailPreview?: string;
   handleSubmit?: () => void;
   handleDelete?: () => void;
@@ -34,6 +35,7 @@ const EventForm = ({
   mode,
   event,
   formValues,
+  formErrors,
   thumbnailPreview,
   handleSubmit,
   handleDelete,
@@ -117,8 +119,10 @@ const EventForm = ({
                   placeholder="이벤트명을 입력하세요."
                   value={formValues?.eventName}
                   onChange={(e) => handleChange?.('eventName', e.target.value)}
+                  $isError={!!formErrors?.eventName || false}
                 />
               )}
+              {formErrors?.eventName && <S.ErrorText>{formErrors?.eventName}</S.ErrorText>}
             </S.FieldGroup>
             <S.FieldGroup>
               <S.Label>
@@ -141,10 +145,12 @@ const EventForm = ({
                       placeholder="ex) 모임"
                       value={otherEventType}
                       onChange={(e) => setOtherEventType?.(e.target.value)}
+                      $isError={!!formErrors?.eventType || false}
                     />
                   )}
                 </>
               )}
+              {formErrors?.eventName && <S.ErrorText>{formErrors?.eventType}</S.ErrorText>}
             </S.FieldGroup>
             <S.FieldGroup>
               <S.Label>
@@ -157,8 +163,10 @@ const EventForm = ({
                 <CustomDatePicker
                   date={formValues?.eventDate || null}
                   onChange={(value) => handleChange?.('eventDate', value)}
+                  isError={!!formErrors?.eventDate || false}
                 />
               )}
+              {formErrors?.eventDate && <S.ErrorText>{formErrors?.eventDate}</S.ErrorText>}
             </S.FieldGroup>
             <S.FieldGroup>
               <S.Label>
@@ -178,6 +186,7 @@ const EventForm = ({
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') setIsModalOpen(true);
                     }}
+                    $isError={!!formErrors?.address || false}
                   />
                   <AddressModal
                     isOpen={isModalOpen}
@@ -186,6 +195,7 @@ const EventForm = ({
                   />
                 </>
               )}
+              {formErrors?.address && <S.ErrorText>{formErrors?.address}</S.ErrorText>}
             </S.FieldGroup>
             {mode === 'read' ? (
               event &&
@@ -248,15 +258,19 @@ const EventForm = ({
                       <Switch checked={isTag || false} onChange={(checked) => setIsTag?.(checked)} />
                     </S.DetailSwitchBox>
                     {isTag && (
-                      <TagInput
-                        tags={formValues?.tags || []}
-                        setTags={(newTags) =>
-                          handleChange?.(
-                            'tags',
-                            typeof newTags === 'function' ? newTags(formValues?.tags || []) : newTags,
-                          )
-                        }
-                      />
+                      <>
+                        <TagInput
+                          tags={formValues?.tags || []}
+                          setTags={(newTags) =>
+                            handleChange?.(
+                              'tags',
+                              typeof newTags === 'function' ? newTags(formValues?.tags || []) : newTags,
+                            )
+                          }
+                          isError={!!formErrors?.tags || false}
+                        />
+                        {formErrors?.tags && <S.ErrorText>{formErrors?.tags}</S.ErrorText>}
+                      </>
                     )}
                   </S.DetailGroup>
                   <S.DetailGroup>
@@ -274,15 +288,19 @@ const EventForm = ({
                       <Switch checked={isTarget || false} onChange={(checked) => setIsTarget?.(checked)} />
                     </S.DetailSwitchBox>
                     {isTarget && (
-                      <TagInput
-                        tags={formValues?.targets || []}
-                        setTags={(newTargets) =>
-                          handleChange?.(
-                            'targets',
-                            typeof newTargets === 'function' ? newTargets(formValues?.targets || []) : newTargets,
-                          )
-                        }
-                      />
+                      <>
+                        <TagInput
+                          tags={formValues?.targets || []}
+                          setTags={(newTargets) =>
+                            handleChange?.(
+                              'targets',
+                              typeof newTargets === 'function' ? newTargets(formValues?.targets || []) : newTargets,
+                            )
+                          }
+                          isError={!!formErrors?.targets || false}
+                        />
+                        {formErrors?.targets && <S.ErrorText>{formErrors?.targets}</S.ErrorText>}
+                      </>
                     )}
                   </S.DetailGroup>
                   <S.DetailGroup>

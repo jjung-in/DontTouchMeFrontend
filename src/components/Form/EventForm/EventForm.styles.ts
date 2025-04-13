@@ -87,17 +87,22 @@ export const Label = styled.label`
   font-size: 20px;
 `;
 
-const BaseFieldStyle = css`
+const BaseFieldStyle = css<{ $isError?: boolean }>`
   padding: 15px;
   border: 1px solid #d9d9d9;
   border-radius: 5px;
+  ${({ $isError }) =>
+    $isError &&
+    css`
+      border-color: #ff3a44;
+    `}
 
   &:focus {
-    border-color: #000000;
+    border-color: ${({ $isError }) => ($isError ? '#ff3a44' : '#000000')};
   }
 `;
 
-export const Input = styled.input`
+export const Input = styled.input<{ $isError?: boolean }>`
   ${BaseFieldStyle}
 
   &::placeholder {
@@ -105,7 +110,7 @@ export const Input = styled.input`
   }
 `;
 
-export const NumberInput = styled.div`
+export const NumberInput = styled.div<{ $isError?: boolean }>`
   position: relative;
 
   input {
@@ -127,7 +132,7 @@ export const NumberInput = styled.div`
   }
 `;
 
-export const Select = styled.select`
+export const Select = styled.select<{ $isError?: boolean }>`
   ${BaseFieldStyle}
   padding: 18px 15px;
   appearance: none;
@@ -136,16 +141,20 @@ export const Select = styled.select`
   background-position: right 15px center;
 `;
 
-export const Text = styled.span`
+export const Text = styled.span<{ $isError?: boolean }>`
   ${BaseFieldStyle}
   appearance: none;
 `;
 
-export const TextBox = styled.div`
+export const TextBox = styled.div<{ $isError?: boolean }>`
   ${BaseFieldStyle}
   display: flex;
   flex-direction: column;
   gap: 10px;
+`;
+
+export const ErrorText = styled.span`
+  color: #ff3a44;
 `;
 
 // Button Styles
@@ -187,7 +196,7 @@ export const FileButton = styled.div<ButtonProps>`
 
 // Detail Styles
 
-export const DetailBox = styled.div`
+export const DetailBox = styled.div<{ $isError?: boolean }>`
   ${BaseFieldStyle}
   display: flex;
   flex-direction: column;
@@ -211,13 +220,13 @@ export const DetailText = styled.span<{ $readonly?: boolean }>`
   color: ${(props) => (props.$readonly ? '#9d9d9d' : 'inherit')};
 `;
 
-export const DetailInput = styled.input`
+export const DetailInput = styled.input<{ $isError?: boolean }>`
   ${BaseFieldStyle}
   width: 100%;
   margin-top: 10px;
 `;
 
-export const DetailSelect = styled.select`
+export const DetailSelect = styled.select<{ $isError?: boolean }>`
   ${BaseFieldStyle}
   appearance: none;
   background-image: url(${arrow});

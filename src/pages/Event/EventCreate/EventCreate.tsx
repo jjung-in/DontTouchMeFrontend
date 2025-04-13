@@ -2,7 +2,8 @@ import { uploadImage } from '@_api/image';
 import { getGeocode } from '@_api/map';
 import EventForm from '@_components/Form/EventForm/EventForm';
 import { useCreateEvent } from '@_hooks/useEvents';
-import { TCreateEventRequest } from '@_types/events.type';
+import { TCreateEventRequest, TFormErrors } from '@_types/events.type';
+import { validateEventForm } from '@_utils/events';
 import { isImageFile } from '@_utils/image';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -39,9 +40,15 @@ const EventCreate = () => {
     sendType: 'EMAIL',
     sendTypeValid: false,
   });
+  const [formErrors, setFormErrors] = useState<TFormErrors>({});
 
   const handleChange = (key: keyof TCreateEventRequest, value: string | number | boolean | string[] | null) => {
     setFormValues((prev) => ({ ...prev, [key]: value }));
+    setFormErrors((prevErrors) => {
+      if (!prevErrors[key]) return prevErrors;
+      const { [key]: _, ...rest } = prevErrors;
+      return rest;
+    });
   };
 
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,8 +73,9 @@ const EventCreate = () => {
   };
 
   const handleSubmit = async () => {
-    // 유효성 검사
-    // if (!validateEventForm(formValues)) return;
+    const errors = validateEventForm(formValues, otherEventType, isTag, isTarget);
+    setFormErrors(errors);
+    if (Object.keys(errors).length > 0) return;
 
     let imageUrl = formValues.thumbnailUrl;
     if (thumbnail) {
@@ -110,6 +118,7 @@ const EventCreate = () => {
     <EventForm
       mode="create"
       formValues={formValues}
+      formErrors={formErrors}
       thumbnailPreview={thumbnailPreview}
       handleSubmit={handleSubmit}
       handleChange={handleChange}

@@ -6,9 +6,10 @@ import { useRef, useState } from 'react';
 interface Props {
   tags: string[];
   setTags: React.Dispatch<React.SetStateAction<string[]>>;
+  isError?: boolean;
 }
 
-const TagInput = ({ tags, setTags }: Props) => {
+const TagInput = ({ tags, setTags, isError }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const { value, onChange, reset } = useInput<string>('');
   const [isFocused, setIsFocused] = useState<boolean>(false);
@@ -31,7 +32,7 @@ const TagInput = ({ tags, setTags }: Props) => {
   };
 
   return (
-    <S.TagInput onClick={handleContainerClick} $isFocused={isFocused}>
+    <S.TagInput onClick={handleContainerClick} $isFocused={isFocused} $isError={isError}>
       {tags.map((tag, index) => (
         <Tag label={tag} key={index} />
       ))}

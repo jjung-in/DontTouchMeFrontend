@@ -1,6 +1,7 @@
 import styled from 'styled-components';
+import { css } from 'styled-components';
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<{ $isError?: boolean }>`
   position: relative;
 
   .react-datepicker-wrapper {
@@ -16,10 +17,15 @@ export const Wrapper = styled.div`
     padding: 15px;
     border: 1px solid #d9d9d9;
     border-radius: 5px;
+    ${({ $isError }) =>
+      $isError &&
+      css`
+        border-color: #ff3a44;
+      `}
   }
 
   input:focus {
-    border-color: #000000;
+    border-color: ${({ $isError }) => ($isError ? '#ff3a44' : '#000000')};
   }
 `;
 
