@@ -9,6 +9,7 @@ import EmptyState from '@_components/EmptyState/EmptyState';
 import RecordForm from '@_components/Form/RecordForm/RecordForm';
 import Button from '@_components/Common/Button/Button';
 import { Link } from 'react-router-dom';
+import { validateRecordForm } from '@_utils/records';
 
 const RecordCreate = () => {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ const RecordCreate = () => {
       },
     },
   ]);
+  const [errors, setErrors] = useState<Record<number, (keyof TCreateRecordRequest)[]>>({});
 
   const handleChange = (rowId: number, key: keyof TCreateRecordRequest, value: string | number | string[] | null) => {
     setRows((prev) =>
@@ -41,8 +43,12 @@ const RecordCreate = () => {
   };
 
   const handleSubmit = async () => {
-    // 유효성 검사
-    // if (!validateRecordForm(rows)) return;
+    const invalidMap = validateRecordForm(rows);
+    if (Object.keys(invalidMap).length > 0) {
+      setErrors(invalidMap);
+      return;
+    }
+    setErrors({});
 
     const records: TCreateRecordRequest[] = rows.map((row) => {
       const filteredRecord: TCreateRecordRequest = {
@@ -87,6 +93,7 @@ const RecordCreate = () => {
             event={data}
             rows={rows}
             setRows={setRows}
+            errors={errors}
             handleSubmit={handleSubmit}
             handleChange={handleChange}
           />

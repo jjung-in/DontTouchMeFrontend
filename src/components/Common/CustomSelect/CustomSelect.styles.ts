@@ -7,11 +7,11 @@ export const Container = styled.div`
   height: 100%;
 `;
 
-export const Input = styled.input<{ $isShowArrow?: boolean }>`
+export const Input = styled.input<{ $isShowArrow?: boolean; $isError?: boolean }>`
   width: 100%;
   height: 100%;
   padding: 0 15px;
-  border: 1px solid ${({ theme }) => theme.color.gray[100]};
+  border: 1px solid ${({ theme, $isError }) => ($isError ? theme.color.error : theme.color.gray[100])};
   border-radius: 5px;
   background-repeat: no-repeat;
   background-position: right 15px center;
@@ -23,7 +23,7 @@ export const Input = styled.input<{ $isShowArrow?: boolean }>`
   }
 
   &:focus {
-    border-color: ${({ theme }) => theme.color.gray[300]};
+    border-color: ${({ theme, $isError }) => ($isError ? theme.color.error : theme.color.gray[300])};
   }
 `;
 

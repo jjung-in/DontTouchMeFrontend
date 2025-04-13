@@ -6,7 +6,13 @@ import required from '@_assets/images/required.png';
 import CustomSelect from '@_components/Common/CustomSelect/CustomSelect';
 import { downloadExcelTemplate, exportExcelFile, importExcelFile } from '@_api/excel';
 import { downloadBlobFile } from '@_utils/excel.ts';
-import { formatNumber, getRecordGridTemplate, recordFieldConfig, recordReadConfig } from '@_utils/records';
+import {
+  formatNumber,
+  getRecordGridTemplate,
+  recordFieldConfig,
+  recordReadConfig,
+  validateSingleRecord,
+} from '@_utils/records';
 import React, { useState } from 'react';
 import { useDeleteRecord, useUpdateRecord } from '@_hooks/useRecords';
 import AlertModal from '@_components/Modal/AlertModal/AlertModal';
@@ -22,11 +28,12 @@ interface Props {
   records?: TRecordItem[];
   rows?: { id: number; values: TCreateRecordRequest }[];
   setRows?: React.Dispatch<React.SetStateAction<{ id: number; values: TCreateRecordRequest }[]>>;
+  errors?: Record<number, (keyof TCreateRecordRequest)[]>;
   handleSubmit?: () => void;
   handleChange?: (id: number, key: keyof TCreateRecordRequest, value: string | number | string[] | null) => void;
 }
 
-const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleChange }: Props) => {
+const RecordForm = ({ mode, event, records, rows, setRows, errors, handleSubmit, handleChange }: Props) => {
   const navigate = useNavigate();
   const eventId = Number(useParams().eventId);
   const { mutate: deleteRecord } = useDeleteRecord(eventId);
@@ -35,6 +42,7 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
   const [deletedRecordId, setDeletedRecordId] = useState<number | null>(null);
   const [updatedRecordId, setUpdatedRecordId] = useState<number | null>(null);
   const [updatedValue, setUpdateValue] = useState<TUpdateRecordRequest | null>(null);
+  const [updateError, setUpdateError] = useState<(keyof TUpdateRecordRequest)[] | null>(null);
 
   const handleBack = () => {
     navigate(-1);
@@ -70,7 +78,12 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
 
   const handleUpdateRecord = (record: TRecordItem) => {
     if (updatedRecordId === record.eventDetailId && updatedValue) {
-      // 유효성 검사
+      const invalidFields = validateSingleRecord(updatedValue);
+      if (invalidFields.length > 0) {
+        setUpdateError(invalidFields);
+        return;
+      }
+
       updateRecord({ recordId: record.eventDetailId, recordData: updatedValue });
       setUpdatedRecordId(null);
     } else {
@@ -199,6 +212,7 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                               isShowArrow={type === 'type' || type === 'target'}
                               isInput={type === 'price' && true}
                               isPrice={type === 'price' && true}
+                              isError={updateError?.includes(type)}
                             />
                           </S.GridCell>
                         );
@@ -213,6 +227,7 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                               onChange={(e) => handleUpdateChange(type, e.target.value)}
                               maxLength={type === 'contact' ? 20 : 10}
                               formType="record"
+                              state={updateError?.includes(type) ? 'error' : 'default'}
                             />
                           </S.GridCell>
                         );
@@ -325,6 +340,7 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                             isShowArrow={type === 'type' || type === 'target'}
                             isInput={type === 'price' && true}
                             isPrice={type === 'price' && true}
+                            isError={errors?.[rowId]?.includes(type)}
                           />
                         </S.GridCell>
                       );
@@ -339,6 +355,7 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                             onChange={(e) => handleChange?.(rowId, type, e.target.value)}
                             maxLength={type === 'contact' ? 20 : 10}
                             formType="record"
+                            state={errors?.[rowId]?.includes(type) ? 'error' : 'default'}
                           />
                         </S.GridCell>
                       );
