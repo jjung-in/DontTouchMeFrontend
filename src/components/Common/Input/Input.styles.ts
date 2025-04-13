@@ -24,6 +24,7 @@ const VARIANTS = {
   recordtext: css`
     display: flex;
     align-items: center;
+    height: 100%;
     padding: 15px;
   `,
 };

@@ -11,11 +11,11 @@ export const Input = styled.input<{ $isShowArrow?: boolean }>`
   width: 100%;
   height: 100%;
   padding: 0 15px;
-  border: 1px solid #cbd2e0;
-  border-radius: 6px;
+  border: 1px solid ${({ theme }) => theme.color.gray[100]};
+  border-radius: 5px;
   background-repeat: no-repeat;
   background-position: right 15px center;
-  ${(props) => props.$isShowArrow && `background-image: url(${arrow}); cursor: default;`}
+  ${({ $isShowArrow }) => $isShowArrow && `background-image: url(${arrow}); cursor: default;`}
 
   &::-webkit-inner-spin-button,
   &::-webkit-outer-spin-button {
@@ -23,7 +23,7 @@ export const Input = styled.input<{ $isShowArrow?: boolean }>`
   }
 
   &:focus {
-    border-color: #000000;
+    border-color: ${({ theme }) => theme.color.gray[300]};
   }
 `;
 
@@ -33,8 +33,8 @@ export const Dropdown = styled.ul`
   left: 0;
   min-width: 110px;
   padding: 5px;
-  border: 1px solid #cbd2e0;
-  border-radius: 6px;
+  border: 1px solid ${({ theme }) => theme.color.gray[100]};
+  border-radius: 5px;
   background-color: #ffffff;
   overflow-y: auto;
   z-index: 1000;
@@ -42,12 +42,12 @@ export const Dropdown = styled.ul`
 
 export const Option = styled.li<{ $focused?: boolean; $selected?: boolean }>`
   padding: 8px 15px;
-  color: ${(props) => (props.$selected ? '#ffffff' : 'inherit')};
-  background: ${(props) => (props.$selected ? '#0a84ff' : props.$focused ? '#f0f0f0' : 'inherit')};
-  border-radius: 6px;
+  color: ${({ theme, $selected }) => ($selected ? theme.color.text.white : 'inherit')};
+  background: ${({ $selected, $focused }) => ($selected ? '#0a84ff' : $focused ? '#f0f0f0' : 'inherit')};
+  border-radius: 5px;
   cursor: default;
 
   &:hover {
-    background: ${(props) => (props.$selected ? '#0a84ff' : '#f0f0f0')};
+    background: ${({ $selected }) => ($selected ? '#0a84ff' : '#f0f0f0')};
   }
 `;

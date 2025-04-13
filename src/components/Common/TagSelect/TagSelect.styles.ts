@@ -13,19 +13,19 @@ export const SelectBox = styled.div<{ $focused: boolean }>`
   width: 100%;
   height: 100%;
   padding: 0 14px;
-  border: 1px solid #cbd2e0;
-  border-radius: 6px;
+  border: 1px solid ${({ theme }) => theme.color.gray[100]};
+  border-radius: 5px;
   background-color: #ffffff;
   overflow-x: auto;
 
-  ${(props) =>
-    props.$focused &&
+  ${({ $focused }) =>
+    $focused &&
     css`
-      border-color: #000000;
+      border-color: ${({ theme }) => theme.color.gray[300]};
 
       &:focus {
         outline: none;
-        border: 1px solid #000000;
+        border: 1px solid ${({ theme }) => theme.color.gray[300]};
       }
     `}
 
@@ -34,11 +34,11 @@ export const SelectBox = styled.div<{ $focused: boolean }>`
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: #cbd2e0;
+    background-color: ${({ theme }) => theme.color.gray[100]};
   }
 
   &::-webkit-scrollbar-thumb:hover {
-    background-color: #e4f0fa;
+    background-color: ${({ theme }) => theme.color.primary[200]};
   }
 `;
 
@@ -48,8 +48,8 @@ export const Dropdown = styled.ul`
   left: 0;
   width: 100%;
   padding: 5px;
-  border: 1px solid #cbd2e0;
-  border-radius: 6px;
+  border: 1px solid ${({ theme }) => theme.color.gray[100]};
+  border-radius: 5px;
   background-color: #ffffff;
   overflow-y: auto;
   z-index: 1000;
@@ -57,12 +57,12 @@ export const Dropdown = styled.ul`
 
 export const Option = styled.li<{ $focused?: boolean; $selected?: boolean }>`
   padding: 8px 15px;
-  color: ${(props) => (props.$selected ? '#ffffff' : 'inherit')};
-  background: ${(props) => (props.$selected ? '#0a84ff' : props.$focused ? '#f0f0f0' : 'inherit')};
-  border-radius: 6px;
+  color: ${({ theme, $selected }) => ($selected ? theme.color.text.white : 'inherit')};
+  background: ${({ $selected, $focused }) => ($selected ? '#0a84ff' : $focused ? '#f0f0f0' : 'inherit')};
+  border-radius: 5px;
   cursor: default;
 
   &:hover {
-    background: ${(props) => (props.$selected ? '#0a84ff' : '#f0f0f0')};
+    background: ${({ $selected }) => ($selected ? '#0a84ff' : '#f0f0f0')};
   }
 `;

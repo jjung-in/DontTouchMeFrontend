@@ -1,6 +1,6 @@
 import useInput from '@_hooks/useInput';
 import * as S from './TagInput.styles';
-import Tag from '@_components/Tag/Tag';
+import Tag from '@_components/Common/Tag/Tag';
 import { useRef, useState } from 'react';
 
 interface Props {
