@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import arrow from '@_assets/icons/arrow-down.png';
 
@@ -157,41 +156,10 @@ export const ErrorText = styled.span`
   color: #ff3a44;
 `;
 
-// Button Styles
-
 export const ButtonArea = styled.div`
   display: flex;
   justify-content: center;
   gap: 20px;
-`;
-
-interface ButtonProps {
-  $fontWeight?: string | number;
-  $textColor?: string;
-  $bgColor?: string;
-  $borderColor?: string;
-}
-
-const BaseButtonStyle = css<ButtonProps>`
-  padding: 15px 30px;
-  font-weight: ${(props) => props.$fontWeight || 600};
-  color: ${(props) => props.$textColor || 'inherit'};
-  background: ${(props) => props.$bgColor || 'white'};
-  border: ${(props) => props.$borderColor && `1px solid ${props.$borderColor}`};
-  border-radius: 6px;
-`;
-
-export const Button = styled.button<ButtonProps>`
-  ${BaseButtonStyle}
-`;
-
-export const LinkButton = styled(Link)<ButtonProps>`
-  ${BaseButtonStyle}
-`;
-
-export const FileButton = styled.div<ButtonProps>`
-  ${BaseButtonStyle}
-  cursor: pointer;
 `;
 
 // Detail Styles

@@ -5,6 +5,8 @@ import * as S from './EventList.styles';
 import Spinner from '@_components/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
 import noimage from '@_assets/images/noimage.png';
+import Button from '@_components/Common/Button/Button';
+import { Link } from 'react-router-dom';
 
 const EventList = () => {
   const memberId = 1;
@@ -41,12 +43,12 @@ const EventList = () => {
                         <S.ImageSection>
                           {event.thumbnailUrl ? <S.CardImage src={event.thumbnailUrl} /> : <S.NoImage src={noimage} />}
                           <S.Overlay>
-                            <S.RecordLink to={`/events/${event.eventId}/records/create`} variant="create">
+                            <Button as={Link} to={`/events/${event.eventId}/records/create`} variant="skyblue">
                               입출금 내역 <S.BoldText>등록</S.BoldText>
-                            </S.RecordLink>
-                            <S.RecordLink to={`/events/${event.eventId}/records`} variant="list">
+                            </Button>
+                            <Button as={Link} to={`/events/${event.eventId}/records`} variant="white">
                               입출금 내역 <S.BoldText>조회</S.BoldText>
-                            </S.RecordLink>
+                            </Button>
                           </S.Overlay>
                         </S.ImageSection>
                         <S.ContentSection to={`/events/${event.eventId}`}>

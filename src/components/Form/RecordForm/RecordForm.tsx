@@ -12,6 +12,8 @@ import { useDeleteRecord, useUpdateRecord } from '@_hooks/useRecords';
 import AlertModal from '@_components/Modal/AlertModal/AlertModal';
 import TagSelect from '@_components/Select/TagSelect/TagSelect';
 import { isExcelFile } from '@_utils/excel';
+import { Link } from 'react-router-dom';
+import Button from '@_components/Common/Button/Button';
 
 interface Props {
   mode: 'create' | 'update' | 'read';
@@ -252,27 +254,23 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                   {mode === 'update' && (
                     <>
                       <S.GridCell key={`row-${recordId}-update`}>
-                        <S.Button
+                        <Button
                           onClick={() => handleUpdateRecord(record)}
-                          $textColor={updatedRecordId === recordId ? '#3959a5' : '#ffffff'}
-                          $bgColor={updatedRecordId === recordId ? '#ffffff' : '#3959a5'}
-                          $borderColor="#3959a5"
+                          variant={updatedRecordId === recordId ? 'secondary' : 'primary'}
                         >
                           {updatedRecordId === recordId ? '저장' : '수정'}
-                        </S.Button>
+                        </Button>
                       </S.GridCell>
                       <S.GridCell key={`row-${recordId}-delete`}>
-                        <S.Button
+                        <Button
                           onClick={() => {
                             setDeletedRecordId(recordId);
                             setIsDeleteModalOpen(true);
                           }}
-                          $textColor="#ffffff"
-                          $bgColor="#3959a5"
-                          $borderColor="#3959a5"
+                          variant="primary"
                         >
                           삭제
-                        </S.Button>
+                        </Button>
                       </S.GridCell>
                     </>
                   )}
@@ -359,18 +357,13 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
                   })}
                   <S.GridCell key={`row-${rowId}-action`}>
                     {index === 0 ? (
-                      <S.Button
-                        onClick={() => handleAddRow()}
-                        $textColor="#ffffff"
-                        $bgColor="#3959a5"
-                        $borderColor="#3959a5"
-                      >
+                      <Button onClick={() => handleAddRow()} variant="primary">
                         추가
-                      </S.Button>
+                      </Button>
                     ) : (
-                      <S.Button onClick={() => handleDeleteRow(row.id)} $borderColor="#b4b9c9">
+                      <Button onClick={() => handleDeleteRow(row.id)} variant="default">
                         삭제
-                      </S.Button>
+                      </Button>
                     )}
                   </S.GridCell>
                 </React.Fragment>
@@ -382,45 +375,35 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
       {/* 버튼 영역 */}
       {mode === 'read' && (
         <S.ButtonArea>
-          <S.LinkButton to={`/events/${eventId}`} $textColor="#3959a5" $borderColor="#3959a5">
+          <Button as={Link} to={`/events/${eventId}`} variant="secondary" fontWeight="semibold">
             이전
-          </S.LinkButton>
-          <S.LinkButton
-            to={`/events/${eventId}/records/create`}
-            $textColor="#ffffff"
-            $borderColor="#3959a5"
-            $bgColor="#3959a5"
-          >
+          </Button>
+          <Button as={Link} to={`/events/${eventId}/records/create`} variant="primary" fontWeight="semibold">
             등록
-          </S.LinkButton>
-          <S.LinkButton
-            to={`/events/${eventId}/records/update`}
-            $textColor="#ffffff"
-            $borderColor="#3959a5"
-            $bgColor="#3959a5"
-          >
+          </Button>
+          <Button as={Link} to={`/events/${eventId}/records/update`} variant="primary" fontWeight="semibold">
             수정
-          </S.LinkButton>
-          <S.Button onClick={handleExcelExport} $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
+          </Button>
+          <Button onClick={handleExcelExport} variant="primary" fontWeight="semibold">
             엑셀 다운로드
-          </S.Button>
-          <S.LinkButton to={`/events/${eventId}/card`} $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
+          </Button>
+          <Button as={Link} to={`/events/${eventId}/card`} variant="primary" fontWeight="semibold">
             감사장 전송
-          </S.LinkButton>
+          </Button>
         </S.ButtonArea>
       )}
       {mode === 'create' && (
         <S.ButtonArea>
-          <S.Button onClick={handleBack} $textColor="#3959a5" $borderColor="#3959a5">
+          <Button onClick={handleBack} variant="secondary" fontWeight="semibold">
             이전
-          </S.Button>
-          <S.Button onClick={handleDownloadExcel} $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
+          </Button>
+          <Button onClick={handleDownloadExcel} variant="primary" fontWeight="semibold">
             엑셀 양식 다운로드
-          </S.Button>
+          </Button>
           <label htmlFor="excel-upload">
-            <S.ImportButton $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
+            <Button as="p" variant="primary" fontWeight="semibold">
               엑셀 업로드
-            </S.ImportButton>
+            </Button>
           </label>
           <input
             type="file"
@@ -429,16 +412,16 @@ const RecordForm = ({ mode, event, records, rows, setRows, handleSubmit, handleC
             onChange={handleExcelImport}
             style={{ display: 'none' }}
           />
-          <S.Button onClick={handleSubmit} $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
+          <Button onClick={handleSubmit} variant="primary" fontWeight="semibold">
             저장
-          </S.Button>
+          </Button>
         </S.ButtonArea>
       )}
       {mode === 'update' && (
         <S.ButtonArea>
-          <S.LinkButton to={`/events/${eventId}/records`} $textColor="#3959a5" $borderColor="#3959a5">
+          <Button as={Link} to={`/events/${eventId}/records`} variant="secondary" fontWeight="semibold">
             완료
-          </S.LinkButton>
+          </Button>
         </S.ButtonArea>
       )}
       {/* 삭제 모달 */}

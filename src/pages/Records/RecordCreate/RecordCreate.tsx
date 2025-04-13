@@ -7,6 +7,8 @@ import * as S from './RecordCreate.styles';
 import Spinner from '@_components/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
 import RecordForm from '@_components/Form/RecordForm/RecordForm';
+import Button from '@_components/Common/Button/Button';
+import { Link } from 'react-router-dom';
 
 const RecordCreate = () => {
   const navigate = useNavigate();
@@ -92,9 +94,9 @@ const RecordCreate = () => {
       ) : (
         <S.Main $isEmpty>
           <EmptyState />
-          <S.LinkButton to={`/events/${eventId}`} $textColor="#3959a5" $borderColor="#3959a5">
+          <Button as={Link} to={`/events/${eventId}`} variant="secondary" fontWeight="semibold">
             돌아가기
-          </S.LinkButton>
+          </Button>
         </S.Main>
       )}
     </>

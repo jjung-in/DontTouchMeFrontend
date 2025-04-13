@@ -8,6 +8,8 @@ import AddressModal from '@_components/Modal/AddressModal/AddressModal';
 import CustomDatePicker from '@_components/CustomDatePicker/CustomDatePicker';
 import Switch from '@_components/Switch/Switch';
 import TagInput from '@_components/Tag/TagInput/TagInput';
+import Button from '@_components/Common/Button/Button';
+import { Link } from 'react-router-dom';
 
 interface Props {
   mode: 'create' | 'update' | 'read';
@@ -78,20 +80,12 @@ const EventForm = ({
                   {thumbnailPreview ? <S.ThumbnailImage src={thumbnailPreview} /> : <S.NoImage src={noimage} />}
                 </S.Thumbnail>
                 {thumbnailPreview ? (
-                  <S.Button
-                    onClick={handleThumbnailReset}
-                    $fontWeight="normal"
-                    $textColor="#ffffff"
-                    $bgColor="#3959a5"
-                    $borderColor="#3959a5"
-                  >
+                  <Button onClick={handleThumbnailReset} variant="primary">
                     취소
-                  </S.Button>
+                  </Button>
                 ) : (
                   <label htmlFor="thumbnail">
-                    <S.FileButton $fontWeight="normal" $borderColor="#3959a5">
-                      사진 등록하기
-                    </S.FileButton>
+                    <Button as="p">사진 등록하기</Button>
                   </label>
                 )}
                 <input
@@ -329,49 +323,35 @@ const EventForm = ({
         <S.ButtonArea>
           {mode === 'read' ? (
             <>
-              <S.LinkButton to="/events" $textColor="#3959a5" $borderColor="#3959a5">
+              <Button as={Link} to="/events" variant="secondary" fontWeight="semibold">
                 이전
-              </S.LinkButton>
-              <S.LinkButton
-                to={`/events/${eventId}/update`}
-                $textColor="#ffffff"
-                $borderColor="#3959a5"
-                $bgColor="#3959a5"
-              >
+              </Button>
+              <Button as={Link} to={`/events/${eventId}/update`} variant="primary" fontWeight="semibold">
                 수정
-              </S.LinkButton>
-              <S.Button onClick={handleDelete} $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
+              </Button>
+              <Button onClick={handleDelete} variant="primary" fontWeight="semibold">
                 삭제
-              </S.Button>
-              <S.LinkButton
-                to={`/events/${eventId}/records/create`}
-                $textColor="#ffffff"
-                $borderColor="#3959a5"
-                $bgColor="#3959a5"
-              >
+              </Button>
+              <Button as={Link} to={`/events/${eventId}/records/create`} variant="primary" fontWeight="semibold">
                 입출금 내역 등록
-              </S.LinkButton>
-              <S.LinkButton
-                to={`/events/${eventId}/records`}
-                $textColor="#ffffff"
-                $borderColor="#3959a5"
-                $bgColor="#3959a5"
-              >
+              </Button>
+              <Button as={Link} to={`/events/${eventId}/records`} variant="primary" fontWeight="semibold">
                 입출금 내역 조회
-              </S.LinkButton>
+              </Button>
             </>
           ) : (
             <>
-              <S.LinkButton
+              <Button
+                as={Link}
                 to={mode === 'create' ? '/events' : `/events/${eventId}`}
-                $textColor="#3959a5"
-                $borderColor="#3959a5"
+                variant="secondary"
+                fontWeight="semibold"
               >
                 이전
-              </S.LinkButton>
-              <S.Button onClick={handleSubmit} $textColor="#ffffff" $borderColor="#3959a5" $bgColor="#3959a5">
+              </Button>
+              <Button onClick={handleSubmit} variant="primary" fontWeight="semibold">
                 저장
-              </S.Button>
+              </Button>
             </>
           )}
         </S.ButtonArea>

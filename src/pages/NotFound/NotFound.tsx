@@ -1,4 +1,6 @@
+import Button from '@_components/Common/Button/Button';
 import * as S from './NotFound.styles';
+import { Link } from 'react-router-dom';
 
 const NotFound = () => {
   return (
@@ -11,7 +13,9 @@ const NotFound = () => {
         <br />
         요청하신 페이지의 주소가 변경, 삭제되어 찾을 수 없습니다.
       </S.ErrorMessage>
-      <S.LinkButton to="/">홈으로</S.LinkButton>
+      <Button as={Link} to="/" variant="primary" fontWeight="semibold">
+        홈으로
+      </Button>
     </S.Main>
   );
 };

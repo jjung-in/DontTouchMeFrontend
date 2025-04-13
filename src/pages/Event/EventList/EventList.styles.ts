@@ -80,16 +80,6 @@ export const Overlay = styled.div`
   }
 `;
 
-export const RecordLink = styled(Link)<{ variant?: 'create' | 'list' }>`
-  padding: 25px 20px;
-  border-radius: 10px;
-  background-color: ${({ variant }) => (variant === 'create' ? '#e4f0fa' : '#ffffff')};
-
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
 export const ContentSection = styled(Link)`
   display: block;
   padding: 20px;
