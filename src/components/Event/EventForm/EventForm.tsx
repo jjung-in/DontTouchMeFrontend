@@ -11,6 +11,7 @@ import Input from '@_components/Common/Input/Input';
 import ThumbnailUploader from '../ThumbnailUploader/ThumbnailUploader';
 import { useThumbnailUploader } from '@_hooks/custom/useThumbnailUploader';
 import EventFormButtons from '../EventFormButtons/EventFormButtons';
+import EventInputField from '../EventInputField/EventInputField';
 
 interface Props {
   mode: 'create' | 'update' | 'read';
@@ -67,34 +68,59 @@ const EventForm = ({
           isReadonly={mode === 'read'}
         />
         <S.FieldSection>
-          <S.FieldGroup>
-            <S.Label>
-              이벤트명
-              <img src={required} alt="필수 입력" />
-            </S.Label>
-            {mode === 'read' ? (
-              <Input as="span">{event?.eventName}</Input>
-            ) : (
-              <Input
-                type="text"
-                maxLength={100}
-                placeholder="이벤트명을 입력하세요."
+          {mode === 'read' ? (
+            <>
+              <S.FieldGroup>
+                <S.Label>
+                  이벤트명
+                  <img src={required} alt="필수 입력" />
+                </S.Label>
+                <Input as="span">{event?.eventName}</Input>
+              </S.FieldGroup>
+              <S.FieldGroup>
+                <S.Label>
+                  이벤트 유형
+                  <img src={required} alt="필수 입력" />
+                </S.Label>
+                <Input as="span">{event?.eventType}</Input>
+              </S.FieldGroup>
+              <S.FieldGroup>
+                <S.Label>
+                  이벤트 일정
+                  <img src={required} alt="필수 입력" />
+                </S.Label>
+                <Input as="span">{event?.eventDate}</Input>
+              </S.FieldGroup>
+              <S.FieldGroup>
+                <S.Label>
+                  이벤트 장소
+                  <img src={required} alt="필수 입력" />
+                </S.Label>
+                <Input as="span">{event?.address}</Input>
+              </S.FieldGroup>
+              {event && event.participants > 0 && (
+                <S.FieldGroup>
+                  <S.Label>예상 인원</S.Label>
+                  <Input as="span">{event?.participants}명</Input>
+                </S.FieldGroup>
+              )}
+            </>
+          ) : (
+            <>
+              <EventInputField
+                label="이벤트명"
+                error={formErrors?.eventName}
+                isRequired={true}
                 value={formValues?.eventName}
                 onChange={(e) => handleChange?.('eventName', e.target.value)}
-                state={formErrors?.eventName ? 'error' : 'default'}
+                maxLength={20}
+                placeholder="이벤트명을 입력하세요."
               />
-            )}
-            {formErrors?.eventName && <S.ErrorText>{formErrors?.eventName}</S.ErrorText>}
-          </S.FieldGroup>
-          <S.FieldGroup>
-            <S.Label>
-              이벤트 유형
-              <img src={required} alt="필수 입력" />
-            </S.Label>
-            {mode === 'read' ? (
-              <Input as="span">{event?.eventType}</Input>
-            ) : (
-              <>
+              <S.FieldGroup>
+                <S.Label>
+                  이벤트 유형
+                  <img src={required} alt="필수 입력" />
+                </S.Label>
                 <Input
                   as="select"
                   value={formValues?.eventType}
@@ -107,84 +133,58 @@ const EventForm = ({
                 {formValues?.eventType === '기타' && (
                   <Input
                     type="text"
-                    maxLength={10}
-                    placeholder="ex) 모임"
                     value={otherEventType}
                     onChange={(e) => setOtherEventType?.(e.target.value)}
+                    maxLength={10}
+                    placeholder="ex) 모임"
                     state={formErrors?.eventType ? 'error' : 'default'}
                   />
                 )}
-              </>
-            )}
-            {formErrors?.eventName && <S.ErrorText>{formErrors?.eventType}</S.ErrorText>}
-          </S.FieldGroup>
-          <S.FieldGroup>
-            <S.Label>
-              이벤트 일정
-              <img src={required} alt="필수 입력" />
-            </S.Label>
-            {mode === 'read' ? (
-              <Input as="span">{event?.eventDate}</Input>
-            ) : (
-              <CustomDatePicker
-                date={formValues?.eventDate || null}
-                onChange={(value) => handleChange?.('eventDate', value)}
-                isError={!!formErrors?.eventDate || false}
+                {formErrors?.eventName && <S.ErrorText>{formErrors?.eventType}</S.ErrorText>}
+              </S.FieldGroup>
+              <S.FieldGroup>
+                <S.Label>
+                  이벤트 일정
+                  <img src={required} alt="필수 입력" />
+                </S.Label>
+                <CustomDatePicker
+                  date={formValues?.eventDate || null}
+                  onChange={(value) => handleChange?.('eventDate', value)}
+                  isError={!!formErrors?.eventDate || false}
+                />
+                {formErrors?.eventDate && <S.ErrorText>{formErrors?.eventDate}</S.ErrorText>}
+              </S.FieldGroup>
+              <EventInputField
+                label="이벤트 장소"
+                error={formErrors?.address}
+                isRequired={true}
+                value={formValues?.address}
+                onClick={() => setIsModalOpen(true)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') setIsModalOpen(true);
+                }}
+                placeholder="장소를 입력하세요."
+                readOnly
               />
-            )}
-            {formErrors?.eventDate && <S.ErrorText>{formErrors?.eventDate}</S.ErrorText>}
-          </S.FieldGroup>
-          <S.FieldGroup>
-            <S.Label>
-              이벤트 장소
-              <img src={required} alt="필수 입력" />
-            </S.Label>
-            {mode === 'read' ? (
-              <Input as="span">{event?.address}</Input>
-            ) : (
-              <>
-                <Input
-                  type="text"
-                  placeholder="장소를 입력하세요."
-                  readOnly
-                  value={formValues?.address}
-                  onClick={() => setIsModalOpen(true)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') setIsModalOpen(true);
-                  }}
-                  state={formErrors?.address ? 'error' : 'default'}
-                />
-                <AddressModal
-                  isOpen={isModalOpen}
-                  onClose={() => setIsModalOpen(false)}
-                  onSelectAddress={(selectedAddress) => handleChange?.('address', selectedAddress)}
-                />
-              </>
-            )}
-            {formErrors?.address && <S.ErrorText>{formErrors?.address}</S.ErrorText>}
-          </S.FieldGroup>
-          {mode === 'read' ? (
-            event &&
-            event.participants > 0 && (
+              <AddressModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSelectAddress={(selectedAddress) => handleChange?.('address', selectedAddress)}
+              />
               <S.FieldGroup>
                 <S.Label>예상 인원</S.Label>
-                <Input as="span">{event?.participants}명</Input>
+                <S.NumberInputWrapper>
+                  <Input
+                    type="number"
+                    min={1}
+                    value={formValues?.participants || ''}
+                    onChange={(e) => handleChange?.('participants', Number(e.target.value))}
+                    variant="number"
+                    fullWidth={true}
+                  />
+                </S.NumberInputWrapper>
               </S.FieldGroup>
-            )
-          ) : (
-            <S.FieldGroup>
-              <S.Label>예상 인원</S.Label>
-              <S.NumberInputWrapper>
-                <Input
-                  type="number"
-                  min={1}
-                  value={formValues?.participants || ''}
-                  onChange={(e) => handleChange?.('participants', Number(e.target.value))}
-                  variant="number"
-                  fullWidth={true}
-                />
-              </S.NumberInputWrapper>
-            </S.FieldGroup>
+            </>
           )}
           <S.FieldGroup>
             <S.Label>입출금 항목</S.Label>
