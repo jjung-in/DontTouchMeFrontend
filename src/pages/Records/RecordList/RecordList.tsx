@@ -26,7 +26,7 @@ const RecordList = () => {
   });
 
   return (
-    <S.Main $isEmpty={isLoading || isFetching ? true : false}>
+    <S.Main $isEmpty={isLoading || isFetching}>
       {isLoading || isFetching ? (
         <Spinner />
       ) : (

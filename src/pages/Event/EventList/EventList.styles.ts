@@ -1,11 +1,9 @@
+import { MainStyle } from '@_styles/layout';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const Main = styled.main<{ $isEmpty?: boolean }>`
-  display: flex;
-  flex-direction: column;
-  justify-content: ${({ $isEmpty }) => ($isEmpty ? 'center' : 'flex-start')};
-  align-items: center;
+  ${MainStyle}
 `;
 
 export const CardSection = styled.div`

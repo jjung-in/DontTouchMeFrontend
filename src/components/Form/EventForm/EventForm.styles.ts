@@ -1,12 +1,5 @@
 import styled from 'styled-components';
 
-export const Main = styled.main`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #e4f0fa;
-`;
-
 export const Card = styled.div`
   display: flex;
   flex-direction: column;

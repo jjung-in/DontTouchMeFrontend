@@ -1,12 +1,10 @@
+import { MainStyle } from '@_styles/layout';
 import styled from 'styled-components';
 
 export const Main = styled.main<{ $isEmpty?: boolean }>`
-  display: flex;
-  flex-direction: column;
-  justify-content: ${(props) => (props.$isEmpty ? 'center' : 'flex-start')};
-  align-items: center;
-  gap: ${(props) => (props.$isEmpty ? '30px' : '0')};
-  background-color: #e4f0fa;
+  ${MainStyle}
+  gap: ${($isEmpty) => ($isEmpty ? '30px' : '0')};
+  background-color: ${({ theme }) => theme.color.primary[200]};
 `;
 
 export const EmptyBox = styled.div`

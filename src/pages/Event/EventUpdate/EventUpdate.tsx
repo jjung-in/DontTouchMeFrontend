@@ -10,6 +10,7 @@ import EventForm from '@_components/Form/EventForm/EventForm';
 import Spinner from '@_components/Common/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
 import { validateEventForm } from '@_utils/events';
+import PageTitle from '@_components/Common/PageTitle/PageTitle';
 
 const EventUpdate = () => {
   const navigate = useNavigate();
@@ -157,34 +158,37 @@ const EventUpdate = () => {
   };
 
   return (
-    <>
+    <S.Main $isEmpty={isFetching || !data}>
       {isFetching ? (
-        <S.Main>
-          <Spinner />
-        </S.Main>
+        <Spinner />
       ) : data ? (
-        <EventForm
-          mode="update"
-          formValues={formValues}
-          formErrors={formErrors}
-          thumbnailPreview={thumbnailPreview}
-          handleSubmit={handleSubmit}
-          handleChange={handleChange}
-          handleThumbnailChange={handleThumbnailChange}
-          handleThumbnailReset={handleThumbnailReset}
-          otherEventType={otherEventType}
-          setOtherEventType={setOtherEventType}
-          isTag={isTag}
-          setIsTag={setIsTag}
-          isTarget={isTarget}
-          setIsTarget={setIsTarget}
-        />
+        <>
+          <PageTitle
+            title="이벤트 상세 정보"
+            highlight="이벤트 상세 정보"
+            subtitle="등록된 이벤트의 상세 정보를 확인하고, 수정합니다."
+          />
+          <EventForm
+            mode="update"
+            formValues={formValues}
+            formErrors={formErrors}
+            thumbnailPreview={thumbnailPreview}
+            handleSubmit={handleSubmit}
+            handleChange={handleChange}
+            handleThumbnailChange={handleThumbnailChange}
+            handleThumbnailReset={handleThumbnailReset}
+            otherEventType={otherEventType}
+            setOtherEventType={setOtherEventType}
+            isTag={isTag}
+            setIsTag={setIsTag}
+            isTarget={isTarget}
+            setIsTarget={setIsTarget}
+          />
+        </>
       ) : (
-        <S.Main>
-          <EmptyState />
-        </S.Main>
+        <EmptyState />
       )}
-    </>
+    </S.Main>
   );
 };
 

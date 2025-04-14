@@ -7,6 +7,8 @@ import { validateEventForm } from '@_utils/events';
 import { isImageFile } from '@_utils/image';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import * as S from './EventCreate.styles';
+import PageTitle from '@_components/Common/PageTitle/PageTitle';
 
 const EventCreate = () => {
   const navigate = useNavigate();
@@ -115,22 +117,25 @@ const EventCreate = () => {
   };
 
   return (
-    <EventForm
-      mode="create"
-      formValues={formValues}
-      formErrors={formErrors}
-      thumbnailPreview={thumbnailPreview}
-      handleSubmit={handleSubmit}
-      handleChange={handleChange}
-      handleThumbnailChange={handleThumbnailChange}
-      handleThumbnailReset={handleThumbnailReset}
-      otherEventType={otherEventType}
-      setOtherEventType={setOtherEventType}
-      isTag={isTag}
-      setIsTag={setIsTag}
-      isTarget={isTarget}
-      setIsTarget={setIsTarget}
-    />
+    <S.Main>
+      <PageTitle title="이벤트 만들기" highlight="이벤트 만들기" subtitle="정보들을 입력해 이벤트를 생성합니다." />
+      <EventForm
+        mode="create"
+        formValues={formValues}
+        formErrors={formErrors}
+        thumbnailPreview={thumbnailPreview}
+        handleSubmit={handleSubmit}
+        handleChange={handleChange}
+        handleThumbnailChange={handleThumbnailChange}
+        handleThumbnailReset={handleThumbnailReset}
+        otherEventType={otherEventType}
+        setOtherEventType={setOtherEventType}
+        isTag={isTag}
+        setIsTag={setIsTag}
+        isTarget={isTarget}
+        setIsTarget={setIsTarget}
+      />
+    </S.Main>
   );
 };
 

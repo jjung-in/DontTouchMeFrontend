@@ -80,13 +80,11 @@ const RecordCreate = () => {
   };
 
   return (
-    <>
+    <S.Main $isEmpty={isFetching || !data}>
       {isFetching ? (
-        <S.Main $isEmpty>
-          <Spinner />
-        </S.Main>
+        <Spinner />
       ) : data ? (
-        <S.Main>
+        <>
           <PageTitle
             title="입출금 내역 등록"
             highlight="입출금 내역 등록"
@@ -101,16 +99,16 @@ const RecordCreate = () => {
             handleSubmit={handleSubmit}
             handleChange={handleChange}
           />
-        </S.Main>
+        </>
       ) : (
-        <S.Main $isEmpty>
+        <>
           <EmptyState />
           <Button as={Link} to={`/events/${eventId}`} variant="secondary" fontWeight="semibold">
             돌아가기
           </Button>
-        </S.Main>
+        </>
       )}
-    </>
+    </S.Main>
   );
 };
 
