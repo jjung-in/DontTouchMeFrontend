@@ -7,11 +7,10 @@ import AddressModal from '@_components/Modal/AddressModal/AddressModal';
 import CustomDatePicker from '@_components/Common/CustomDatePicker/CustomDatePicker';
 import Switch from '@_components/Common/Switch/Switch';
 import TagInput from '@_components/Common/TagInput/TagInput';
-import Button from '@_components/Common/Button/Button';
-import { Link } from 'react-router-dom';
 import Input from '@_components/Common/Input/Input';
 import ThumbnailUploader from '../ThumbnailUploader/ThumbnailUploader';
 import { useThumbnailUploader } from '@_hooks/custom/useThumbnailUploader';
+import EventFormButtons from '../EventFormButtons/EventFormButtons';
 
 interface Props {
   mode: 'create' | 'update' | 'read';
@@ -298,41 +297,7 @@ const EventForm = ({
           </S.FieldGroup>
         </S.FieldSection>
       </S.FormArea>
-      <S.ButtonArea>
-        {mode === 'read' ? (
-          <>
-            <Button as={Link} to="/events" variant="secondary" fontWeight="semibold">
-              이전
-            </Button>
-            <Button as={Link} to={`/events/${eventId}/update`} variant="primary" fontWeight="semibold">
-              수정
-            </Button>
-            <Button onClick={handleDelete} variant="primary" fontWeight="semibold">
-              삭제
-            </Button>
-            <Button as={Link} to={`/events/${eventId}/records/create`} variant="primary" fontWeight="semibold">
-              입출금 내역 등록
-            </Button>
-            <Button as={Link} to={`/events/${eventId}/records`} variant="primary" fontWeight="semibold">
-              입출금 내역 조회
-            </Button>
-          </>
-        ) : (
-          <>
-            <Button
-              as={Link}
-              to={mode === 'create' ? '/events' : `/events/${eventId}`}
-              variant="secondary"
-              fontWeight="semibold"
-            >
-              이전
-            </Button>
-            <Button onClick={handleSubmit} variant="primary" fontWeight="semibold">
-              저장
-            </Button>
-          </>
-        )}
-      </S.ButtonArea>
+      <EventFormButtons mode={mode} eventId={eventId} onSubmit={handleSubmit} onDelete={handleDelete} />
     </S.Card>
   );
 };

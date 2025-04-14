@@ -56,12 +56,6 @@ export const ErrorText = styled.span`
   ${ErrorTextStyle}
 `;
 
-export const ButtonArea = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-`;
-
 // Detail Styles
 
 export const DetailGroup = styled.div`
