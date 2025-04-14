@@ -12,6 +12,7 @@ import ThumbnailUploader from '../ThumbnailUploader/ThumbnailUploader';
 import { useThumbnailUploader } from '@_hooks/custom/useThumbnailUploader';
 import EventFormButtons from '../EventFormButtons/EventFormButtons';
 import EventInputField from '../EventInputField/EventInputField';
+import EventTextField from '../EventTextField/EventTextField';
 
 interface Props {
   mode: 'create' | 'update' | 'read';
@@ -70,39 +71,20 @@ const EventForm = ({
         <S.FieldSection>
           {mode === 'read' ? (
             <>
-              <S.FieldGroup>
-                <S.Label>
-                  이벤트명
-                  <img src={required} alt="필수 입력" />
-                </S.Label>
-                <Input as="span">{event?.eventName}</Input>
-              </S.FieldGroup>
-              <S.FieldGroup>
-                <S.Label>
-                  이벤트 유형
-                  <img src={required} alt="필수 입력" />
-                </S.Label>
-                <Input as="span">{event?.eventType}</Input>
-              </S.FieldGroup>
-              <S.FieldGroup>
-                <S.Label>
-                  이벤트 일정
-                  <img src={required} alt="필수 입력" />
-                </S.Label>
-                <Input as="span">{event?.eventDate}</Input>
-              </S.FieldGroup>
-              <S.FieldGroup>
-                <S.Label>
-                  이벤트 장소
-                  <img src={required} alt="필수 입력" />
-                </S.Label>
-                <Input as="span">{event?.address}</Input>
-              </S.FieldGroup>
+              <EventTextField label="이벤트명" isRequired={true}>
+                {event?.eventName}
+              </EventTextField>
+              <EventTextField label="이벤트 유형" isRequired={true}>
+                {event?.eventType}
+              </EventTextField>
+              <EventTextField label="이벤트 일정" isRequired={true}>
+                {event?.eventDate}
+              </EventTextField>
+              <EventTextField label="이벤트 장소" isRequired={true}>
+                {event?.address}
+              </EventTextField>
               {event && event.participants > 0 && (
-                <S.FieldGroup>
-                  <S.Label>예상 인원</S.Label>
-                  <Input as="span">{event?.participants}명</Input>
-                </S.FieldGroup>
+                <EventTextField label="예상 인원">{event?.participants}명</EventTextField>
               )}
             </>
           ) : (
