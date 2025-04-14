@@ -18,13 +18,7 @@ export interface LogInProps {
 }
 
 export interface LogInResponse {
-  accessToken: string;
-  refreshToken: string;
-  user: {
-    id: number;
-    name: string;
-    email: string;
-  };
+  message: string;
 }
 
 export interface EmailVerifyRequest {
