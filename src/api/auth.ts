@@ -26,7 +26,9 @@ export const PostSignUp = async (signUpData: SignUpProps): Promise<SignUpRespons
 
 export const PostLogIn = async (loginData: LogInProps): Promise<LogInResponse> => {
   try {
-    const { data } = await instance.post(`/member/login`, loginData);
+    const { data } = await instance.post(`/member/login`, loginData, {
+      withCredentials: true,
+    });
     return data;
   } catch (error) {
     console.error('LogIn Error:', error);
