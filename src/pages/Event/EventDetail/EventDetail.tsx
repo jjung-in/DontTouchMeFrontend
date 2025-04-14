@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import * as S from './EventDetail.styles';
 import Spinner from '@_components/Common/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
-import EventForm from '@_components/Form/EventForm/EventForm';
+import EventForm from '@_components/Event/EventForm/EventForm';
 import { useState } from 'react';
 import AlertModal from '@_components/Modal/AlertModal/AlertModal';
 import PageTitle from '@_components/Common/PageTitle/PageTitle';

@@ -1,7 +1,6 @@
 import { TCreateEventRequest, TEventDetailResponse, TFormErrors, TUpdateEventRequest } from '@_types/events.type';
 import { useParams } from 'react-router-dom';
 import * as S from './EventForm.styles';
-import noimage from '@_assets/images/noimage.png';
 import required from '@_assets/images/required.png';
 import { useState } from 'react';
 import AddressModal from '@_components/Modal/AddressModal/AddressModal';
@@ -11,21 +10,20 @@ import TagInput from '@_components/Common/TagInput/TagInput';
 import Button from '@_components/Common/Button/Button';
 import { Link } from 'react-router-dom';
 import Input from '@_components/Common/Input/Input';
+import ThumbnailUploader from '../ThumbnailUploader/ThumbnailUploader';
+import { useThumbnailUploader } from '@_hooks/custom/useThumbnailUploader';
 
 interface Props {
   mode: 'create' | 'update' | 'read';
   event?: TEventDetailResponse;
   formValues?: TCreateEventRequest | TUpdateEventRequest;
   formErrors?: TFormErrors;
-  thumbnailPreview?: string;
-  handleSubmit?: () => void;
+  onSubmit?: (thumbnailFile: File | null) => void;
   handleDelete?: () => void;
   handleChange?: (
     key: keyof (TCreateEventRequest | TUpdateEventRequest),
     value: string | number | boolean | string[] | null,
   ) => void;
-  handleThumbnailChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleThumbnailReset?: () => void;
   otherEventType?: string;
   setOtherEventType?: React.Dispatch<React.SetStateAction<string>>;
   isTag?: boolean;
@@ -39,12 +37,9 @@ const EventForm = ({
   event,
   formValues,
   formErrors,
-  thumbnailPreview,
-  handleSubmit,
+  onSubmit,
   handleDelete,
   handleChange,
-  handleThumbnailChange,
-  handleThumbnailReset,
   otherEventType,
   setOtherEventType,
   isTag,
@@ -55,38 +50,23 @@ const EventForm = ({
   const eventId = Number(useParams().eventId);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const { thumbnailFile, thumbnailPreview, handleThumbnailChange, handleThumbnailReset } = useThumbnailUploader(
+    formValues?.thumbnailUrl,
+  );
+
+  const handleSubmit = () => {
+    onSubmit?.(thumbnailFile);
+  };
+
   return (
     <S.Card>
       <S.FormArea>
-        <S.ImageSection>
-          {mode === 'read' ? (
-            <S.Thumbnail>
-              {event?.thumbnailUrl ? <S.ThumbnailImage src={event?.thumbnailUrl} /> : <S.NoImage src={noimage} />}
-            </S.Thumbnail>
-          ) : (
-            <>
-              <S.Thumbnail>
-                {thumbnailPreview ? <S.ThumbnailImage src={thumbnailPreview} /> : <S.NoImage src={noimage} />}
-              </S.Thumbnail>
-              {thumbnailPreview ? (
-                <Button onClick={handleThumbnailReset} variant="primary">
-                  취소
-                </Button>
-              ) : (
-                <label htmlFor="thumbnail">
-                  <Button as="p">사진 등록하기</Button>
-                </label>
-              )}
-              <input
-                type="file"
-                id="thumbnail"
-                accept="image/*"
-                onChange={handleThumbnailChange}
-                style={{ display: 'none' }}
-              />
-            </>
-          )}
-        </S.ImageSection>
+        <ThumbnailUploader
+          thumbnailPreview={mode === 'read' ? event?.thumbnailUrl || '' : thumbnailPreview}
+          onChange={handleThumbnailChange}
+          onReset={handleThumbnailReset}
+          isReadonly={mode === 'read'}
+        />
         <S.FieldSection>
           <S.FieldGroup>
             <S.Label>

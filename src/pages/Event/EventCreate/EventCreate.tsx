@@ -1,10 +1,9 @@
 import { uploadImage } from '@_api/image';
 import { getGeocode } from '@_api/map';
-import EventForm from '@_components/Form/EventForm/EventForm';
+import EventForm from '@_components/Event/EventForm/EventForm';
 import { useCreateEvent } from '@_hooks/useEvents';
 import { TCreateEventRequest, TFormErrors } from '@_types/events.type';
 import { validateEventForm } from '@_utils/events';
-import { isImageFile } from '@_utils/image';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as S from './EventCreate.styles';
@@ -16,8 +15,6 @@ const EventCreate = () => {
   const memberId = 1;
   const { mutate: createEvent } = useCreateEvent(memberId);
 
-  const [thumbnail, setThumbnail] = useState<File | null>(null);
-  const [thumbnailPreview, setThumbnailPreview] = useState<string>('');
   const [otherEventType, setOtherEventType] = useState<string>('');
   const [isTag, setIsTag] = useState<boolean>(false);
   const [isTarget, setIsTarget] = useState<boolean>(false);
@@ -53,38 +50,18 @@ const EventCreate = () => {
     });
   };
 
-  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (!selectedFile) return;
-    if (!isImageFile(selectedFile)) {
-      alert('이미지 형식의 파일만 업로드할 수 있습니다.');
-      e.target.value = '';
-      return;
-    }
-    setThumbnail(selectedFile);
-    setThumbnailPreview(URL.createObjectURL(selectedFile));
-    e.target.value = '';
-  };
-
-  const handleThumbnailReset = () => {
-    if (thumbnailPreview) {
-      URL.revokeObjectURL(thumbnailPreview);
-    }
-    setThumbnail(null);
-    setThumbnailPreview('');
-  };
-
-  const handleSubmit = async () => {
+  const handleSubmit = async (thumbnailFile: File | null) => {
     const errors = validateEventForm(formValues, otherEventType, isTag, isTarget);
     setFormErrors(errors);
     if (Object.keys(errors).length > 0) return;
 
-    let imageUrl = formValues.thumbnailUrl;
-    if (thumbnail) {
-      imageUrl = await uploadImage(thumbnail);
-      if (!imageUrl) {
-        console.warn('이미지 업로드에 실패했습니다.');
+    let imageUrl = '';
+    try {
+      if (thumbnailFile) {
+        imageUrl = await uploadImage(thumbnailFile);
       }
+    } catch {
+      console.warn('이미지 업로드에 실패했습니다.');
     }
 
     let latitude = 0;
@@ -123,11 +100,8 @@ const EventCreate = () => {
         mode="create"
         formValues={formValues}
         formErrors={formErrors}
-        thumbnailPreview={thumbnailPreview}
-        handleSubmit={handleSubmit}
+        onSubmit={handleSubmit}
         handleChange={handleChange}
-        handleThumbnailChange={handleThumbnailChange}
-        handleThumbnailReset={handleThumbnailReset}
         otherEventType={otherEventType}
         setOtherEventType={setOtherEventType}
         isTag={isTag}

@@ -1,3 +1,4 @@
+import { ErrorTextStyle } from '@_styles/event';
 import styled from 'styled-components';
 
 export const Card = styled.div`
@@ -16,33 +17,6 @@ export const FormArea = styled.div`
   display: flex;
   gap: 140px;
 `;
-
-export const ImageSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  width: 250px;
-`;
-
-export const Thumbnail = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 250px;
-  border-radius: 10px;
-  background-color: #f1f3f7;
-  overflow: hidden;
-`;
-
-export const ThumbnailImage = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-`;
-
-export const NoImage = styled.img``;
 
 // Field Styles
 
@@ -79,7 +53,7 @@ export const NumberInputWrapper = styled.div<{ $isError?: boolean }>`
 `;
 
 export const ErrorText = styled.span`
-  color: #ff3a44;
+  ${ErrorTextStyle}
 `;
 
 export const ButtonArea = styled.div`
