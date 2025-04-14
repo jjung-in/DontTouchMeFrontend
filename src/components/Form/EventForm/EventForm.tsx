@@ -11,6 +11,7 @@ import TagInput from '@_components/Common/TagInput/TagInput';
 import Button from '@_components/Common/Button/Button';
 import { Link } from 'react-router-dom';
 import Input from '@_components/Common/Input/Input';
+import PageTitle from '@_components/Common/PageTitle/PageTitle';
 
 interface Props {
   mode: 'create' | 'update' | 'read';
@@ -58,15 +59,17 @@ const EventForm = ({
   return (
     <S.Main>
       {mode === 'create' ? (
-        <>
-          <S.Title>이벤트 만들기</S.Title>
-          <S.SubTitle>정보들을 입력해 이벤트를 생성합니다.</S.SubTitle>
-        </>
+        <PageTitle
+          title="이벤트 만들기"
+          highlight="이벤트 만들기"
+          subtitle="등록된 이벤트의 상세 정보를 확인하고, 수정합니다."
+        />
       ) : (
-        <>
-          <S.Title>이벤트 상세 정보</S.Title>
-          <S.SubTitle>등록된 이벤트의 상세 정보를 확인하고, 수정합니다.</S.SubTitle>
-        </>
+        <PageTitle
+          title="이벤트 상세 정보"
+          highlight="이벤트 상세 정보"
+          subtitle="등록된 이벤트의 상세 정보를 확인하고, 수정합니다."
+        />
       )}
       <S.Card>
         <S.FormArea>

@@ -12,7 +12,7 @@ const HeroSection = () => {
         <S.Title>
           번거로운 비용정산?
           <br />
-          <S.HighlightText>한 번의 클릭</S.HighlightText>으로 끝!
+          <span>한 번의 클릭</span>으로 끝!
         </S.Title>
       </FadeInUp>
       <S.FloatingGroup>

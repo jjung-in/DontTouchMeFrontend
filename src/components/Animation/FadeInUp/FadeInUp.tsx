@@ -13,7 +13,7 @@ interface Props {
 }
 
 const FadeInUp = ({ children, delay = 0 }: Props) => {
-  const { observerRef, visible } = useIntersectionObserver({ threshold: 0.8, once: true });
+  const { observerRef, visible } = useIntersectionObserver({ threshold: 0.5, once: true });
 
   return (
     <S.FadeInUpWrapper ref={observerRef} $visible={visible} $delay={delay}>

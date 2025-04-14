@@ -1,3 +1,4 @@
+import { TitleStyle } from '@_styles/typography';
 import { Link } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 
@@ -9,12 +10,7 @@ export const Section = styled.section`
 `;
 
 export const Title = styled.p`
-  font-size: 48px;
-  font-weight: 700;
-`;
-
-export const HighlightText = styled.span`
-  color: #3959a5;
+  ${TitleStyle}
 `;
 
 export const Steps = styled.div`
@@ -115,7 +111,7 @@ export const LinkButton = styled(Link)`
   font-size: 24px;
   font-weight: 600;
   border-radius: 50px;
-  background-color: #3959a5;
+  background-color: ${({ theme }) => theme.color.primary[500]};
   box-shadow: inset 6px 6px 50px #5db3ff;
 
   img {

@@ -10,6 +10,7 @@ import RecordForm from '@_components/Form/RecordForm/RecordForm';
 import Button from '@_components/Common/Button/Button';
 import { Link } from 'react-router-dom';
 import { validateRecordForm } from '@_utils/records';
+import PageTitle from '@_components/Common/PageTitle/PageTitle';
 
 const RecordCreate = () => {
   const navigate = useNavigate();
@@ -86,8 +87,11 @@ const RecordCreate = () => {
         </S.Main>
       ) : data ? (
         <S.Main>
-          <S.Title>입출금 내역 등록</S.Title>
-          <S.SubTitle>등록된 이벤트에 입출금 내역을 등록합니다.</S.SubTitle>
+          <PageTitle
+            title="입출금 내역 등록"
+            highlight="입출금 내역 등록"
+            subtitle="등록된 이벤트에 대한 입출금 내역을 등록합니다."
+          />
           <RecordForm
             mode="create"
             event={data}

@@ -9,9 +9,9 @@ const BannerSection = () => {
       <FadeInUp>
         <S.Title>
           어디서나&nbsp;
-          <S.HighlightText>간편</S.HighlightText>
+          <span>간편</span>
           하게&nbsp;
-          <S.HighlightText>페이블</S.HighlightText>
+          <span>페이블</span>
         </S.Title>
       </FadeInUp>
       <RotateY>

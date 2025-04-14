@@ -52,7 +52,7 @@ export const CreateLink = styled(Link)`
   font-weight: 600;
   color: #6d758f;
   background: #ffffff;
-  border: 1px solid #3959a5;
+  border: 1px solid ${({ theme }) => theme.color.primary[500]};
   border-radius: 12px;
 `;
 

@@ -32,7 +32,7 @@ const StepSection = () => {
     <S.Section>
       <FadeInUp delay={0.1}>
         <S.Title>
-          <S.HighlightText>페이블</S.HighlightText> 이렇게 이용하세요!
+          <span>페이블</span> 이렇게 이용하세요!
         </S.Title>
       </FadeInUp>
       <S.Steps>

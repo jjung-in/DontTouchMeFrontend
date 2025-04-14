@@ -7,18 +7,6 @@ export const Main = styled.main`
   background-color: #e4f0fa;
 `;
 
-export const Title = styled.h2`
-  margin-bottom: 35px;
-  color: #3959a5;
-  font-size: 48px;
-  font-weight: 600;
-`;
-
-export const SubTitle = styled.p`
-  margin-bottom: 30px;
-  font-size: 20px;
-`;
-
 export const Card = styled.div`
   display: flex;
   flex-direction: column;
