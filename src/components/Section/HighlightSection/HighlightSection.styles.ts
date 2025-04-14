@@ -1,4 +1,4 @@
-import { TitleStyle } from '@_styles/typography';
+import { TitleStyle } from '@_styles/common';
 import styled from 'styled-components';
 
 export const Section = styled.section`

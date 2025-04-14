@@ -1,4 +1,4 @@
-import { MainStyle } from '@_styles/layout';
+import { MainStyle } from '@_styles/common';
 import styled from 'styled-components';
 
 export const Main = styled.main<{ $isEmpty?: boolean }>`

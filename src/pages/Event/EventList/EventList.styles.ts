@@ -1,4 +1,4 @@
-import { MainStyle } from '@_styles/layout';
+import { MainStyle } from '@_styles/common';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 

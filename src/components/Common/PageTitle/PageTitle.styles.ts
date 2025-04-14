@@ -1,4 +1,4 @@
-import { SubtitleStyle, TitleStyle } from '@_styles/typography';
+import { SubtitleStyle, TitleStyle } from '@_styles/common';
 import styled from 'styled-components';
 
 export const Title = styled.h2`

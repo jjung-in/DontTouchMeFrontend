@@ -1,4 +1,4 @@
-import { TitleStyle } from '@_styles/typography';
+import { TitleStyle } from '@_styles/common';
 import { Link } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 
