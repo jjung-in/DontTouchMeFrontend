@@ -1,4 +1,4 @@
-import { css } from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const MainStyle = css<{ $isEmpty?: boolean }>`
   display: flex;
@@ -20,4 +20,12 @@ export const TitleStyle = css`
 export const SubtitleStyle = css`
   color: ${({ theme }) => theme.color.text.black};
   font-size: ${({ theme }) => theme.fontSize.xl};
+`;
+
+export const InfiniteScrollObserverStyle = styled.div`
+  height: 1px;
+`;
+
+export const BoldTextStyle = styled.span`
+  font-weight: bold;
 `;

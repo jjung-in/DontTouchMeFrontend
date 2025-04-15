@@ -1,19 +1,22 @@
 import { useEventList } from '@_hooks/useEvents';
 import { useIntersectionObserver } from '@_hooks/observer/useIntersectionObserver';
-import { getEventStatus } from '@_utils/events';
 import * as S from './EventList.styles';
 import Spinner from '@_components/Common/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
-import noimage from '@_assets/images/noimage.png';
-import Button from '@_components/Common/Button/Button';
-import { Link } from 'react-router-dom';
 import PageTitle from '@_components/Common/PageTitle/PageTitle';
+import { InfiniteScrollObserverStyle } from '@_styles/common';
+import EventCard from '@_components/Event/EventCard/EventCard';
+
+const EVENT_LIST_TITLE = {
+  title: '이벤트 목록',
+  subtitle: '등록된 이벤트를 확인하고, 입출금 내역을 등록할 수 있습니다.',
+  highlight: '목록',
+};
+const PAGE_SIZE = 9;
 
 const EventList = () => {
   const memberId = 1;
-  const pageSize = 9;
-  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useEventList(memberId, pageSize);
-  const events = data?.pages.flatMap((page) => page.events) || [];
+  const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useEventList(memberId, PAGE_SIZE);
   const { observerRef } = useIntersectionObserver({
     onIntersect: () => {
       if (hasNextPage && !isFetchingNextPage) {
@@ -22,6 +25,7 @@ const EventList = () => {
     },
     threshold: 0.1,
   });
+  const events = data?.pages.flatMap((page) => page.events) || [];
 
   return (
     <S.Main $isEmpty={isLoading ? true : false}>
@@ -29,46 +33,20 @@ const EventList = () => {
         <Spinner />
       ) : (
         <>
-          <PageTitle
-            title="이벤트 목록"
-            subtitle="등록된 이벤트를 확인하고, 입출금 내역을 등록할 수 있습니다."
-            highlight="목록"
-          />
+          <PageTitle {...EVENT_LIST_TITLE} />
           {events.length > 0 ? (
-            <S.CardSection>
+            <S.CardArea>
               <S.CardList>
-                {events.map((event) => {
-                  const status = getEventStatus(event.eventDate);
-                  return (
-                    <div key={event.eventId}>
-                      <S.Card>
-                        <S.ImageSection>
-                          {event.thumbnailUrl ? <S.CardImage src={event.thumbnailUrl} /> : <S.NoImage src={noimage} />}
-                          <S.Overlay>
-                            <Button as={Link} to={`/events/${event.eventId}/records/create`} variant="skyblue">
-                              입출금 내역 <S.BoldText>등록</S.BoldText>
-                            </Button>
-                            <Button as={Link} to={`/events/${event.eventId}/records`} variant="white">
-                              입출금 내역 <S.BoldText>조회</S.BoldText>
-                            </Button>
-                          </S.Overlay>
-                        </S.ImageSection>
-                        <S.ContentSection to={`/events/${event.eventId}`}>
-                          <S.StatusBadge $status={status}>{status}</S.StatusBadge>
-                          <S.CardTitle>{event.eventName}</S.CardTitle>
-                          <S.CardDate>{event.eventDate}</S.CardDate>
-                        </S.ContentSection>
-                      </S.Card>
-                    </div>
-                  );
-                })}
+                {events.map((event) => (
+                  <EventCard key={event.eventId} event={event} />
+                ))}
               </S.CardList>
               {isFetchingNextPage && hasNextPage && (
                 <S.FetchingBox>
                   <Spinner />
                 </S.FetchingBox>
               )}
-            </S.CardSection>
+            </S.CardArea>
           ) : (
             <S.EmptyBox>
               <EmptyState message="등록된 이벤트가 없습니다." />
@@ -76,7 +54,7 @@ const EventList = () => {
           )}
         </>
       )}
-      <div ref={observerRef} style={{ height: 1 }} />
+      <InfiniteScrollObserverStyle ref={observerRef} />
     </S.Main>
   );
 };

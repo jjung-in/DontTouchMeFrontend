@@ -7,7 +7,7 @@ export const Container = styled.div`
   width: 1000px;
   padding: 100px 100px 50px 100px;
   border-radius: 10px;
-  background-color: #ffffff;
+  background-color: ${({ theme }) => theme.color.primary[50]};
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
 `;

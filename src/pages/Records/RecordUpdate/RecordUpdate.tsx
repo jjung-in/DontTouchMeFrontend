@@ -7,6 +7,7 @@ import { Spinner } from '@_components/Common/Spinner/Spinner.styles';
 import RecordForm from '@_components/Form/RecordForm/RecordForm';
 import EmptyState from '@_components/EmptyState/EmptyState';
 import PageTitle from '@_components/Common/PageTitle/PageTitle';
+import { InfiniteScrollObserverStyle } from '@_styles/common';
 
 const RecordUpdate = () => {
   const eventId = Number(useParams().eventId);
@@ -44,7 +45,7 @@ const RecordUpdate = () => {
           )}
         </>
       )}
-      <div ref={observerRef} style={{ height: 1 }} />
+      <InfiniteScrollObserverStyle ref={observerRef} />
     </S.Main>
   );
 };

@@ -3,7 +3,7 @@ import required from '@_assets/images/required.png';
 import CustomDatePicker from '@_components/Common/CustomDatePicker/CustomDatePicker';
 
 /**
- * EventDateField 컴포넌트 (이벤트 날짜를 선택할 수 있는 데이트 필드 컴포넌트트)
+ * EventDateField 컴포넌트 (이벤트 날짜를 선택할 수 있는 데이트 필드 컴포넌트)
  * @param label - 필드 상단에 표시할 텍스트 라벨
  * @param error - 유효성 검사 실패 시 표시할 에러 메시지
  * @param date - 현재 선택된 날짜 값

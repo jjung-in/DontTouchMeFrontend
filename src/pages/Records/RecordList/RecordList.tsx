@@ -9,6 +9,7 @@ import RecordForm from '@_components/Form/RecordForm/RecordForm';
 import Button from '@_components/Common/Button/Button';
 import { Link } from 'react-router-dom';
 import PageTitle from '@_components/Common/PageTitle/PageTitle';
+import { InfiniteScrollObserverStyle } from '@_styles/common';
 
 const RecordList = () => {
   const eventId = Number(useParams().eventId);
@@ -48,7 +49,7 @@ const RecordList = () => {
           )}
         </>
       )}
-      <div ref={observerRef} style={{ height: 1 }} />
+      <InfiniteScrollObserverStyle ref={observerRef} />
     </S.Main>
   );
 };
