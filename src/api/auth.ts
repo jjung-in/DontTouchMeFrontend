@@ -71,6 +71,23 @@ export const ReissueAccessToken = async (): Promise<string> => {
 
 export const CookieToHeader = async (): Promise<string> => {
   try {
+    const response = await instance.get('/jwt');
+
+    const rawToken = response.headers['authorization'];
+    const accessToken = rawToken?.startsWith('Bearer ') ? rawToken.slice(7) : rawToken;
+
+    if (!accessToken) {
+      throw new Error('헤더로 토큰 이동 실패');
+    }
+
+    return accessToken;
+  } catch (error) {
+    console.error('CookieToHeader Error:', error);
+    throw new Error('쿠키 → 헤더 이동 실패');
+  }
+};
+
+
 export const EmailDuplicateCheck = async (email: string): Promise<boolean> => {
   try {
     const { data } = await instance.get('./member/check-email-duplicate', {
