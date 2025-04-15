@@ -51,6 +51,26 @@ export const PostLogIn = async (loginData: LogInProps): Promise<LogInResponse> =
   }
 };
 
+export const ReissueAccessToken = async (): Promise<string> => {
+  try {
+    const response = await instance.post('jwt/reissue', null);
+
+    const rawToken = response.headers['authorization'];
+    const accessToken = rawToken?.startsWith('Bearer ') ? rawToken.slice(7) : rawToken;
+
+    if (!accessToken) {
+      throw new Error('accessToken 재발급 실패');
+    }
+
+    return accessToken;
+  } catch (error) {
+    console.error('Token Reissue Error:', error);
+    throw new Error('accessToken 재발급 오류');
+  }
+};
+
+export const CookieToHeader = async (): Promise<string> => {
+  try {
 export const EmailDuplicateCheck = async (email: string): Promise<boolean> => {
   try {
     const { data } = await instance.get('./member/check-email-duplicate', {
