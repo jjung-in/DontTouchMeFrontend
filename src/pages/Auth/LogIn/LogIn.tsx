@@ -1,39 +1,13 @@
-import { useState } from 'react';
+import { useLogInFlow } from '@_hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { LogInProps } from '@_types/auth.type';
-import { useLogIn } from '@_hooks/useAuth';
 
 const LogIn = () => {
-  const [FormData, setFormData] = useState<LogInProps>({
-    Email: '',
-    Password: '',
-  });
+  const { FormData, setFormData, handleLogIn } = useLogInFlow();
   const navigate = useNavigate();
-  const LogIn = useLogIn(FormData);
-
-  const HandleLogIn = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!FormData.Email || !FormData.Password) {
-      console.log('모든 칸을 채워주세요.');
-      return;
-    }
-
-    try {
-      await LogIn();
-      navigate('../');
-    } catch (errer) {
-      console.error('로그인 중 오류 발생:', errer);
-    }
-  };
-
-  const HandleSignUp = () => {
-    navigate('../SignUp/SignUp');
-  };
 
   return (
     <div>
-      <form onSubmit={HandleLogIn}>
+      <form onSubmit={handleLogIn}>
         <input
           type="email"
           placeholder="이메일을 입력해주세요"
@@ -51,7 +25,7 @@ const LogIn = () => {
         />
 
         <button type="submit">로그인</button>
-        <button type="button" onClick={HandleSignUp}>
+        <button type="button" onClick={() => navigate('../signup')}>
           회원가입
         </button>
       </form>
