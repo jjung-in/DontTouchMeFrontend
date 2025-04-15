@@ -23,6 +23,7 @@ const color = {
     green: '#61f52c',
     yellow: '#fcce39',
     blue: '#3959a5',
+    image: '#f1f3f7',
   },
   error: '#ff3a44',
 };

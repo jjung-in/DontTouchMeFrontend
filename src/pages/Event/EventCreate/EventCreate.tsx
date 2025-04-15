@@ -2,59 +2,23 @@ import { uploadImage } from '@_api/image';
 import { getGeocode } from '@_api/map';
 import EventForm from '@_components/Event/EventForm/EventForm';
 import { useCreateEvent } from '@_hooks/useEvents';
-import { TCreateEventRequest, TFormErrors } from '@_types/events.type';
-import { validateEventForm } from '@_utils/events';
-import { useState } from 'react';
+import { TEventFormValues } from '@_types/events.type';
 import { useNavigate } from 'react-router-dom';
 import * as S from './EventCreate.styles';
 import PageTitle from '@_components/Common/PageTitle/PageTitle';
 
+const EVENT_CREATE_TITLE = {
+  title: '이벤트 만들기',
+  highlight: '이벤트 만들기',
+  subtitle: '정보들을 입력해 이벤트를 생성합니다.',
+};
+
 const EventCreate = () => {
   const navigate = useNavigate();
-
   const memberId = 1;
   const { mutate: createEvent } = useCreateEvent(memberId);
 
-  const [otherEventType, setOtherEventType] = useState<string>('');
-  const [isTag, setIsTag] = useState<boolean>(false);
-  const [isTarget, setIsTarget] = useState<boolean>(false);
-  const [formValues, setFormValues] = useState<TCreateEventRequest>({
-    memberId: memberId,
-    thumbnailUrl: '',
-    eventName: '',
-    eventType: '결혼식',
-    eventDate: '',
-    address: '',
-    latitude: 0,
-    longitude: 0,
-    participants: '',
-    isType: true,
-    isHistory: true,
-    isPrice: true,
-    isName: false,
-    tags: [],
-    isImage: false,
-    targets: [],
-    isSend: false,
-    sendType: 'EMAIL',
-    sendTypeValid: false,
-  });
-  const [formErrors, setFormErrors] = useState<TFormErrors>({});
-
-  const handleChange = (key: keyof TCreateEventRequest, value: string | number | boolean | string[] | null) => {
-    setFormValues((prev) => ({ ...prev, [key]: value }));
-    setFormErrors((prevErrors) => {
-      if (!prevErrors[key]) return prevErrors;
-      const { [key]: _, ...rest } = prevErrors;
-      return rest;
-    });
-  };
-
-  const handleSubmit = async (thumbnailFile: File | null) => {
-    const errors = validateEventForm(formValues, otherEventType, isTag, isTarget);
-    setFormErrors(errors);
-    if (Object.keys(errors).length > 0) return;
-
+  const handleSubmit = async (formValues: TEventFormValues, thumbnailFile: File | null) => {
     let imageUrl = '';
     try {
       if (thumbnailFile) {
@@ -76,14 +40,25 @@ const EventCreate = () => {
 
     createEvent(
       {
-        ...formValues,
+        memberId,
         thumbnailUrl: imageUrl,
+        eventName: formValues.eventName,
+        eventType: formValues.eventType === '기타' ? formValues.otherEventType : formValues.eventType,
+        eventDate: formValues.eventDate,
+        address: formValues.address,
         latitude,
         longitude,
-        eventType: formValues.eventType === '기타' ? otherEventType : formValues.eventType,
-        tags: isTag ? formValues.tags : [],
-        targets: isTarget ? formValues.targets : [],
+        participants: formValues.participants,
+        isType: true,
+        isHistory: true,
+        isPrice: true,
+        isName: formValues.isName,
+        tags: formValues.isTag ? formValues.tags : null,
+        isImage: formValues.isImage,
+        targets: formValues.isTarget ? formValues.targets : null,
+        isSend: formValues.isSend,
         sendType: formValues.isSend ? formValues.sendType : null,
+        sendTypeValid: false,
       },
       {
         onSuccess: () => {
@@ -95,20 +70,8 @@ const EventCreate = () => {
 
   return (
     <S.Main>
-      <PageTitle title="이벤트 만들기" highlight="이벤트 만들기" subtitle="정보들을 입력해 이벤트를 생성합니다." />
-      <EventForm
-        mode="create"
-        formValues={formValues}
-        formErrors={formErrors}
-        onSubmit={handleSubmit}
-        handleChange={handleChange}
-        otherEventType={otherEventType}
-        setOtherEventType={setOtherEventType}
-        isTag={isTag}
-        setIsTag={setIsTag}
-        isTarget={isTarget}
-        setIsTarget={setIsTarget}
-      />
+      <PageTitle {...EVENT_CREATE_TITLE} />
+      <EventForm mode="create" onSubmit={handleSubmit} />
     </S.Main>
   );
 };

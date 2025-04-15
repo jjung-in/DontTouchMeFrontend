@@ -53,4 +53,22 @@ export interface TUpdateEventRequest {
   sendTypeValid: boolean;
 }
 
-export type TFormErrors = Partial<Record<keyof TCreateEventRequest, string>>;
+export interface TEventFormValues {
+  thumbnailUrl: string;
+  eventName: string;
+  eventType: string;
+  otherEventType: string;
+  eventDate: string;
+  address: string;
+  participants: number | '';
+  isName: boolean;
+  isTag: boolean;
+  tags: string[] | null;
+  isImage: boolean;
+  isTarget: boolean;
+  targets: string[] | null;
+  isSend: boolean;
+  sendType: 'EMAIL' | 'PHONE' | null;
+}
+
+export type TEventFormErrors = Partial<Record<keyof TEventFormValues, string>>;

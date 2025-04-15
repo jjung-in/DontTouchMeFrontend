@@ -25,3 +25,7 @@ export const SubtitleStyle = css`
 export const InfiniteScrollObserverStyle = styled.div`
   height: 1px;
 `;
+
+export const BoldTextStyle = styled.span`
+  font-weight: bold;
+`;
