@@ -8,6 +8,7 @@ import noimage from '@_assets/images/noimage.png';
 import Button from '@_components/Common/Button/Button';
 import { Link } from 'react-router-dom';
 import PageTitle from '@_components/Common/PageTitle/PageTitle';
+import { InfiniteScrollObserverStyle } from '@_styles/common';
 
 const EventList = () => {
   const memberId = 1;
@@ -76,7 +77,7 @@ const EventList = () => {
           )}
         </>
       )}
-      <div ref={observerRef} style={{ height: 1 }} />
+      <InfiniteScrollObserverStyle ref={observerRef} />
     </S.Main>
   );
 };
