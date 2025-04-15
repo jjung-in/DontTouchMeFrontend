@@ -1,22 +1,51 @@
 import { useState, useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { PostSignUp, EmailDuplicateCheck, SendAuthNumber, CheckAuthNumber } from '@_api/auth';
-import { SignUpProps, EmailVerifyRequest } from '@_types/auth.type';
+import { PostSignUp, EmailDuplicateCheck, SendAuthNumber, CheckAuthNumber, PostLogIn } from '@_api/auth';
+import { SignUpProps, EmailVerifyRequest, LogInProps } from '@_types/auth.type';
+// import { useNavigate } from 'react-router-dom';
 
-//로그인
-export const useLogIn = () => {
-  return useMutation({
+export const useLogInFlow = () => {
+  const [FormData, setFormData] = useState<LogInProps>({
+    Email: '',
+    Password: '',
+  });
+
+  // const navigate = useNavigate();
+
+  const logInMutation = useMutation({
     mutationFn: PostLogIn,
-    onSuccess: (result) => {
-      console.log('login success', result);
-      // const { accessToken, refreshToken } = result;
-      // localStorage.setItem('accessToken', accessToken);
-      // localStorage.setItem('refreshToken', refreshToken);
-    },
+    onSuccess: (accessToken) => {
+      console.log(accessToken);
+      if (!accessToken) {
+        console.error('토큰 없음');
+        throw new Error('accessToken 없음');
+      }      
+      console.log('로그인 성공');
+      localStorage.setItem('accessToken', accessToken);
+      // navigate('/');
+    },    
     onError: (error) => {
-      console.error('LogIn Error', error);
+      console.error('로그인 실패', error);
     },
   });
+
+  const handleLogIn = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!FormData.Email || !FormData.Password) {
+      console.log('모든 칸을 채워주세요.');
+      return;
+    }
+
+    logInMutation.mutate(FormData);
+  };
+
+  return {
+    FormData,
+    setFormData,
+    logInMutation,
+    handleLogIn,
+  };
 };
 
 export const useSignUpFlow = () => {
