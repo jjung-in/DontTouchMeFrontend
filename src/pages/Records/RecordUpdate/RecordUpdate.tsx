@@ -6,6 +6,7 @@ import * as S from './RecordUpdate.styles';
 import { Spinner } from '@_components/Common/Spinner/Spinner.styles';
 import RecordForm from '@_components/Form/RecordForm/RecordForm';
 import EmptyState from '@_components/EmptyState/EmptyState';
+import PageTitle from '@_components/Common/PageTitle/PageTitle';
 
 const RecordUpdate = () => {
   const eventId = Number(useParams().eventId);
@@ -24,13 +25,16 @@ const RecordUpdate = () => {
   });
 
   return (
-    <S.Main $isEmpty={isLoading || isFetching ? true : false}>
+    <S.Main $isEmpty={isLoading || isFetching}>
       {isLoading || isFetching ? (
         <Spinner />
       ) : (
         <>
-          <S.Title>입출금 내역 수정</S.Title>
-          <S.SubTitle>등록된 이벤트에 입출금 내역을 수정합니다.</S.SubTitle>
+          <PageTitle
+            title="입출금 내역 수정"
+            highlight="입출금 내역 수정"
+            subtitle="등록된 이벤트에 대한 입출금 내역을 수정합니다."
+          />
           {event && records.length > 0 ? (
             <RecordForm mode="update" event={event} records={records} />
           ) : (

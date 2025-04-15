@@ -1,3 +1,4 @@
+import { TitleStyle } from '@_styles/common';
 import styled from 'styled-components';
 
 export const Section = styled.section`
@@ -14,13 +15,8 @@ export const Section = styled.section`
 `;
 
 export const Title = styled.p`
-  font-size: 48px;
-  font-weight: 700;
+  ${TitleStyle}
   line-height: 1.5;
-`;
-
-export const HighlightText = styled.span`
-  color: #3959a5;
 `;
 
 export const FloatingGroup = styled.div`

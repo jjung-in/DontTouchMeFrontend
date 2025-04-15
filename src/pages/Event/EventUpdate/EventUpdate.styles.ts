@@ -1,9 +1,7 @@
+import { MainStyle } from '@_styles/common';
 import styled from 'styled-components';
 
-export const Main = styled.main`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #e4f0fa;
+export const Main = styled.main<{ $isEmpty?: boolean }>`
+  ${MainStyle}
+  background-color: ${({ theme }) => theme.color.primary[200]};
 `;

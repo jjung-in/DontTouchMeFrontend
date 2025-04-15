@@ -3,13 +3,13 @@ import { getGeocode } from '@_api/map';
 import * as S from './EventUpdate.styles';
 import { useEventDetail, useUpdateEvent } from '@_hooks/useEvents';
 import { TFormErrors, TUpdateEventRequest } from '@_types/events.type';
-import { isImageFile } from '@_utils/image';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import EventForm from '@_components/Form/EventForm/EventForm';
+import EventForm from '@_components/Event/EventForm/EventForm';
 import Spinner from '@_components/Common/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
 import { validateEventForm } from '@_utils/events';
+import PageTitle from '@_components/Common/PageTitle/PageTitle';
 
 const EventUpdate = () => {
   const navigate = useNavigate();
@@ -18,8 +18,6 @@ const EventUpdate = () => {
   const { data, isFetching } = useEventDetail(eventId);
   const { mutate: updateEvent } = useUpdateEvent(eventId);
 
-  const [thumbnail, setThumbnail] = useState<File | null>(null);
-  const [thumbnailPreview, setThumbnailPreview] = useState<string>('');
   const [otherEventType, setOtherEventType] = useState<string>('');
   const [isTag, setIsTag] = useState<boolean>(false);
   const [isTarget, setIsTarget] = useState<boolean>(false);
@@ -69,9 +67,6 @@ const EventUpdate = () => {
         sendType: data.sendType || null,
       }));
 
-      if (data.thumbnailUrl) {
-        setThumbnailPreview(data.thumbnailUrl);
-      }
       if (data.eventType !== '결혼식' && data.eventType !== '장례식') {
         setOtherEventType(data.eventType);
       }
@@ -89,36 +84,14 @@ const EventUpdate = () => {
     });
   };
 
-  const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0];
-    if (!selectedFile) return;
-    if (!isImageFile(selectedFile)) {
-      alert('이미지 형식의 파일만 업로드할 수 있습니다.');
-      e.target.value = '';
-      return;
-    }
-    setThumbnail(selectedFile);
-    setThumbnailPreview(URL.createObjectURL(selectedFile));
-    e.target.value = '';
-  };
-
-  const handleThumbnailReset = () => {
-    if (thumbnailPreview) {
-      URL.revokeObjectURL(thumbnailPreview);
-    }
-    setThumbnail(null);
-    setThumbnailPreview('');
-    handleChange('thumbnailUrl', '');
-  };
-
-  const handleSubmit = async () => {
+  const handleSubmit = async (thumbnailFile: File | null) => {
     const errors = validateEventForm(formValues, otherEventType, isTag, isTarget);
     setFormErrors(errors);
     if (Object.keys(errors).length > 0) return;
 
     let imageUrl = formValues.thumbnailUrl;
-    if (thumbnail) {
-      imageUrl = await uploadImage(thumbnail);
+    if (thumbnailFile) {
+      imageUrl = await uploadImage(thumbnailFile);
       if (!imageUrl) {
         console.warn('이미지 업로드에 실패했습니다.');
       }
@@ -157,34 +130,34 @@ const EventUpdate = () => {
   };
 
   return (
-    <>
+    <S.Main $isEmpty={isFetching || !data}>
       {isFetching ? (
-        <S.Main>
-          <Spinner />
-        </S.Main>
+        <Spinner />
       ) : data ? (
-        <EventForm
-          mode="update"
-          formValues={formValues}
-          formErrors={formErrors}
-          thumbnailPreview={thumbnailPreview}
-          handleSubmit={handleSubmit}
-          handleChange={handleChange}
-          handleThumbnailChange={handleThumbnailChange}
-          handleThumbnailReset={handleThumbnailReset}
-          otherEventType={otherEventType}
-          setOtherEventType={setOtherEventType}
-          isTag={isTag}
-          setIsTag={setIsTag}
-          isTarget={isTarget}
-          setIsTarget={setIsTarget}
-        />
+        <>
+          <PageTitle
+            title="이벤트 상세 정보"
+            highlight="이벤트 상세 정보"
+            subtitle="등록된 이벤트의 상세 정보를 확인하고, 수정합니다."
+          />
+          <EventForm
+            mode="update"
+            formValues={formValues}
+            formErrors={formErrors}
+            onSubmit={handleSubmit}
+            handleChange={handleChange}
+            otherEventType={otherEventType}
+            setOtherEventType={setOtherEventType}
+            isTag={isTag}
+            setIsTag={setIsTag}
+            isTarget={isTarget}
+            setIsTarget={setIsTarget}
+          />
+        </>
       ) : (
-        <S.Main>
-          <EmptyState />
-        </S.Main>
+        <EmptyState />
       )}
-    </>
+    </S.Main>
   );
 };
 

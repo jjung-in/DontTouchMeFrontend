@@ -3,9 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import * as S from './EventDetail.styles';
 import Spinner from '@_components/Common/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
-import EventForm from '@_components/Form/EventForm/EventForm';
+import EventForm from '@_components/Event/EventForm/EventForm';
 import { useState } from 'react';
 import AlertModal from '@_components/Modal/AlertModal/AlertModal';
+import PageTitle from '@_components/Common/PageTitle/PageTitle';
 
 const EventDetail = () => {
   const memberId = 1;
@@ -32,13 +33,16 @@ const EventDetail = () => {
   };
 
   return (
-    <>
+    <S.Main $isEmpty={isFetching || !data}>
       {isFetching ? (
-        <S.Main>
-          <Spinner />
-        </S.Main>
+        <Spinner />
       ) : data ? (
         <>
+          <PageTitle
+            title="이벤트 상세 정보"
+            highlight="이벤트 상세 정보"
+            subtitle="등록된 이벤트의 상세 정보를 확인하고, 수정합니다."
+          />
           <EventForm mode="read" event={data} handleDelete={handleDelete} />
           <AlertModal
             isOpen={isDeleteModalOpen}
@@ -49,11 +53,9 @@ const EventDetail = () => {
           />
         </>
       ) : (
-        <S.Main>
-          <EmptyState />
-        </S.Main>
+        <EmptyState />
       )}
-    </>
+    </S.Main>
   );
 };
 

@@ -7,6 +7,7 @@ import EmptyState from '@_components/EmptyState/EmptyState';
 import noimage from '@_assets/images/noimage.png';
 import Button from '@_components/Common/Button/Button';
 import { Link } from 'react-router-dom';
+import PageTitle from '@_components/Common/PageTitle/PageTitle';
 
 const EventList = () => {
   const memberId = 1;
@@ -28,10 +29,11 @@ const EventList = () => {
         <Spinner />
       ) : (
         <>
-          <S.Title>
-            <S.BlueText>이벤트</S.BlueText> 목록
-          </S.Title>
-          <S.SubTitle>등록된 이벤트를 확인하고, 입출금 내역을 등록할 수 있습니다.</S.SubTitle>
+          <PageTitle
+            title="이벤트 목록"
+            subtitle="등록된 이벤트를 확인하고, 입출금 내역을 등록할 수 있습니다."
+            highlight="목록"
+          />
           {events.length > 0 ? (
             <S.CardSection>
               <S.CardList>

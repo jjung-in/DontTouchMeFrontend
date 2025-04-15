@@ -1,3 +1,4 @@
+import { TitleStyle } from '@_styles/common';
 import styled from 'styled-components';
 
 export const Section = styled.section`
@@ -11,12 +12,7 @@ export const Section = styled.section`
 `;
 
 export const Title = styled.p`
-  font-size: 48px;
-`;
-
-export const HighlightText = styled.span`
-  color: #3959a5;
-  font-weight: 700;
+  ${TitleStyle}
 `;
 
 export const Image = styled.img``;

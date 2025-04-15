@@ -34,7 +34,7 @@ const HighlightSection = () => {
           <S.Title>
             이보다 쉬울 수 없다!
             <br />
-            페이블과 함께 <S.HighlightText>스마트</S.HighlightText>한 비용 관리
+            페이블과 함께 <span>스마트</span>한 비용 관리
           </S.Title>
         </FadeInUp>
         <S.SignUpBlock>

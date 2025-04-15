@@ -8,6 +8,7 @@ import EmptyState from '@_components/EmptyState/EmptyState';
 import RecordForm from '@_components/Form/RecordForm/RecordForm';
 import Button from '@_components/Common/Button/Button';
 import { Link } from 'react-router-dom';
+import PageTitle from '@_components/Common/PageTitle/PageTitle';
 
 const RecordList = () => {
   const eventId = Number(useParams().eventId);
@@ -25,13 +26,16 @@ const RecordList = () => {
   });
 
   return (
-    <S.Main $isEmpty={isLoading || isFetching ? true : false}>
+    <S.Main $isEmpty={isLoading || isFetching}>
       {isLoading || isFetching ? (
         <Spinner />
       ) : (
         <>
-          <S.Title>입출금 내역</S.Title>
-          <S.SubTitle>등록된 이벤트에 입출금 내역을 조회합니다.</S.SubTitle>
+          <PageTitle
+            title="입출금 내역"
+            highlight="입출금 내역"
+            subtitle="등록된 이벤트에 대한 입출금 내역을 조회합니다."
+          />
           {event && records.length > 0 ? (
             <RecordForm mode="read" event={event} records={records} />
           ) : (

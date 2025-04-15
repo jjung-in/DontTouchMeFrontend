@@ -10,6 +10,7 @@ import RecordForm from '@_components/Form/RecordForm/RecordForm';
 import Button from '@_components/Common/Button/Button';
 import { Link } from 'react-router-dom';
 import { validateRecordForm } from '@_utils/records';
+import PageTitle from '@_components/Common/PageTitle/PageTitle';
 
 const RecordCreate = () => {
   const navigate = useNavigate();
@@ -79,15 +80,16 @@ const RecordCreate = () => {
   };
 
   return (
-    <>
+    <S.Main $isEmpty={isFetching || !data}>
       {isFetching ? (
-        <S.Main $isEmpty>
-          <Spinner />
-        </S.Main>
+        <Spinner />
       ) : data ? (
-        <S.Main>
-          <S.Title>입출금 내역 등록</S.Title>
-          <S.SubTitle>등록된 이벤트에 입출금 내역을 등록합니다.</S.SubTitle>
+        <>
+          <PageTitle
+            title="입출금 내역 등록"
+            highlight="입출금 내역 등록"
+            subtitle="등록된 이벤트에 대한 입출금 내역을 등록합니다."
+          />
           <RecordForm
             mode="create"
             event={data}
@@ -97,16 +99,16 @@ const RecordCreate = () => {
             handleSubmit={handleSubmit}
             handleChange={handleChange}
           />
-        </S.Main>
+        </>
       ) : (
-        <S.Main $isEmpty>
+        <>
           <EmptyState />
           <Button as={Link} to={`/events/${eventId}`} variant="secondary" fontWeight="semibold">
             돌아가기
           </Button>
-        </S.Main>
+        </>
       )}
-    </>
+    </S.Main>
   );
 };
 

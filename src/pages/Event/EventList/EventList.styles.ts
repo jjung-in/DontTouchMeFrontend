@@ -1,23 +1,9 @@
+import { MainStyle } from '@_styles/common';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 export const Main = styled.main<{ $isEmpty?: boolean }>`
-  display: flex;
-  flex-direction: column;
-  justify-content: ${({ $isEmpty }) => ($isEmpty ? 'center' : 'flex-start')};
-  align-items: center;
-`;
-
-export const Title = styled.h2`
-  margin-bottom: 35px;
-  color: #000000;
-  font-size: 48px;
-  font-weight: 600;
-`;
-
-export const SubTitle = styled.p`
-  margin-bottom: 70px;
-  font-size: 20px;
+  ${MainStyle}
 `;
 
 export const CardSection = styled.div`
@@ -103,8 +89,12 @@ export const StatusBadge = styled.span<{ $status: '예정' | '진행중' | '완�
     width: 12px;
     height: 12px;
     border-radius: 50%;
-    background-color: ${({ $status }) =>
-      $status === '예정' ? '#fcce39' : status === '진행중' ? '#61f52c' : '#3959a5'};
+    background-color: ${({ theme, $status }) =>
+      $status === '예정'
+        ? theme.color.plus.yellow
+        : $status === '진행중'
+          ? theme.color.plus.green
+          : theme.color.plus.blue};
   }
 `;
 
@@ -141,10 +131,6 @@ export const EmptyBox = styled.div`
 `;
 
 // Common Styles
-
-export const BlueText = styled.span`
-  color: #3959a5;
-`;
 
 export const BoldText = styled.span`
   font-weight: bold;

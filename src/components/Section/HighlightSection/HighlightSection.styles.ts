@@ -1,3 +1,4 @@
+import { TitleStyle } from '@_styles/common';
 import styled from 'styled-components';
 
 export const Section = styled.section`
@@ -50,15 +51,10 @@ export const Info = styled.div`
 `;
 
 export const Title = styled.p`
-  font-size: 48px;
-  font-weight: 700;
+  ${TitleStyle}
   line-height: 1.5;
   text-align: left;
   background-color: #ffffffcc;
-`;
-
-export const HighlightText = styled.span`
-  color: #3959a5;
 `;
 
 export const SignUpBlock = styled.div`
