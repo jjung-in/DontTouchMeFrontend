@@ -14,8 +14,9 @@ export const ThumbnailBox = styled.div`
   align-items: center;
   width: 100%;
   height: 250px;
+  border: 1px solid ${({ theme }) => theme.color.gray[100]};
   border-radius: 10px;
-  background-color: #f1f3f7;
+  background-color: ${({ theme }) => theme.color.plus.image};
   overflow: hidden;
 `;
 
