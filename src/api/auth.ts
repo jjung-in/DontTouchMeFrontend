@@ -26,11 +26,26 @@ export const PostSignUp = async (signUpData: SignUpProps): Promise<SignUpRespons
 
 export const PostLogIn = async (loginData: LogInProps): Promise<LogInResponse> => {
   try {
-    const { data } = await instance.post(`/member/login`, loginData, {
+    const response = await instance.post(`/member/login`, loginData, {
       withCredentials: true,
     });
-    return data;
+
+    const rawToken = response.headers['authorization'];
+    const accessToken = rawToken?.startsWith('Bearer ') ? rawToken.slice(7) : rawToken;
+
+    if (!accessToken) {
+      throw new Error('헤더에서 accessToken을 찾을 수 없습니다.');
+    }
+
+    return accessToken;
   } catch (error) {
+    if (error.response) {
+      if (error.response.status === 401) {
+        console.log('인증실패');
+        throw new Error('아이디 또는 비밀번호가 올바르지 않습니다.');
+      }
+    }
+
     console.error('LogIn Error:', error);
     throw new Error('로그인 오류');
   }
