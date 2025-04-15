@@ -9,7 +9,7 @@ import Input from '@_components/Common/Input/Input';
  * @param ...props - span 요소에 전달될 기타 속성
  */
 
-interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
+interface Props extends React.InputHTMLAttributes<HTMLSpanElement> {
   label: string;
   isRequired?: boolean;
 }

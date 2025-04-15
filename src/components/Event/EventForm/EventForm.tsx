@@ -1,11 +1,8 @@
 import { TCreateEventRequest, TEventDetailResponse, TFormErrors, TUpdateEventRequest } from '@_types/events.type';
 import { useParams } from 'react-router-dom';
 import * as S from './EventForm.styles';
-import required from '@_assets/images/required.png';
 import { useState } from 'react';
 import AddressModal from '@_components/Modal/AddressModal/AddressModal';
-import CustomDatePicker from '@_components/Common/CustomDatePicker/CustomDatePicker';
-import Switch from '@_components/Common/Switch/Switch';
 import TagInput from '@_components/Common/TagInput/TagInput';
 import Input from '@_components/Common/Input/Input';
 import ThumbnailUploader from '../ThumbnailUploader/ThumbnailUploader';
@@ -13,6 +10,12 @@ import { useThumbnailUploader } from '@_hooks/custom/useThumbnailUploader';
 import EventFormButtons from '../EventFormButtons/EventFormButtons';
 import EventInputField from '../EventInputField/EventInputField';
 import EventTextField from '../EventTextField/EventTextField';
+import EventTypeField from '../EventTypeField/EventTypeField';
+import EventDateField from '../EventDateField/EventDateField';
+import EventNumberField from '../EventNumberField/EventNumberField';
+import EventInfoBoxField from '../EventInfoBoxField/EventInfoBoxField';
+import EventSwitchField from '../EventSwitchField/EventSwitchField';
+import { ErrorTextStyle } from '@_styles/event';
 
 interface Props {
   mode: 'create' | 'update' | 'read';
@@ -60,7 +63,7 @@ const EventForm = ({
   };
 
   return (
-    <S.Card>
+    <S.Container>
       <S.FormArea>
         <ThumbnailUploader
           thumbnailPreview={mode === 'read' ? event?.thumbnailUrl || '' : thumbnailPreview}
@@ -68,7 +71,7 @@ const EventForm = ({
           onReset={handleThumbnailReset}
           isReadonly={mode === 'read'}
         />
-        <S.FieldSection>
+        <S.FieldArea>
           {mode === 'read' ? (
             <>
               <EventTextField label="이벤트명" isRequired={true}>
@@ -86,6 +89,9 @@ const EventForm = ({
               {event && event.participants > 0 && (
                 <EventTextField label="예상 인원">{event?.participants}명</EventTextField>
               )}
+              <EventInfoBoxField label="입출금 항목" variant="textbox">
+                {event?.eventInfoItems.map((item, index) => <span key={index}>{item}</span>)}
+              </EventInfoBoxField>
             </>
           ) : (
             <>
@@ -98,44 +104,22 @@ const EventForm = ({
                 maxLength={20}
                 placeholder="이벤트명을 입력하세요."
               />
-              <S.FieldGroup>
-                <S.Label>
-                  이벤트 유형
-                  <img src={required} alt="필수 입력" />
-                </S.Label>
-                <Input
-                  as="select"
-                  value={formValues?.eventType}
-                  onChange={(e) => handleChange?.('eventType', e.target.value)}
-                >
-                  <option value="결혼식">결혼식</option>
-                  <option value="장례식">장례식</option>
-                  <option value="기타">기타</option>
-                </Input>
-                {formValues?.eventType === '기타' && (
-                  <Input
-                    type="text"
-                    value={otherEventType}
-                    onChange={(e) => setOtherEventType?.(e.target.value)}
-                    maxLength={10}
-                    placeholder="ex) 모임"
-                    state={formErrors?.eventType ? 'error' : 'default'}
-                  />
-                )}
-                {formErrors?.eventName && <S.ErrorText>{formErrors?.eventType}</S.ErrorText>}
-              </S.FieldGroup>
-              <S.FieldGroup>
-                <S.Label>
-                  이벤트 일정
-                  <img src={required} alt="필수 입력" />
-                </S.Label>
-                <CustomDatePicker
-                  date={formValues?.eventDate || null}
-                  onChange={(value) => handleChange?.('eventDate', value)}
-                  isError={!!formErrors?.eventDate || false}
-                />
-                {formErrors?.eventDate && <S.ErrorText>{formErrors?.eventDate}</S.ErrorText>}
-              </S.FieldGroup>
+              <EventTypeField
+                label="이벤트 유형"
+                value={formValues?.eventType ?? ''}
+                onChange={(val) => handleChange?.('eventType', val)}
+                otherValue={otherEventType}
+                onOtherChange={setOtherEventType}
+                error={formErrors?.eventType}
+                isRequired={true}
+              />
+              <EventDateField
+                label="이벤트 일정"
+                error={formErrors?.eventDate}
+                date={formValues?.eventDate || null}
+                onChange={(value) => handleChange?.('eventDate', value)}
+                isRequired={true}
+              />
               <EventInputField
                 label="이벤트 장소"
                 error={formErrors?.address}
@@ -153,62 +137,23 @@ const EventForm = ({
                 onClose={() => setIsModalOpen(false)}
                 onSelectAddress={(selectedAddress) => handleChange?.('address', selectedAddress)}
               />
-              <S.FieldGroup>
-                <S.Label>예상 인원</S.Label>
-                <S.NumberInputWrapper>
-                  <Input
-                    type="number"
-                    min={1}
-                    value={formValues?.participants || ''}
-                    onChange={(e) => handleChange?.('participants', Number(e.target.value))}
-                    variant="number"
-                    fullWidth={true}
-                  />
-                </S.NumberInputWrapper>
-              </S.FieldGroup>
-            </>
-          )}
-          <S.FieldGroup>
-            <S.Label>입출금 항목</S.Label>
-            {mode === 'read' ? (
-              <Input as="div" variant="textbox">
-                {event?.eventInfoItems.map((item, index) => <span key={index}>{item}</span>)}
-              </Input>
-            ) : (
-              <Input as="div" variant="box">
-                <S.DetailGroup>
-                  <S.DetailSwitchBox>
-                    <S.DetailText $readonly={true}>입출금 분류</S.DetailText>
-                    <Switch checked={true} />
-                  </S.DetailSwitchBox>
-                </S.DetailGroup>
-                <S.DetailGroup>
-                  <S.DetailSwitchBox>
-                    <S.DetailText $readonly={true}>입출금 내역명</S.DetailText>
-                    <Switch checked={true} />
-                  </S.DetailSwitchBox>
-                </S.DetailGroup>
-                <S.DetailGroup>
-                  <S.DetailSwitchBox>
-                    <S.DetailText $readonly={true}>금액</S.DetailText>
-                    {/* 선택 */}
-                    <Switch checked={true} />
-                  </S.DetailSwitchBox>
-                </S.DetailGroup>
-                <S.DetailGroup>
-                  <S.DetailSwitchBox>
-                    <S.DetailText>이름</S.DetailText>
-                    <Switch
-                      checked={formValues?.isName || false}
-                      onChange={(checked) => handleChange?.('isName', checked)}
-                    />
-                  </S.DetailSwitchBox>
-                </S.DetailGroup>
-                <S.DetailGroup>
-                  <S.DetailSwitchBox>
-                    <S.DetailText>태그</S.DetailText>
-                    <Switch checked={isTag || false} onChange={(checked) => setIsTag?.(checked)} />
-                  </S.DetailSwitchBox>
+              <EventNumberField
+                label="예상 인원"
+                unit="명"
+                value={formValues?.participants || ''}
+                onChange={(e) => handleChange?.('participants', Number(e.target.value))}
+                min={1}
+              />
+              <EventInfoBoxField label="입출금 항목" variant="box">
+                <EventSwitchField label="입출금 분류" checked={true} isReadonly={true} />
+                <EventSwitchField label="입출금 내역명" checked={true} isReadonly={true} />
+                <EventSwitchField label="금액" checked={true} isReadonly={true} />
+                <EventSwitchField
+                  label="이름"
+                  checked={formValues?.isName || false}
+                  onToggle={(checked) => handleChange?.('isName', checked)}
+                />
+                <EventSwitchField label="태그" checked={isTag || false} onToggle={(checked) => setIsTag?.(checked)}>
                   {isTag && (
                     <>
                       <TagInput
@@ -221,24 +166,20 @@ const EventForm = ({
                         }
                         isError={!!formErrors?.tags || false}
                       />
-                      {formErrors?.tags && <S.ErrorText>{formErrors?.tags}</S.ErrorText>}
+                      {formErrors?.tags && <ErrorTextStyle>{formErrors?.tags}</ErrorTextStyle>}
                     </>
                   )}
-                </S.DetailGroup>
-                <S.DetailGroup>
-                  <S.DetailSwitchBox>
-                    <S.DetailText>사진 첨부</S.DetailText>
-                    <Switch
-                      checked={formValues?.isImage || false}
-                      onChange={(checked) => handleChange?.('isImage', checked)}
-                    />
-                  </S.DetailSwitchBox>
-                </S.DetailGroup>
-                <S.DetailGroup>
-                  <S.DetailSwitchBox>
-                    <S.DetailText>입금 대상</S.DetailText>
-                    <Switch checked={isTarget || false} onChange={(checked) => setIsTarget?.(checked)} />
-                  </S.DetailSwitchBox>
+                </EventSwitchField>
+                <EventSwitchField
+                  label="사진 첨부"
+                  checked={formValues?.isImage || false}
+                  onToggle={(checked) => handleChange?.('isImage', checked)}
+                />
+                <EventSwitchField
+                  label="입금 대상"
+                  checked={isTarget || false}
+                  onToggle={(checked) => setIsTarget?.(checked)}
+                >
                   {isTarget && (
                     <>
                       <TagInput
@@ -251,18 +192,15 @@ const EventForm = ({
                         }
                         isError={!!formErrors?.targets || false}
                       />
-                      {formErrors?.targets && <S.ErrorText>{formErrors?.targets}</S.ErrorText>}
+                      {formErrors?.targets && <ErrorTextStyle>{formErrors?.targets}</ErrorTextStyle>}
                     </>
                   )}
-                </S.DetailGroup>
-                <S.DetailGroup>
-                  <S.DetailSwitchBox>
-                    <S.DetailText>감사장</S.DetailText>
-                    <Switch
-                      checked={formValues?.isSend || false}
-                      onChange={(checked) => handleChange?.('isSend', checked)}
-                    />
-                  </S.DetailSwitchBox>
+                </EventSwitchField>
+                <EventSwitchField
+                  label="감사장"
+                  checked={formValues?.isSend || false}
+                  onToggle={(checked) => handleChange?.('isSend', checked)}
+                >
                   {formValues?.isSend && (
                     <Input
                       as="select"
@@ -273,14 +211,14 @@ const EventForm = ({
                       <option value="PHONE">문자</option>
                     </Input>
                   )}
-                </S.DetailGroup>
-              </Input>
-            )}
-          </S.FieldGroup>
-        </S.FieldSection>
+                </EventSwitchField>
+              </EventInfoBoxField>
+            </>
+          )}
+        </S.FieldArea>
       </S.FormArea>
       <EventFormButtons mode={mode} eventId={eventId} onSubmit={handleSubmit} onDelete={handleDelete} />
-    </S.Card>
+    </S.Container>
   );
 };
 
