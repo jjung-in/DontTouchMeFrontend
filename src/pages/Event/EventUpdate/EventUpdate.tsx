@@ -8,6 +8,8 @@ import EventForm from '@_components/Event/EventForm/EventForm';
 import Spinner from '@_components/Common/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
 import PageTitle from '@_components/Common/PageTitle/PageTitle';
+import BackButton from '@_components/Common/BackButton/BackButton';
+import { EmptyBoxStyle } from '@_styles/common';
 
 const EVENT_UPDATE_TITLE = {
   title: '이벤트 상세 정보',
@@ -82,7 +84,10 @@ const EventUpdate = () => {
           <EventForm mode="update" event={data} onSubmit={handleSubmit} />
         </>
       ) : (
-        <EmptyState />
+        <EmptyBoxStyle>
+          <EmptyState />
+          <BackButton />
+        </EmptyBoxStyle>
       )}
     </S.Main>
   );

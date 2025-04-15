@@ -6,6 +6,8 @@ import EmptyState from '@_components/EmptyState/EmptyState';
 import PageTitle from '@_components/Common/PageTitle/PageTitle';
 import { InfiniteScrollObserverStyle } from '@_styles/common';
 import EventCard from '@_components/Event/EventCard/EventCard';
+import Button from '@_components/Common/Button/Button';
+import { Link } from 'react-router-dom';
 
 const EVENT_LIST_TITLE = {
   title: '이벤트 목록',
@@ -50,6 +52,9 @@ const EventList = () => {
           ) : (
             <S.EmptyBox>
               <EmptyState message="등록된 이벤트가 없습니다." />
+              <Button as={Link} to="/events/create">
+                이벤트 만들기 →
+              </Button>
             </S.EmptyBox>
           )}
         </>

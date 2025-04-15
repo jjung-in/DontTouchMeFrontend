@@ -7,6 +7,8 @@ import EventForm from '@_components/Event/EventForm/EventForm';
 import { useState } from 'react';
 import AlertModal from '@_components/Modal/AlertModal/AlertModal';
 import PageTitle from '@_components/Common/PageTitle/PageTitle';
+import BackButton from '@_components/Common/BackButton/BackButton';
+import { EmptyBoxStyle } from '@_styles/common';
 
 const EVENT_DETAIL_TITLE = {
   title: '이벤트 상세 정보',
@@ -51,7 +53,10 @@ const EventDetail = () => {
           />
         </>
       ) : (
-        <EmptyState />
+        <EmptyBoxStyle>
+          <EmptyState />
+          <BackButton />
+        </EmptyBoxStyle>
       )}
     </S.Main>
   );

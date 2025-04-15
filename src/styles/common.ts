@@ -22,6 +22,15 @@ export const SubtitleStyle = css`
   font-size: ${({ theme }) => theme.fontSize.xl};
 `;
 
+export const EmptyBoxStyle = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+`;
+
 export const InfiniteScrollObserverStyle = styled.div`
   height: 1px;
 `;

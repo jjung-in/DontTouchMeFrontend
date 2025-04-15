@@ -1,4 +1,4 @@
-import { MainStyle } from '@_styles/common';
+import { EmptyBoxStyle, MainStyle } from '@_styles/common';
 import styled from 'styled-components';
 
 export const Main = styled.main<{ $isEmpty?: boolean }>`
@@ -26,11 +26,7 @@ export const FetchingBox = styled.div`
   padding-top: 100px;
 `;
 
-export const EmptyBox = styled.div`
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+export const EmptyBox = styled(EmptyBoxStyle)`
   width: 100%;
   background-color: ${({ theme }) => theme.color.primary[200]};
 `;
