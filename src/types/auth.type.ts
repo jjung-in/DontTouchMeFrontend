@@ -12,14 +12,20 @@ export interface SignUpResponse {
   email: string;
 }
 
-export interface LogInProps {
+export interface LogInFormValues {
+  email: string;
+  password: string;
+}
+
+export interface LogInRequest {
   email: string;
   password: string;
 }
 
 export interface LogInResponse {
-  message: string;
   accessToken: string;
+  memberId: number;
+  message: string;
 }
 
 export interface EmailVerifyRequest {

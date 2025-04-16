@@ -1,50 +1,58 @@
 import { useState, useEffect } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { PostSignUp, EmailDuplicateCheck, SendAuthNumber, CheckAuthNumber, PostLogIn } from '@_api/auth';
-import { SignUpProps, EmailVerifyRequest, LogInProps } from '@_types/auth.type';
-// import { useNavigate } from 'react-router-dom';
+import { SignUpProps, EmailVerifyRequest, LogInFormValues } from '@_types/auth.type';
+import { useAuthStore } from '@_store/authStore';
+import { useNavigate } from 'react-router-dom';
+import { AxiosError } from 'axios';
 
 export const useLogInFlow = () => {
-  const [FormData, setFormData] = useState<LogInProps>({
-    Email: '',
-    Password: '',
+  const [formValues, setFormValues] = useState<LogInFormValues>({
+    email: '',
+    password: '',
   });
 
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const setAuth = useAuthStore((state) => state.setAuth);
 
   const logInMutation = useMutation({
     mutationFn: PostLogIn,
-    onSuccess: ({ accessToken }) => {
-      console.log(accessToken);
-      if (!accessToken) {
-        console.error('토큰 없음');
-        throw new Error('accessToken 없음');
-      }
-      console.log('로그인 성공');
-      localStorage.setItem('accessToken', accessToken);
-      // navigate('/');
+    onSuccess: ({ accessToken, memberId }) => {
+      setAuth(accessToken, Number(memberId));
+      navigate('/');
     },
     onError: (error) => {
-      console.error('로그인 실패', error);
+      const err = error as AxiosError<{ message?: string }>;
+      const message = err.response?.data?.message ?? '로그인 중 오류가 발생했습니다.';
+      console.error('로그인 실패:', message);
     },
   });
 
-  const handleLogIn = (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormValues((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleLogIn = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!FormData.Email || !FormData.Password) {
-      console.log('모든 칸을 채워주세요.');
+    const { email, password } = formValues;
+
+    if (!email || !password) {
+      console.log('모든 필드를 입력해주세요.');
       return;
     }
 
-    logInMutation.mutate(FormData);
+    logInMutation.mutate(formValues);
   };
 
   return {
-    FormData,
-    setFormData,
-    logInMutation,
+    formValues,
+    handleChange,
     handleLogIn,
+    isPending: logInMutation.isPending,
+    isError: logInMutation.isError,
+    error: logInMutation.error,
   };
 };
 

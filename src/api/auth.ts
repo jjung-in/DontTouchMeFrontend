@@ -1,12 +1,14 @@
 import {
-  LogInProps,
+  LogInRequest,
   LogInResponse,
   SignUpProps,
   SignUpResponse,
   EmailVerifyResponse,
   SendEmailVerifyResponse,
 } from '@_types/auth.type';
-import { instance } from '@_api/interface';
+import { instance } from './instance';
+import { parseAccessToken } from '@_utils/auth';
+import { AxiosError } from 'axios';
 
 export const PostSignUp = async (signUpData: SignUpProps): Promise<SignUpResponse> => {
   try {
@@ -24,31 +26,25 @@ export const PostSignUp = async (signUpData: SignUpProps): Promise<SignUpRespons
   }
 };
 
-export const PostLogIn = async (loginData: LogInProps): Promise<LogInResponse> => {
+export const PostLogIn = async (loginData: LogInRequest): Promise<LogInResponse> => {
   try {
     const response = await instance.post(`/member/login`, loginData);
 
     const rawToken = response.headers['authorization'];
     const accessToken = rawToken?.startsWith('Bearer ') ? rawToken.slice(7) : rawToken;
 
-    if (!accessToken) {
-      throw new Error('헤더에서 accessToken을 찾을 수 없습니다.');
+    const parsed = accessToken ? parseAccessToken(accessToken) : null;
+    const memberId = parsed?.id;
+
+    if (!accessToken || !memberId) {
+      throw new Error('accessToken 또는 memberId가 유효하지 않습니다.');
     }
 
-    return {
-      message: '로그인 성공',
-      accessToken,
-    };
-  } catch (error) {
-    if (error.response) {
-      if (error.response.status === 401) {
-        console.log('인증실패');
-        throw new Error('아이디 또는 비밀번호가 올바르지 않습니다.');
-      }
-    }
-
-    console.error('LogIn Error:', error);
-    throw new Error('로그인 오류');
+    return { accessToken, memberId, message: response.data.message };
+  } catch (err) {
+    const error = err as AxiosError<{ message: string }>;
+    const serverMessage = error.response?.data?.message || '로그인에 실패했습니다.';
+    throw new Error(serverMessage);
   }
 };
 
