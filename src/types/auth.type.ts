@@ -42,3 +42,8 @@ export interface SendEmailVerifyResponse {
   email: 'string';
   state: 'string';
 }
+
+export interface TokenReissueResponse {
+  accessToken: string;
+  memberId: number;
+}

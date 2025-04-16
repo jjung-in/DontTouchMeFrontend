@@ -5,6 +5,7 @@ import {
   SignUpResponse,
   EmailVerifyResponse,
   SendEmailVerifyResponse,
+  TokenReissueResponse,
 } from '@_types/auth.type';
 import { instance } from './instance';
 import { parseAccessToken } from '@_utils/auth';
@@ -48,18 +49,21 @@ export const PostLogIn = async (loginData: LogInRequest): Promise<LogInResponse>
   }
 };
 
-export const ReissueAccessToken = async (): Promise<string> => {
+export const ReissueAccessToken = async (): Promise<TokenReissueResponse> => {
   try {
-    const response = await instance.post('jwt/reissue', null);
+    const response = await instance.post('/jwt/reissue', null);
 
     const rawToken = response.headers['authorization'];
     const accessToken = rawToken?.startsWith('Bearer ') ? rawToken.slice(7) : rawToken;
 
-    if (!accessToken) {
+    const parsed = accessToken ? parseAccessToken(accessToken) : null;
+    const memberId = parsed?.id;
+
+    if (!accessToken || !memberId) {
       throw new Error('accessToken 재발급 실패');
     }
 
-    return accessToken;
+    return { accessToken, memberId };
   } catch (error) {
     console.error('Token Reissue Error:', error);
     throw new Error('accessToken 재발급 오류');

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useAuthStore } from '@_store/authStore';
+import { ReissueAccessToken } from './auth';
 
 export const instance = axios.create({
   baseURL: '/api/v1',
@@ -25,23 +26,18 @@ instance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    if (originalRequest.url.includes('/jwt/reissue')) {
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
-        const res = await instance.post('/jwt/reissue', null);
-
-        const raw = res.headers['authorization'];
-        const newToken = raw?.startsWith('Bearer ') ? raw.slice(7) : raw;
-
-        if (!newToken) throw new Error('토큰 재발급 실패');
-
-        const payload = JSON.parse(atob(newToken.split('.')[1]));
-        const memberId = Number(payload.id);
-
+        const { accessToken: newToken, memberId } = await ReissueAccessToken();
         useAuthStore.getState().setAuth(newToken, memberId);
-
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
+
         return instance(originalRequest);
       } catch (reissueError) {
         useAuthStore.getState().logout();
