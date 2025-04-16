@@ -1,111 +1,166 @@
-import { useEffect } from 'react';
 import { useSignUpFlow } from '@_hooks/useAuth';
+import * as S from './SignUp.styles';
+import required from '@_assets/images/required.png';
+import PageTitle from '@_components/Common/PageTitle/PageTitle';
+import { ErrorTextStyle } from '@_styles/event';
+import Input from '@_components/Common/Input/Input';
+import Button from '@_components/Common/Button/Button';
+import AgreementSection from '@_components/Auth/AgreementSection/AgreementSection';
+
+const SIGNUP_TITLE = {
+  title: '회원가입',
+  highlight: '회원가입',
+  subtitle: '회원가입하여 모든 서비스를 이용해보세요!',
+};
 
 const SignUp = () => {
   const {
-    FormData,
-    setFormData,
-    EmailNumber,
-    setEmailNumber,
-    emailMutation,
-    authNumberMutation,
+    formValues,
+    formErrors,
+    verificationMessage,
+    isVerificationRequested,
+    isVerificationSuccess,
+    agreements,
+    handleChange,
+    handleRequestEmailCode,
+    handleVerifyEmailCode,
+    handleAgreementChange,
     handleSignUp,
   } = useSignUpFlow();
 
-  const emailCheck = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    if (!FormData.email) {
-      console.log('이메일을 입력해주세요.');
-    } else {
-      emailMutation.mutate(FormData.email);
-    }
-  };
-
-  const handleVerifyCode = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    if (!EmailNumber.verificationCode) {
-      console.log('인증번호를 입력해주세요.');
-    } else {
-      authNumberMutation.mutate(EmailNumber);
-    }
-  };
-
-  useEffect(() => {
-    let contact = FormData.contact.replace(/[^0-9]/g, '');
-    if (contact.length > 11) contact = contact.slice(0, 11);
-
-    if (contact.length <= 3) {
-      contact = FormData.contact;
-    } else if (contact.length <= 7) {
-      contact = `${contact.slice(0, 3)}-${contact.slice(3)}`;
-    } else if (contact.length <= 11) {
-      contact = `${contact.slice(0, 3)}-${contact.slice(3, 7)}-${contact.slice(7, 11)}`;
-    }
-
-    setFormData((prevData) => ({
-      ...prevData,
-      contact,
-    }));
-  }, [FormData.contact]);
-
   return (
-    <div>
-      <form>
-        <input
-          type="text"
-          placeholder="이름을 입력하세요"
-          value={FormData.name}
-          onChange={(e) => setFormData({ ...FormData, name: e.target.value })}
-        />
-
-        <span>
-          <input
-            type="email"
-            placeholder="이메일을 입력하세요"
-            value={FormData.email}
-            autoComplete="email"
-            onChange={(e) => setFormData({ ...FormData, email: e.target.value })}
-          />
-          <button onClick={emailCheck}>인증</button>
-        </span>
-
-        <input
-          type="text"
-          placeholder="인증번호를 입력하세요"
-          value={EmailNumber.verificationCode}
-          onChange={(e) => setEmailNumber({ ...EmailNumber, verificationCode: e.target.value })}
-        />
-        <button onClick={handleVerifyCode}>인증번호 확인</button>
-
-        <input
-          type="password"
-          placeholder="비밀번호를 입력하세요"
-          value={FormData.password}
-          autoComplete="new-password"
-          onChange={(e) => setFormData({ ...FormData, password: e.target.value })}
-        />
-
-        <input
-          type="password"
-          placeholder="비밀번호를 다시 입력하세요"
-          autoComplete="new-password"
-          value={FormData.confirmPassword}
-          onChange={(e) => setFormData({ ...FormData, confirmPassword: e.target.value })}
-        />
-
-        <input
-          type="tel"
-          placeholder="전화번호를 입력하세요"
-          value={FormData.contact}
-          onInput={(e) => {
-            const value = e.target.value.replace(/[^0-9]/g, '');
-            setFormData({ ...FormData, contact: value });
-          }}
-        />
-
-        <button onClick={handleSignUp}>회원가입</button>
-      </form>
-    </div>
+    <S.Main>
+      <PageTitle {...SIGNUP_TITLE} />
+      <S.SignUpForm onSubmit={handleSignUp}>
+        <S.FieldArea>
+          <S.FieldContainer>
+            <S.FieldLabel>
+              이름
+              <img src={required} alt="필수 입력" />
+            </S.FieldLabel>
+            <Input
+              type="text"
+              name="name"
+              value={formValues.name}
+              onChange={handleChange}
+              maxLength={10}
+              placeholder="이름을 입력하세요"
+              autoComplete="off"
+              state={formErrors.name ? 'error' : 'default'}
+            />
+            {formErrors.name && <ErrorTextStyle>{formErrors.name}</ErrorTextStyle>}
+          </S.FieldContainer>
+          <S.FieldContainer $hasButton={true}>
+            <S.FieldLabel $hasButton={true}>
+              이메일
+              <img src={required} alt="필수 입력" />
+            </S.FieldLabel>
+            <S.FieldInnerContainer>
+              <Input
+                type="email"
+                name="email"
+                value={formValues.email}
+                onChange={handleChange}
+                maxLength={30}
+                placeholder="이메일을 입력하세요"
+                state={formErrors.email ? 'error' : 'default'}
+              />
+              <S.FieldButton type="button" onClick={handleRequestEmailCode}>
+                인증요청
+              </S.FieldButton>
+            </S.FieldInnerContainer>
+            <S.FieldInnerContainer>
+              <Input
+                type="text"
+                name="verificationCode"
+                value={formValues.verificationCode}
+                onChange={handleChange}
+                placeholder="인증번호를 입력하세요"
+                autoComplete="off"
+                disabled={!isVerificationRequested || isVerificationSuccess}
+                state={formErrors.verificationCode ? 'error' : 'default'}
+                fullWidth={true}
+              />
+              <S.FieldButton
+                type="button"
+                onClick={handleVerifyEmailCode}
+                disabled={!isVerificationRequested || isVerificationSuccess}
+              >
+                확인
+              </S.FieldButton>
+            </S.FieldInnerContainer>
+            {formErrors.email ? (
+              <ErrorTextStyle>{formErrors.email}</ErrorTextStyle>
+            ) : formErrors.verificationCode ? (
+              <ErrorTextStyle>{formErrors.verificationCode}</ErrorTextStyle>
+            ) : (
+              verificationMessage && <ErrorTextStyle $isSuccess={true}>{verificationMessage}</ErrorTextStyle>
+            )}
+          </S.FieldContainer>
+          <S.FieldContainer>
+            <S.FieldLabel>
+              비밀번호
+              <img src={required} alt="필수 입력" />
+            </S.FieldLabel>
+            <Input
+              type="password"
+              name="password"
+              value={formValues.password}
+              onChange={handleChange}
+              maxLength={20}
+              placeholder="비밀번호를 입력하세요"
+              autoComplete="new-password"
+              state={formErrors.password ? 'error' : 'default'}
+            />
+            {formErrors.password ? (
+              <ErrorTextStyle>{formErrors.password}</ErrorTextStyle>
+            ) : (
+              <S.HintText>비밀번호는 영문, 숫자, 특수문자를 포함한 8자 이상이어야 합니다.</S.HintText>
+            )}
+          </S.FieldContainer>
+          <S.FieldContainer>
+            <S.FieldLabel>
+              비밀번호 확인
+              <img src={required} alt="필수 입력" />
+            </S.FieldLabel>
+            <Input
+              type="password"
+              name="confirmPassword"
+              value={formValues.confirmPassword}
+              onChange={handleChange}
+              maxLength={20}
+              placeholder="비밀번호를 다시 입력하세요"
+              autoComplete="new-password"
+              state={formErrors.confirmPassword ? 'error' : 'default'}
+            />
+            {formErrors.confirmPassword && <ErrorTextStyle>{formErrors.confirmPassword}</ErrorTextStyle>}
+          </S.FieldContainer>
+          <S.FieldContainer>
+            <S.FieldLabel>
+              연락처
+              <img src={required} alt="필수 입력" />
+            </S.FieldLabel>
+            <Input
+              type="tel"
+              name="contact"
+              value={formValues.contact}
+              onChange={handleChange}
+              maxLength={20}
+              placeholder="연락처를 입력하세요"
+              autoComplete="off"
+              state={formErrors.contact ? 'error' : 'default'}
+            />
+            {formErrors.contact && <ErrorTextStyle>{formErrors.contact}</ErrorTextStyle>}
+          </S.FieldContainer>
+        </S.FieldArea>
+        <AgreementSection values={agreements} onChange={handleAgreementChange} />
+        <S.ButtonArea>
+          <Button type="submit" variant="primary" fontWeight="semibold" fullWidth={true}>
+            회원가입
+          </Button>
+        </S.ButtonArea>
+      </S.SignUpForm>
+    </S.Main>
   );
 };
 

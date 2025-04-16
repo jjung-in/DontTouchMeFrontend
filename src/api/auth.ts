@@ -1,30 +1,40 @@
 import {
   LogInRequest,
   LogInResponse,
-  SignUpProps,
-  SignUpResponse,
-  EmailVerifyResponse,
-  SendEmailVerifyResponse,
   TokenReissueResponse,
+  TSignUpRequest,
+  TSignUpResponse,
+  TEmailDuplicateCheckResponse,
+  TSendEmailCodeResponse,
+  TVerifyEmailCodeRequest,
+  TVerifyEmailCodeResponse,
 } from '@_types/auth.type';
 import { instance } from './instance';
 import { parseAccessToken } from '@_utils/auth';
 import { AxiosError } from 'axios';
 
-export const PostSignUp = async (signUpData: SignUpProps): Promise<SignUpResponse> => {
-  try {
-    const { data } = await instance.post(`/member/sign-up`, signUpData);
-    return data;
-  } catch (error) {
-    if (error.response) {
-      if (error.response.status == 400) {
-        console.log('이미 가입된 계정입니다');
-      }
-    } else {
-      console.error('SignUp Error', error);
-      throw new Error('회원가입 오류');
-    }
-  }
+export const postSignUp = async (signUpData: TSignUpRequest): Promise<TSignUpResponse> => {
+  const { data } = await instance.post(`/member/sign-up`, signUpData);
+  return data;
+};
+
+export const checkEmailDuplicate = async (email: string): Promise<TEmailDuplicateCheckResponse> => {
+  const { data } = await instance.get('/member/check-email-duplicate', {
+    params: { email: email },
+  });
+  return data;
+};
+
+export const sendEmailCode = async (email: string): Promise<TSendEmailCodeResponse> => {
+  const { data } = await instance.post('/mail/send-verification', {
+    email: email,
+  });
+  return data;
+};
+
+export const verifyEmailCode = async (verifyData: TVerifyEmailCodeRequest): Promise<TVerifyEmailCodeResponse> => {
+  const { data } = await instance.post('/mail/verify', verifyData);
+  return data;
 };
 
 export const PostLogIn = async (loginData: LogInRequest): Promise<LogInResponse> => {
@@ -88,18 +98,6 @@ export const CookieToHeader = async (): Promise<string> => {
   }
 };
 
-export const EmailDuplicateCheck = async (email: string): Promise<boolean> => {
-  try {
-    const { data } = await instance.get('./member/check-email-duplicate', {
-      params: { email: email },
-    });
-    return data;
-  } catch (error) {
-    console.error('Email DuplicateCheck Error', error);
-    throw new Error('이메일 중복 체크 오류');
-  }
-};
-
 export const GetTemporaryPassword = async (email: string): Promise<string> => {
   try {
     const { data } = await instance.post('./member/issue-temp-password', email);
@@ -107,37 +105,6 @@ export const GetTemporaryPassword = async (email: string): Promise<string> => {
   } catch (error) {
     console.error('TemporaryPassword Error', error);
     throw new Error('임시 비밀번호 발급 오류');
-  }
-};
-
-export const SendAuthNumber = async (email: string): Promise<SendEmailVerifyResponse> => {
-  try {
-    const { data } = await instance.post('./mail/send-verification', {
-      email: email,
-    });
-    return data;
-  } catch (error) {
-    console.error('SendAuthenticationNumber Error', error);
-    throw new Error('인증번호 발급 오류');
-  }
-};
-
-export const CheckAuthNumber = async (verify: string): Promise<EmailVerifyResponse> => {
-  try {
-    const { data } = await instance.post('./mail/verify', {
-      email: verify.email,
-      verificationCode: verify.verificationCode,
-    });
-    return data;
-  } catch (error) {
-    if (error.response) {
-      if (error.response.status === 400) {
-        console.log('인증번호가 일치하지 않습니다.');
-      }
-    } else {
-      console.error('에러 응답:', error?.response?.data || error.message);
-      throw new Error('인증번호 확인 오류');
-    }
   }
 };
 
