@@ -14,16 +14,16 @@ export const useLogInFlow = () => {
 
   const logInMutation = useMutation({
     mutationFn: PostLogIn,
-    onSuccess: (accessToken) => {
+    onSuccess: ({ accessToken }) => {
       console.log(accessToken);
       if (!accessToken) {
         console.error('토큰 없음');
         throw new Error('accessToken 없음');
-      }      
+      }
       console.log('로그인 성공');
       localStorage.setItem('accessToken', accessToken);
       // navigate('/');
-    },    
+    },
     onError: (error) => {
       console.error('로그인 실패', error);
     },

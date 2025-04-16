@@ -19,6 +19,7 @@ export interface LogInProps {
 
 export interface LogInResponse {
   message: string;
+  accessToken: string;
 }
 
 export interface EmailVerifyRequest {
