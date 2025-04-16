@@ -1,6 +1,7 @@
 import Layout from '@_components/Layout/Layout';
 import Home from '@_pages/Home';
-import SignUp from '@_pages/SignUp';
+import SignUp from '@_pages/Auth/SignUp/SignUp';
+import LogIn from '@_pages/Auth/LogIn/LogIn';
 import NotFound from '@_pages/NotFound/NotFound';
 import EventList from '@_pages/Event/EventList/EventList';
 import EventCreate from '@_pages/Event/EventCreate/EventCreate';
@@ -22,6 +23,10 @@ export const routes = [
       {
         path: '/signup',
         element: <SignUp />,
+      },
+      {
+        path: '/login',
+        element: <LogIn />,
       },
       {
         path: '/events',
