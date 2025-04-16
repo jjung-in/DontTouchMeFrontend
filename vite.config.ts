@@ -30,4 +30,16 @@ export default defineConfig({
       },
     },
   },
+  server: {
+    port: 3000,
+    proxy: {
+      '/api/v1': {
+        target: 'http://13.209.40.51:8080/',
+        changeOrigin: true,
+        rewrite: (path) => path,
+        secure: false,
+        ws: true,
+      },
+    },
+  },
 });
