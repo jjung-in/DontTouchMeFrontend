@@ -1,15 +1,44 @@
-export interface SignUpProps {
+export interface TSignUpFormValues {
+  name: string;
+  email: string;
+  verificationCode: string;
+  password: string;
+  confirmPassword: string;
+  contact: string;
+}
+
+export type TSignUpFormErrors = Partial<Record<keyof TSignUpFormValues, string>>;
+
+export interface TSignUpRequest {
   name: string;
   email: string;
   password: string;
   contact: string;
-  confirmPassword: string;
 }
 
-export interface SignUpResponse {
+export interface TSignUpResponse {
   id: number;
   name: string;
   email: string;
+}
+
+export interface TEmailDuplicateCheckResponse {
+  isDuplicated: boolean;
+}
+
+export interface TSendEmailCodeResponse {
+  email: 'string';
+  state: 'string';
+}
+
+export interface TVerifyEmailCodeRequest {
+  email: string;
+  verificationCode: string;
+}
+
+export interface TVerifyEmailCodeResponse {
+  email: string;
+  message: string;
 }
 
 export interface LogInFormValues {
@@ -26,21 +55,6 @@ export interface LogInResponse {
   accessToken: string;
   memberId: number;
   message: string;
-}
-
-export interface EmailVerifyRequest {
-  email: string;
-  verificationCode: string;
-}
-
-export interface EmailVerifyResponse {
-  email: string;
-  message: string;
-}
-
-export interface SendEmailVerifyResponse {
-  email: 'string';
-  state: 'string';
 }
 
 export interface TokenReissueResponse {

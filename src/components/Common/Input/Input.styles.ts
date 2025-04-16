@@ -43,6 +43,7 @@ export const StyledInput = styled.input<TStyledInputProps>`
   ${({ $state }) => STATE[$state]}
 
   width: ${({ $fullWidth }) => ($fullWidth ? '100%' : 'auto')};
+  flex: ${({ $fullWidth }) => ($fullWidth ? '1' : 'auto')};
   border-radius: 5px;
   background-color: #ffffff;
 
@@ -52,6 +53,14 @@ export const StyledInput = styled.input<TStyledInputProps>`
 
   &:focus {
     border-color: ${({ theme, $state }) => ($state === 'error' ? theme.color.error : theme.color.gray[300])};
+  }
+
+  &:disabled {
+    border-color: ${({ theme }) => theme.color.gray[100]};
+
+    &::placeholder {
+      color: ${({ theme }) => theme.color.gray[100]};
+    }
   }
 
   ${({ as }) =>

@@ -13,6 +13,6 @@ export const FieldLabelStyle = styled.label`
   font-size: ${({ theme }) => theme.fontSize.xl};
 `;
 
-export const ErrorTextStyle = styled.p`
-  color: ${({ theme }) => theme.color.error};
+export const ErrorTextStyle = styled.p<{ $isSuccess?: boolean }>`
+  color: ${({ theme, $isSuccess }) => ($isSuccess ? theme.color.text.primary : theme.color.error)};
 `;

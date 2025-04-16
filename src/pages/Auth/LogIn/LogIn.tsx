@@ -29,7 +29,7 @@ const LogIn = () => {
           로그인
         </button>
 
-        <Link to="./signup">회원가입</Link>
+        <Link to="/signup">회원가입</Link>
       </form>
     </main>
   );
