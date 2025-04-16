@@ -1,10 +1,10 @@
 import { Outlet } from 'react-router-dom';
-import Header from './Header';
-import Footer from './Footer';
+import Header from './header/Header.tsx';
+import Footer from './footer/Footer.tsx';
 
 const Layout = () => {
   return (
-    <div>
+    <div style={{ minWidth: '1280px' }}>
       <Header />
       <Outlet />
       <Footer />

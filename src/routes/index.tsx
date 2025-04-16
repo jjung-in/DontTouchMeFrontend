@@ -2,7 +2,14 @@ import Layout from '@_components/Layout/Layout';
 import Home from '@_pages/Home';
 import SignUp from '@_pages/Auth/SignUp/SignUp';
 import LogIn from '@_pages/Auth/LogIn/LogIn';
-import NotFound from '@_pages/NotFound';
+import NotFound from '@_pages/NotFound/NotFound';
+import EventList from '@_pages/Event/EventList/EventList';
+import EventCreate from '@_pages/Event/EventCreate/EventCreate';
+import EventDetail from '@_pages/Event/EventDetail/EventDetail';
+import EventUpdate from '@_pages/Event/EventUpdate/EventUpdate';
+import RecordList from '@_pages/Records/RecordList/RecordList';
+import RecordCreate from '@_pages/Records/RecordCreate/RecordCreate';
+import RecordUpdate from '@_pages/Records/RecordUpdate/RecordUpdate';
 
 export const routes = [
   {
@@ -18,9 +25,37 @@ export const routes = [
         element: <SignUp />,
       },
       {
-        path : '/login',
-        element : <LogIn />,
-      }
+        path: '/login',
+        element: <LogIn />,
+      },
+      {
+        path: '/events',
+        element: <EventList />,
+      },
+      {
+        path: '/events/:eventId',
+        element: <EventDetail />,
+      },
+      {
+        path: '/events/create',
+        element: <EventCreate />,
+      },
+      {
+        path: '/events/:eventId/update',
+        element: <EventUpdate />,
+      },
+      {
+        path: '/events/:eventId/records',
+        element: <RecordList />,
+      },
+      {
+        path: '/events/:eventId/records/create',
+        element: <RecordCreate />,
+      },
+      {
+        path: '/events/:eventId/records/update',
+        element: <RecordUpdate />,
+      },
     ],
   },
   {

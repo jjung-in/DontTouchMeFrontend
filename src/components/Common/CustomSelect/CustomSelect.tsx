@@ -1,0 +1,141 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
+import * as S from './CustomSelect.styles';
+import { formatNumber } from '@_utils/records';
+
+interface Props {
+  options: string[];
+  value: string;
+  onChange: (value: string | number) => void;
+  isInput?: boolean;
+  isPrice?: boolean;
+  isShowArrow?: boolean;
+  isError?: boolean;
+}
+
+const CustomSelect = ({ options, value, onChange, isInput, isPrice, isShowArrow, isError }: Props) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [inputValue, setInputValue] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    const index = options.findIndex((option) => option.toLowerCase().includes(val.toLowerCase()));
+    setIsOpen(true);
+    setHoveredIndex(val !== '' && index >= 0 ? index : null);
+    setSelectedIndex(null);
+    setInputValue(val);
+    onChange(val);
+  };
+
+  const handleSelect = (index: number) => {
+    const selectedValue = options[index];
+    setInputValue(selectedValue);
+    setSelectedIndex(index);
+    setHoveredIndex(index);
+    onChange(selectedValue);
+    setIsOpen(false);
+  };
+
+  const handleClose = useCallback(() => {
+    setIsOpen(false);
+    setHoveredIndex(selectedIndex === null ? null : selectedIndex);
+  }, [selectedIndex]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'ArrowDown' && e.altKey) {
+      setIsOpen(true);
+      return;
+    }
+
+    if (!isOpen) {
+      return;
+    }
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setHoveredIndex((prev) => {
+          const next = prev === null ? 0 : prev + 1 === options.length ? prev : prev + 1;
+          return next;
+        });
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setHoveredIndex((prev) => {
+          const next = prev === null || prev === 0 ? prev : prev - 1;
+          return next;
+        });
+        break;
+      case 'Enter':
+        if (hoveredIndex !== null) {
+          handleSelect(hoveredIndex);
+        } else {
+          setIsOpen(false);
+        }
+        break;
+      case 'Tab':
+      case 'Escape':
+        handleClose();
+        break;
+    }
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        handleClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [handleClose]);
+
+  useEffect(() => {
+    const selected = options.find((options) => options === value);
+    if (selected) {
+      setInputValue(selected);
+      setHoveredIndex(options.indexOf(selected));
+      setSelectedIndex(options.indexOf(selected));
+    } else {
+      setInputValue(value);
+    }
+  }, [value, options]);
+
+  return (
+    <S.Container ref={ref}>
+      <S.Input
+        type={isPrice ? 'number' : 'text'}
+        value={inputValue}
+        min={0}
+        readOnly={!isInput}
+        onKeyDown={handleKeyDown}
+        onClick={() => setIsOpen(true)}
+        onFocus={() => setIsOpen(true)}
+        onChange={handleChange}
+        $isShowArrow={isShowArrow}
+        $isError={isError}
+      ></S.Input>
+      {isOpen && options.length > 0 && (
+        <S.Dropdown>
+          {options.map((option, index) => (
+            <S.Option
+              key={index}
+              onClick={() => handleSelect(index)}
+              $focused={index === hoveredIndex}
+              $selected={index === selectedIndex}
+            >
+              {option === '' ? '-' : isPrice ? formatNumber(option) : option}
+            </S.Option>
+          ))}
+        </S.Dropdown>
+      )}
+    </S.Container>
+  );
+};
+
+export default CustomSelect;
