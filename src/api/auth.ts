@@ -26,9 +26,7 @@ export const PostSignUp = async (signUpData: SignUpProps): Promise<SignUpRespons
 
 export const PostLogIn = async (loginData: LogInProps): Promise<LogInResponse> => {
   try {
-    const response = await instance.post(`/member/login`, loginData, {
-      withCredentials: true,
-    });
+    const response = await instance.post(`/member/login`, loginData);
 
     const rawToken = response.headers['authorization'];
     const accessToken = rawToken?.startsWith('Bearer ') ? rawToken.slice(7) : rawToken;
@@ -37,7 +35,10 @@ export const PostLogIn = async (loginData: LogInProps): Promise<LogInResponse> =
       throw new Error('헤더에서 accessToken을 찾을 수 없습니다.');
     }
 
-    return accessToken;
+    return {
+      message: '로그인 성공',
+      accessToken,
+    };
   } catch (error) {
     if (error.response) {
       if (error.response.status === 401) {
@@ -86,7 +87,6 @@ export const CookieToHeader = async (): Promise<string> => {
     throw new Error('쿠키 → 헤더 이동 실패');
   }
 };
-
 
 export const EmailDuplicateCheck = async (email: string): Promise<boolean> => {
   try {
