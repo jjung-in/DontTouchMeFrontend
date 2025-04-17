@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { postSignUp, PostLogIn, checkEmailDuplicate, sendEmailCode, verifyEmailCode } from '@_api/auth';
 import { LogInFormValues, TSignUpFormValues, TSignUpFormErrors } from '@_types/auth.type';
@@ -259,4 +259,18 @@ export const useSignUpFlow = () => {
     isError: signUpMutation.isError,
     error: signUpMutation.error,
   };
+};
+
+export const useRequireAuth = () => {
+  const navigate = useNavigate();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      alert('로그인 후 이용할 수 있습니다.');
+      navigate('/login');
+    }
+  }, [isLoggedIn, navigate]);
+
+  return isLoggedIn;
 };

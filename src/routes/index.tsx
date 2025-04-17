@@ -10,6 +10,7 @@ import EventUpdate from '@_pages/Event/EventUpdate/EventUpdate';
 import RecordList from '@_pages/Records/RecordList/RecordList';
 import RecordCreate from '@_pages/Records/RecordCreate/RecordCreate';
 import RecordUpdate from '@_pages/Records/RecordUpdate/RecordUpdate';
+import PrivateRoute from './PrivateRoute';
 
 export const routes = [
   {
@@ -30,31 +31,59 @@ export const routes = [
       },
       {
         path: '/events',
-        element: <EventList />,
+        element: (
+          <PrivateRoute>
+            <EventList />
+          </PrivateRoute>
+        ),
       },
       {
         path: '/events/:eventId',
-        element: <EventDetail />,
+        element: (
+          <PrivateRoute>
+            <EventDetail />
+          </PrivateRoute>
+        ),
       },
       {
         path: '/events/create',
-        element: <EventCreate />,
+        element: (
+          <PrivateRoute>
+            <EventCreate />
+          </PrivateRoute>
+        ),
       },
       {
         path: '/events/:eventId/update',
-        element: <EventUpdate />,
+        element: (
+          <PrivateRoute>
+            <EventUpdate />
+          </PrivateRoute>
+        ),
       },
       {
         path: '/events/:eventId/records',
-        element: <RecordList />,
+        element: (
+          <PrivateRoute>
+            <RecordList />
+          </PrivateRoute>
+        ),
       },
       {
         path: '/events/:eventId/records/create',
-        element: <RecordCreate />,
+        element: (
+          <PrivateRoute>
+            <RecordCreate />
+          </PrivateRoute>
+        ),
       },
       {
         path: '/events/:eventId/records/update',
-        element: <RecordUpdate />,
+        element: (
+          <PrivateRoute>
+            <RecordUpdate />
+          </PrivateRoute>
+        ),
       },
     ],
   },
