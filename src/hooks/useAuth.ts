@@ -48,6 +48,7 @@ export const useLogInFlow = () => {
 
   return {
     formValues,
+    formErrors: {},
     handleChange,
     handleLogIn,
     isPending: logInMutation.isPending,
