@@ -11,6 +11,7 @@ export const useLogInFlow = () => {
     email: '',
     password: '',
   });
+  const [formErrors, setFormErrors] = useState<Partial<LogInFormValues>>({});
 
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
@@ -31,15 +32,20 @@ export const useLogInFlow = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormValues((prev) => ({ ...prev, [name]: value }));
+    setFormErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
   const handleLogIn = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const { email, password } = formValues;
+    const errors: Partial<LogInFormValues> = {};
 
-    if (!email || !password) {
-      console.log('모든 필드를 입력해주세요.');
+    if (!email.trim()) errors.email = '이메일을 입력해주세요.';
+    if (!password.trim()) errors.password = '비밀번호를 입력해주세요.';
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
       return;
     }
 
@@ -48,7 +54,7 @@ export const useLogInFlow = () => {
 
   return {
     formValues,
-    formErrors: {},
+    formErrors,
     handleChange,
     handleLogIn,
     isPending: logInMutation.isPending,
