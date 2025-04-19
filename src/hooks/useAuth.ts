@@ -162,6 +162,7 @@ export const useSignUpFlow = () => {
     mutationFn: postSignUp,
     onSuccess: (result) => {
       console.log('회원가입 성공', result);
+      navigate('/auth/success');
     },
     onError: (error) => {
       console.error('회원가입 오류', error);
