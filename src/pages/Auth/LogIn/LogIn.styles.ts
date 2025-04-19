@@ -24,7 +24,7 @@ export const FieldArea = styled.div`
   display: flex;
   flex-direction: column;
   gap: 30px;
-  margin-bottom: 100px;
+  margin-bottom: 70px;
 `;
 
 export const ForgotPasswordText = styled.span`
@@ -56,5 +56,53 @@ export const SignUpLinkArea = styled.div`
   a {
     color: ${({ theme }) => theme.color.primary[400]};
     text-decoration: underline;
+  }
+`;
+
+export const SocialLoginWrapper = styled.div`
+  margin-top: 100px;
+  padding-right: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+export const SocialLoginDivider = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  color: ${({ theme }) => theme.color.gray[500]};
+  font-size: 14px;
+  margin-bottom: 15px;
+
+  span {
+    padding: 0 10px;
+    white-space: nowrap;
+  }
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: ${({ theme }) => theme.color.gray[200]};
+  }
+`;
+
+export const SocialIconContainer = styled.div`
+  display: flex;
+  gap: 45px;
+
+  img {
+    margin-top : 45px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: scale(1.05);
+    }
   }
 `;
