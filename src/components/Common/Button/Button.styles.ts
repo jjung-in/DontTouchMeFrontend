@@ -47,6 +47,13 @@ const VARIANTS = {
       text-decoration: underline;
     }
   `,
+
+  outlined: css`
+    color: ${({ theme }) => theme.color.primary[500]};
+    background-color: #ffffff;
+    border: 1px solid ${({ theme }) => theme.color.primary[500]};
+    border-radius: 6px;
+  `,
 };
 
 export const StyledButton = styled.button<TStyledButtonProps>`
