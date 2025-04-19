@@ -51,8 +51,8 @@ const LogIn = () => {
               fullWidth
             />
             {formErrors.password && <ErrorTextStyle>{formErrors.password}</ErrorTextStyle>}
-            <S.ForgotPasswordText>비밀번호를 잊으셨나요?</S.ForgotPasswordText>
           </S.FieldContainer>
+          <S.ForgotPasswordText>비밀번호를 잊으셨나요?</S.ForgotPasswordText>
         </S.FieldArea>
 
         <S.ButtonArea>
