@@ -10,7 +10,7 @@ export const Main = styled.main`
 export const LogInForm = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 75px;
+  /* gap: 75px; */
   width: 900px;
   padding: 100px 100px 50px 210px;
   border-radius: 10px;
@@ -20,9 +20,20 @@ export const LogInForm = styled.form`
 `;
 
 export const FieldArea = styled.div`
+  text-align: center;
   display: flex;
   flex-direction: column;
   gap: 30px;
+  margin-bottom: 100px;
+`;
+
+export const ForgotPasswordText = styled.span`
+  display: inline-block;
+  margin-top: 25px;
+  font-size: 14px;
+  color: ${({ theme }) => theme.color.primary[400]};
+  text-decoration: underline;
+  cursor: pointer;
 `;
 
 export const FieldContainer = styled(FieldContainerStyle)`
@@ -37,6 +48,7 @@ export const ButtonArea = styled.div`
 
 export const SignUpLinkArea = styled.div`
   padding-right: 110px;
+  margin-top: 20px;
   display: flex;
   gap: 10px;
   font-size: 14px;
