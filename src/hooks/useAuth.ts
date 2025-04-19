@@ -52,11 +52,21 @@ export const useLogInFlow = () => {
     logInMutation.mutate(formValues);
   };
 
+  const handleGoogleClick = () => {
+    window.location.href = `http://13.209.40.51:8080/oauth2/authorization/google`;
+  };
+  
+  const handleNaverClick = () => {
+    window.location.href = 'http://13.209.40.51:8080/oauth2/authorization/naver';
+  };  
+
   return {
     formValues,
     formErrors,
     handleChange,
     handleLogIn,
+    handleNaverClick,
+    handleGoogleClick,
     isPending: logInMutation.isPending,
     isError: logInMutation.isError,
     error: logInMutation.error,
