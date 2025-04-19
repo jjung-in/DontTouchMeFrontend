@@ -34,9 +34,11 @@ export const ForgotPasswordText = styled.span`
   color: ${({ theme }) => theme.color.primary[400]};
   text-decoration: underline;
   cursor: pointer;
+  padding-right: 110px;
 `;
 
 export const FieldContainer = styled(FieldContainerStyle)`
+  text-align: left;
   padding-right: 110px;
 `;
 
