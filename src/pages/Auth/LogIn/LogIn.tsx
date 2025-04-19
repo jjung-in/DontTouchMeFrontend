@@ -5,6 +5,8 @@ import PageTitle from '@_components/Common/PageTitle/PageTitle';
 import Input from '@_components/Common/Input/Input';
 import Button from '@_components/Common/Button/Button';
 import { ErrorTextStyle } from '@_styles/event';
+import google from '@_assets/icons/google.png';
+import naver from '@_assets/icons/naver.png';
 
 const LOGIN_TITLE = {
   title: '로그인',
@@ -64,6 +66,16 @@ const LogIn = () => {
             회원가입
           </Button>
         </S.SignUpLinkArea>
+
+        <S.SocialLoginWrapper>
+          <S.SocialLoginDivider>
+            <span>소셜 로그인</span>
+          </S.SocialLoginDivider>
+          <S.SocialIconContainer>
+            <img src={google} alt="google login" />
+            <img src={naver} alt="naver login" />
+          </S.SocialIconContainer>
+        </S.SocialLoginWrapper>
       </S.LogInForm>
     </S.Main>
   );
