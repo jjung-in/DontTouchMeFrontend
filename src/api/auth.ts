@@ -107,23 +107,3 @@ export const GetTemporaryPassword = async (email: string): Promise<string> => {
     throw new Error('임시 비밀번호 발급 오류');
   }
 };
-
-export const NaverSignUp = async () => {
-  try {
-    const { data } = await instance.post('oauth2/authorization/naver');
-    return data;
-  } catch (error) {
-    console.error('NaverSignUp Error', error);
-    throw new Error('네이버 회원가입 오류');
-  }
-};
-
-export const GoogleSignUp = async () => {
-  try {
-    const { data } = await instance.post('oauth2/authorization/google');
-    return data;
-  } catch (error) {
-    console.error('GoogleSignUp Error', error);
-    throw new Error('구글 회원가입 오류');
-  }
-};
