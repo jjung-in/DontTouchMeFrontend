@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 
 export const Section = styled.section`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   padding: 200px 0;
   text-align: center;
@@ -99,6 +102,25 @@ const pulse = keyframes`
   20%  { transform: scale(1.1); }
   40% { transform: scale(1); }
   100% { transform: scale(1); }
+`;
+
+export const AnchorButton = styled.a`
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 35px;
+  padding: 25px 120px;
+  color: #ffffff;
+  font-size: 24px;
+  font-weight: 600;
+  border-radius: 50px;
+  background-color: ${({ theme }) => theme.color.primary[500]};
+  box-shadow: inset 6px 6px 50px #5db3ff;
+
+  img {
+    animation: ${pulse} 2s ease-in-out infinite;
+  }
 `;
 
 export const LinkButton = styled(Link)`

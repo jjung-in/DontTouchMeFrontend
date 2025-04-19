@@ -30,7 +30,7 @@ const steps = [
 const StepSection = () => {
   return (
     <S.Section>
-      <FadeInUp delay={0.1}>
+      <FadeInUp delay={0.2}>
         <S.Title>
           <span>페이블</span> 이렇게 이용하세요!
         </S.Title>
@@ -54,6 +54,14 @@ const StepSection = () => {
           </S.Step>
         ))}
       </S.Steps>
+      <S.AnchorButton
+        href="https://sleet-literature-5ab.notion.site/PAYble-1c4b4128bae2808ba3ace5b11679a509"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        사용 매뉴얼 바로가기
+        <img src={finger} />
+      </S.AnchorButton>
       <S.LinkButton to="/events/create">
         이벤트 등록 바로가기
         <img src={finger} />
