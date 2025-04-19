@@ -1,5 +1,5 @@
 import { useLogInFlow } from '@_hooks/useAuth';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import * as S from './LogIn.styles';
 import PageTitle from '@_components/Common/PageTitle/PageTitle';
 import Input from '@_components/Common/Input/Input';
@@ -14,6 +14,7 @@ const LOGIN_TITLE = {
 
 const LogIn = () => {
   const { formValues, formErrors, handleChange, handleLogIn, isPending } = useLogInFlow();
+  const navigate = useNavigate();
 
   return (
     <S.Main>
@@ -48,6 +49,7 @@ const LogIn = () => {
               fullWidth
             />
             {formErrors.password && <ErrorTextStyle>{formErrors.password}</ErrorTextStyle>}
+            <S.ForgotPasswordText>비밀번호를 잊으셨나요?</S.ForgotPasswordText>
           </S.FieldContainer>
         </S.FieldArea>
 
@@ -58,8 +60,9 @@ const LogIn = () => {
         </S.ButtonArea>
 
         <S.SignUpLinkArea>
-          <span>계정이 없으신가요?</span>
-          <Link to="/signup">회원가입</Link>
+          <Button type="button" variant="outlined" fontWeight="semibold" fullWidth onClick={() => navigate('/signup')}>
+            회원가입
+          </Button>
         </S.SignUpLinkArea>
       </S.LogInForm>
     </S.Main>
