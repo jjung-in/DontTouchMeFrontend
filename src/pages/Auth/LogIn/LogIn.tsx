@@ -15,7 +15,7 @@ const LOGIN_TITLE = {
 };
 
 const LogIn = () => {
-  const { formValues, formErrors, handleChange, handleLogIn, isPending } = useLogInFlow();
+  const { formValues, formErrors, handleChange, handleLogIn, handleNaverClick, handleGoogleClick, isPending } = useLogInFlow();
   const navigate = useNavigate();
 
   return (
@@ -72,8 +72,8 @@ const LogIn = () => {
             <span>소셜 로그인</span>
           </S.SocialLoginDivider>
           <S.SocialIconContainer>
-            <img src={google} alt="google login" />
-            <img src={naver} alt="naver login" />
+          <img src={google} alt="google login" onClick={handleGoogleClick} />
+          <img src={naver} alt="naver login" onClick={handleNaverClick} />
           </S.SocialIconContainer>
         </S.SocialLoginWrapper>
       </S.LogInForm>
