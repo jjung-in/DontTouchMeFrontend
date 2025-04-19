@@ -11,6 +11,7 @@ import RecordList from '@_pages/Records/RecordList/RecordList';
 import RecordCreate from '@_pages/Records/RecordCreate/RecordCreate';
 import RecordUpdate from '@_pages/Records/RecordUpdate/RecordUpdate';
 import PrivateRoute from './PrivateRoute';
+import AuthSuccess from '@_pages/Auth/Success/AuthSuccess';
 
 export const routes = [
   {
@@ -28,6 +29,10 @@ export const routes = [
       {
         path: '/login',
         element: <LogIn />,
+      },
+      {
+        path: '/auth/success',
+        element: <AuthSuccess />,
       },
       {
         path: '/events',
