@@ -12,6 +12,7 @@ import RecordCreate from '@_pages/Records/RecordCreate/RecordCreate';
 import RecordUpdate from '@_pages/Records/RecordUpdate/RecordUpdate';
 import PrivateRoute from './PrivateRoute';
 import AuthSuccess from '@_pages/Auth/Success/AuthSuccess';
+import CardSend from '@_pages/Card/CardSend/CardSend';
 import CardComplete from '@_pages/Card/CardComplete/CardComplete';
 
 export const routes = [
@@ -88,6 +89,14 @@ export const routes = [
         element: (
           <PrivateRoute>
             <RecordUpdate />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: '/events/:eventId/card',
+        element: (
+          <PrivateRoute>
+            <CardSend />
           </PrivateRoute>
         ),
       },
