@@ -1,4 +1,4 @@
-import { TRecipientList, TSendEmailRequest } from '@_types/cards.type';
+import { TRecipientList, TSendEmailRequest, TSendSMSRequest } from '@_types/cards.type';
 import { instance } from './instance';
 
 export const getRecipients = async (eventId: number): Promise<TRecipientList> => {
@@ -7,6 +7,11 @@ export const getRecipients = async (eventId: number): Promise<TRecipientList> =>
 };
 
 export const sendEmail = async (sendData: TSendEmailRequest): Promise<string> => {
+  const { data } = await instance.post('/send/email', sendData);
+  return data;
+};
+
+export const sendSMS = async (sendData: TSendSMSRequest): Promise<string> => {
   const { data } = await instance.post('/send/email', sendData);
   return data;
 };

@@ -16,3 +16,8 @@ export interface TSendEmailRequest {
   eventName: string;
   fromEmail: string;
 }
+
+export interface TSendSMSRequest {
+  recipients: TRecipient[];
+  eventName: string;
+}

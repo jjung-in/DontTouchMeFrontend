@@ -1,4 +1,4 @@
-import { getRecipients, sendEmail } from '@_api/cards';
+import { getRecipients, sendEmail, sendSMS } from '@_api/cards';
 import { TRecipientList, TRecipientWithId } from '@_types/cards.type';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
@@ -13,6 +13,12 @@ export const useGetRecipients = (eventId: number) => {
 export const useSendEmail = () => {
   return useMutation({
     mutationFn: sendEmail,
+  });
+};
+
+export const useSendSMS = () => {
+  return useMutation({
+    mutationFn: sendSMS,
   });
 };
 

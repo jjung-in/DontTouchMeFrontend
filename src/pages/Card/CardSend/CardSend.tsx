@@ -6,9 +6,15 @@ import PageTitle from '@_components/Common/PageTitle/PageTitle';
 import { Spinner } from '@_components/Common/Spinner/Spinner.styles';
 import EmptyState from '@_components/EmptyState/EmptyState';
 import AlertModal from '@_components/Modal/AlertModal/AlertModal';
-import { useGetRecipients, useRecipientSelection, useRecipientsWithId, useSendEmail } from '@_hooks/useCards';
+import {
+  useGetRecipients,
+  useRecipientSelection,
+  useRecipientsWithId,
+  useSendEmail,
+  useSendSMS,
+} from '@_hooks/useCards';
 import { useEventDetail } from '@_hooks/useEvents';
-import { TSendEmailRequest } from '@_types/cards.type';
+import { TSendEmailRequest, TSendSMSRequest } from '@_types/cards.type';
 import { getEventStatus } from '@_utils/events';
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -32,7 +38,8 @@ const CardSend = () => {
   const { selectedRecipients, isAllSelected, handleToggleRecipient, handleSelectAll, handleDeselectAll } =
     useRecipientSelection(recipientsWithId);
 
-  const { mutate: sendEmail, isPending } = useSendEmail();
+  const { mutate: sendEmail, isPending: isEmailPending } = useSendEmail();
+  const { mutate: sendSMS, isPending: isSMSPending } = useSendSMS();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -47,33 +54,48 @@ const CardSend = () => {
       return;
     }
 
-    if (event?.sendType !== 'EMAIL') {
-      alert('현재는 이메일 전송만 지원됩니다.\nSMS 전송은 추후 지원될 예정입니다.');
-      return;
-    }
-
     setIsModalOpen(true);
   };
 
   const handleSubmit = async () => {
-    const payload: TSendEmailRequest = {
-      recipients: selectedRecipients,
-      eventName: event?.eventName || '',
-      fromEmail: 'payble.reply@gmail.com',
-    };
+    if (event?.sendType === 'EMAIL') {
+      const payload: TSendEmailRequest = {
+        recipients: selectedRecipients,
+        eventName: event?.eventName || '',
+        fromEmail: 'payble.reply@gmail.com',
+      };
 
-    sendEmail(payload, {
-      onSuccess: () => {
-        navigate(`/events/${eventId}/card/complete`, {
-          state: {
-            count: selectedRecipients.length,
-          },
-        });
-      },
-      onError: () => {
-        alert('이메일 전송에 실패했습니다. 잠시 후 다시 시도해주세요.');
-      },
-    });
+      sendEmail(payload, {
+        onSuccess: () => {
+          navigate(`/events/${eventId}/card/complete`, {
+            state: {
+              count: selectedRecipients.length,
+            },
+          });
+        },
+        onError: () => {
+          alert('이메일 전송에 실패했습니다. 잠시 후 다시 시도해주세요.');
+        },
+      });
+    } else if (event?.sendType === 'PHONE') {
+      const payload: TSendSMSRequest = {
+        recipients: selectedRecipients,
+        eventName: event?.eventName || '',
+      };
+
+      sendSMS(payload, {
+        onSuccess: () => {
+          navigate(`/events/${eventId}/card/complete`, {
+            state: {
+              count: selectedRecipients.length,
+            },
+          });
+        },
+        onError: () => {
+          alert('SMS 전송에 실패했습니다. 잠시 후 다시 시도해주세요.');
+        },
+      });
+    }
   };
 
   if (isEventFetching || isRecipientsFetching) {
@@ -137,11 +159,11 @@ const CardSend = () => {
         onClose={() => setIsModalOpen(false)}
         title="감사장 전송"
         message={
-          isPending
+          isEmailPending || isSMSPending
             ? '감사장을 전송하고 있습니다.'
             : `확인 클릭 시 ${selectedRecipients.length}명에게 감사장이 전송됩니다. 진행하시겠습니까?`
         }
-        onConfirm={isPending ? () => {} : handleSubmit}
+        onConfirm={isEmailPending || isSMSPending ? () => {} : handleSubmit}
       />
     </S.Main>
   );
