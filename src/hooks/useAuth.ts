@@ -103,7 +103,11 @@ export const useSignUpFlow = () => {
     if (!formValues.email.trim()) errors.email = '이메일을 입력해주세요.';
     if (!formValues.verificationCode.trim()) errors.verificationCode = '인증번호를 입력해주세요.';
     if (!formValues.password.trim()) errors.password = '비밀번호를 입력해주세요.';
-    else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(formValues.password))
+    else if (
+      !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/.test(
+        formValues.password,
+      )
+    )
       errors.password = '비밀번호는 영문, 숫자, 특수문자를 포함한 8자 이상이어야 합니다.';
     if (!formValues.confirmPassword.trim()) errors.confirmPassword = '비밀번호를 다시 입력해주세요.';
     else if (formValues.password !== formValues.confirmPassword)
