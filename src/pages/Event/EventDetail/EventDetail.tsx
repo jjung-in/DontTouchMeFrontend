@@ -1,12 +1,13 @@
-import { useDeleteEvent, useEventDetail } from '@_hooks/useEvents';
-import { useNavigate, useParams } from 'react-router-dom';
-import * as S from './EventDetail.styles';
+import PageTitle from '@_components/Common/PageTitle/PageTitle';
 import Spinner from '@_components/Common/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
 import EventForm from '@_components/Event/EventForm/EventForm';
-import { useState } from 'react';
 import AlertModal from '@_components/Modal/AlertModal/AlertModal';
-import PageTitle from '@_components/Common/PageTitle/PageTitle';
+import { useDeleteEvent, useEventDetail } from '@_hooks/useEvents';
+import { useToastStore } from '@_store/toastStore';
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import * as S from './EventDetail.styles';
 
 const EVENT_DETAIL_TITLE = {
   title: '이벤트 상세 정보',
@@ -28,6 +29,7 @@ const EventDetail = () => {
       {
         onSuccess: () => {
           navigate(`/events`);
+          useToastStore.getState().showToast('이벤트가 삭제되었습니다.');
         },
       },
     );
