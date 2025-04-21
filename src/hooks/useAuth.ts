@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { postSignUp, PostLogIn, checkEmailDuplicate, sendEmailCode, verifyEmailCode } from '@_api/auth';
-import { LogInFormValues, TSignUpFormValues, TSignUpFormErrors } from '@_types/auth.type';
+import { PostLogIn, checkEmailDuplicate, postSignUp, sendEmailCode, verifyEmailCode } from '@_api/auth';
 import { useAuthStore } from '@_store/authStore';
-import { useNavigate } from 'react-router-dom';
+import { useToastStore } from '@_store/toastStore';
+import { LogInFormValues, TSignUpFormErrors, TSignUpFormValues } from '@_types/auth.type';
+import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const useLogInFlow = () => {
   const [formValues, setFormValues] = useState<LogInFormValues>({
@@ -21,6 +22,7 @@ export const useLogInFlow = () => {
     onSuccess: ({ accessToken, memberId }) => {
       setAuth(accessToken, Number(memberId));
       navigate('/');
+      useToastStore.getState().showToast('로그인되었습니다.');
     },
     onError: (error) => {
       const err = error as AxiosError<{ message?: string }>;

@@ -1,13 +1,14 @@
 import { uploadImage } from '@_api/image';
 import { getGeocode } from '@_api/map';
-import * as S from './EventUpdate.styles';
-import { useEventDetail, useUpdateEvent } from '@_hooks/useEvents';
-import { TEventFormValues } from '@_types/events.type';
-import { useNavigate, useParams } from 'react-router-dom';
-import EventForm from '@_components/Event/EventForm/EventForm';
+import PageTitle from '@_components/Common/PageTitle/PageTitle';
 import Spinner from '@_components/Common/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
-import PageTitle from '@_components/Common/PageTitle/PageTitle';
+import EventForm from '@_components/Event/EventForm/EventForm';
+import { useEventDetail, useUpdateEvent } from '@_hooks/useEvents';
+import { useToastStore } from '@_store/toastStore';
+import { TEventFormValues } from '@_types/events.type';
+import { useNavigate, useParams } from 'react-router-dom';
+import * as S from './EventUpdate.styles';
 
 const EVENT_UPDATE_TITLE = {
   title: '이벤트 상세 정보',
@@ -67,6 +68,7 @@ const EventUpdate = () => {
       {
         onSuccess: () => {
           navigate(`/events/${eventId}`);
+          useToastStore.getState().showToast('이벤트 정보가 수정되었습니다.');
         },
       },
     );
