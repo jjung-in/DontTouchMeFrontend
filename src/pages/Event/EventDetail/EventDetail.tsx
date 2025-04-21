@@ -4,6 +4,7 @@ import EmptyState from '@_components/EmptyState/EmptyState';
 import EventForm from '@_components/Event/EventForm/EventForm';
 import AlertModal from '@_components/Modal/AlertModal/AlertModal';
 import { useDeleteEvent, useEventDetail } from '@_hooks/useEvents';
+import { useAuthStore } from '@_store/authStore';
 import { useToastStore } from '@_store/toastStore';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -17,7 +18,7 @@ const EVENT_DETAIL_TITLE = {
 
 const EventDetail = () => {
   const navigate = useNavigate();
-  const memberId = 1;
+  const { memberId } = useAuthStore();
   const eventId = Number(useParams().eventId);
   const { data, isFetching } = useEventDetail(eventId);
   const { mutate: deleteEvent } = useDeleteEvent(memberId);
