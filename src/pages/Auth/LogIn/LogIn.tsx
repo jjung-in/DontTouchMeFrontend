@@ -15,7 +15,8 @@ const LOGIN_TITLE = {
 };
 
 const LogIn = () => {
-  const { formValues, formErrors, handleChange, handleLogIn, handleNaverClick, handleGoogleClick, isPending } = useLogInFlow();
+  const { formValues, formErrors, handleChange, handleLogIn, handleNaverClick, handleGoogleClick, isPending } =
+    useLogInFlow();
   const navigate = useNavigate();
 
   return (
@@ -62,7 +63,7 @@ const LogIn = () => {
         </S.ButtonArea>
 
         <S.SignUpLinkArea>
-          <Button type="button" variant="outlined" fontWeight="semibold" fullWidth onClick={() => navigate('/signup')}>
+          <Button type="button" variant="secondary" fontWeight="semibold" fullWidth onClick={() => navigate('/signup')}>
             회원가입
           </Button>
         </S.SignUpLinkArea>
@@ -72,8 +73,8 @@ const LogIn = () => {
             <span>소셜 로그인</span>
           </S.SocialLoginDivider>
           <S.SocialIconContainer>
-          <img src={google} alt="google login" onClick={handleGoogleClick} />
-          <img src={naver} alt="naver login" onClick={handleNaverClick} />
+            <img src={google} alt="google login" onClick={handleGoogleClick} />
+            <img src={naver} alt="naver login" onClick={handleNaverClick} />
           </S.SocialIconContainer>
         </S.SocialLoginWrapper>
       </S.LogInForm>

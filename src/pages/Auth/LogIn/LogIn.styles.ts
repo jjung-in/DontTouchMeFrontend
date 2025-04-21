@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { MainStyle } from '@_styles/common';
 import { FieldContainerStyle, FieldLabelStyle } from '@_styles/event';
 
-export const Main = styled.main`
+export const Main = styled.main<{ $isEmpty?: boolean }>`
   ${MainStyle}
   background-color: ${({ theme }) => theme.color.primary[200]};
 `;
@@ -73,7 +73,7 @@ export const SocialLoginDivider = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  color: ${({ theme }) => theme.color.gray[500]};
+  color: ${({ theme }) => theme.color.gray[300]};
   font-size: 14px;
   margin-bottom: 15px;
 
@@ -96,7 +96,7 @@ export const SocialIconContainer = styled.div`
   gap: 45px;
 
   img {
-    margin-top : 45px;
+    margin-top: 45px;
     width: 60px;
     height: 60px;
     border-radius: 50%;

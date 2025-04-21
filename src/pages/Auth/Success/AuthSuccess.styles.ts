@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { MainStyle } from '@_styles/common';
 
-export const Main = styled.main`
+export const Main = styled.main<{ $isEmpty?: boolean }>`
   ${MainStyle}
   height: 100vh;
   display: flex;

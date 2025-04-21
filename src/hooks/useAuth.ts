@@ -55,10 +55,10 @@ export const useLogInFlow = () => {
   const handleGoogleClick = () => {
     window.location.href = `http://13.209.40.51:8080/oauth2/authorization/google`;
   };
-  
+
   const handleNaverClick = () => {
     window.location.href = 'http://13.209.40.51:8080/oauth2/authorization/naver';
-  };  
+  };
 
   return {
     formValues,
@@ -74,6 +74,8 @@ export const useLogInFlow = () => {
 };
 
 export const useSignUpFlow = () => {
+  const navigate = useNavigate();
+
   const [formValues, setFormValues] = useState<TSignUpFormValues>({
     name: '',
     email: '',
