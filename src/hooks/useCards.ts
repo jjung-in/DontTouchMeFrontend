@@ -1,12 +1,12 @@
-import { getSendRecipients, sendEmail } from '@_api/cards';
+import { getRecipients, sendEmail } from '@_api/cards';
 import { TRecipientList, TRecipientWithId } from '@_types/cards.type';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 
-export const useGetSendRecipients = (eventId: number) => {
+export const useGetRecipients = (eventId: number) => {
   return useQuery<TRecipientList>({
     queryKey: ['recipients', eventId],
-    queryFn: () => getSendRecipients(eventId),
+    queryFn: () => getRecipients(eventId),
   });
 };
 
@@ -14,6 +14,16 @@ export const useSendEmail = () => {
   return useMutation({
     mutationFn: sendEmail,
   });
+};
+
+export const useRecipientsWithId = (recipients?: TRecipientList) => {
+  return useMemo(() => {
+    if (!recipients?.recipients) return [];
+    return recipients.recipients.map((recipient, index) => ({
+      ...recipient,
+      id: `${recipient.name}-${recipient.contact}-${index}`,
+    }));
+  }, [recipients]);
 };
 
 export const useRecipientSelection = (recipients: TRecipientWithId[]) => {

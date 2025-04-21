@@ -1,19 +1,18 @@
-import { useEventDetail } from '@_hooks/useEvents';
-import { useNavigate, useParams } from 'react-router-dom';
-import * as S from './CardSend.styles';
 import noimage from '@_assets/images/noimage.png';
-import { getEventStatus } from '@_utils/events';
-import { useGetSendRecipients, useRecipientSelection, useSendEmail } from '@_hooks/useCards';
-import { Spinner } from '@_components/Common/Spinner/Spinner.styles';
-import EmptyState from '@_components/EmptyState/EmptyState';
-import { Link } from 'react-router-dom';
+import MessagePreview from '@_components/Card/MessagePreview/MessagePreview';
+import RecipientList from '@_components/Card/RecipientList/RecipientList';
 import Button from '@_components/Common/Button/Button';
 import PageTitle from '@_components/Common/PageTitle/PageTitle';
-import RecipientList from '@_components/Card/RecipientList/RecipientList';
-import MessagePreview from '@_components/Card/MessagePreview/MessagePreview';
-import { useMemo, useState } from 'react';
-import { TSendEmailRequest } from '@_types/cards.type';
+import { Spinner } from '@_components/Common/Spinner/Spinner.styles';
+import EmptyState from '@_components/EmptyState/EmptyState';
 import AlertModal from '@_components/Modal/AlertModal/AlertModal';
+import { useGetRecipients, useRecipientSelection, useRecipientsWithId, useSendEmail } from '@_hooks/useCards';
+import { useEventDetail } from '@_hooks/useEvents';
+import { TSendEmailRequest } from '@_types/cards.type';
+import { getEventStatus } from '@_utils/events';
+import { useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import * as S from './CardSend.styles';
 
 const CARD_SEND_TITLE = {
   title: '감사장 전송',
@@ -24,21 +23,18 @@ const CARD_SEND_TITLE = {
 const CardSend = () => {
   const navigate = useNavigate();
   const eventId = Number(useParams().eventId);
-  const { data: event, isFetching: isEventFetching } = useEventDetail(eventId);
-  const { data: recipients, isFetching: isRecipientsFetching } = useGetSendRecipients(eventId);
-  const { mutate: sendEmail, isPending } = useSendEmail();
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const recipientsWithId = useMemo(() => {
-    if (!recipients?.recipients) return [];
-    return recipients.recipients.map((recipient, index) => ({
-      ...recipient,
-      id: `${recipient.name}-${recipient.contact}-${index}`,
-    }));
-  }, [recipients]);
+  const { data: event, isFetching: isEventFetching } = useEventDetail(eventId);
+  const { data: recipients, isFetching: isRecipientsFetching } = useGetRecipients(eventId);
+
+  const recipientsWithId = useRecipientsWithId(recipients);
 
   const { selectedRecipients, isAllSelected, handleToggleRecipient, handleSelectAll, handleDeselectAll } =
     useRecipientSelection(recipientsWithId);
+
+  const { mutate: sendEmail, isPending } = useSendEmail();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSendClick = () => {
     if (!event?.eventName) {
@@ -75,76 +71,78 @@ const CardSend = () => {
         });
       },
       onError: () => {
-        alert('전송 중 오류가 발생했습니다.');
+        alert('이메일 전송에 실패했습니다. 잠시 후 다시 시도해주세요.');
       },
     });
   };
 
-  return (
-    <S.Main $isEmpty={isEventFetching || isRecipientsFetching}>
-      {isEventFetching ? (
+  if (isEventFetching || isRecipientsFetching) {
+    return (
+      <S.Main $isEmpty={true}>
         <Spinner />
-      ) : (
-        <>
-          {event ? (
-            (() => {
-              const status = getEventStatus(event.eventDate);
-              return (
-                <>
-                  <PageTitle {...CARD_SEND_TITLE} />
-                  <S.EventInfo>
-                    <S.ImageBox>
-                      {event.thumbnailUrl ? <S.EventImage src={event.thumbnailUrl} /> : <img src={noimage} />}
-                    </S.ImageBox>
-                    <S.EventContent>
-                      <S.StatusBadge $status={status}>{status}</S.StatusBadge>
-                      <S.EventTitle>{event.eventName}</S.EventTitle>
-                      <S.EventDate>{event.eventDate}</S.EventDate>
-                    </S.EventContent>
-                  </S.EventInfo>
-                  <S.SendSection>
-                    <RecipientList
-                      recipients={recipientsWithId}
-                      selectedRecipients={selectedRecipients}
-                      isAllSelected={isAllSelected}
-                      onToggle={handleToggleRecipient}
-                      onSelectAll={handleSelectAll}
-                      onDeselectAll={handleDeselectAll}
-                    />
-                    <MessagePreview event={event} recipient={selectedRecipients[selectedRecipients.length - 1]} />
-                  </S.SendSection>
-                  <S.ButtonSection>
-                    <Button as={Link} to={`/events/${eventId}/records`} variant="secondary" fontWeight="semibold">
-                      이전
-                    </Button>
-                    <Button onClick={handleSendClick} variant="primary" fontWeight="semibold">
-                      전송
-                    </Button>
-                  </S.ButtonSection>
-                  <AlertModal
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    title="감사장 전송"
-                    message={
-                      isPending
-                        ? '감사장을 전송하고 있습니다.'
-                        : `확인 클릭 시 ${selectedRecipients.length}명에게 감사장이 전송됩니다. 진행하시겠습니까?`
-                    }
-                    onConfirm={isPending ? () => {} : handleSubmit}
-                  />
-                </>
-              );
-            })()
-          ) : (
-            <S.EmptyBox>
-              <EmptyState />
-              <Button as={Link} to={`/events/${eventId}/records`} variant="secondary" fontWeight="semibold">
-                돌아가기
-              </Button>
-            </S.EmptyBox>
-          )}
-        </>
-      )}
+      </S.Main>
+    );
+  }
+
+  if (!event) {
+    return (
+      <S.Main $isEmpty={true}>
+        <S.EmptyBox>
+          <EmptyState />
+          <Button as={Link} to={`/events/${eventId}/records`} variant="secondary" fontWeight="semibold">
+            돌아가기
+          </Button>
+        </S.EmptyBox>
+      </S.Main>
+    );
+  }
+
+  const status = getEventStatus(event.eventDate);
+  const lastSelectedRecipient = selectedRecipients[selectedRecipients.length - 1];
+
+  return (
+    <S.Main $isEmpty={false}>
+      <PageTitle {...CARD_SEND_TITLE} />
+      <S.EventInfo>
+        <S.ImageBox>
+          {event.thumbnailUrl ? <S.EventImage src={event.thumbnailUrl} /> : <img src={noimage} />}
+        </S.ImageBox>
+        <S.EventContent>
+          <S.StatusBadge $status={status}>{status}</S.StatusBadge>
+          <S.EventTitle>{event.eventName}</S.EventTitle>
+          <S.EventDate>{event.eventDate}</S.EventDate>
+        </S.EventContent>
+      </S.EventInfo>
+      <S.SendSection>
+        <RecipientList
+          recipients={recipientsWithId}
+          selectedRecipients={selectedRecipients}
+          isAllSelected={isAllSelected}
+          onToggle={handleToggleRecipient}
+          onSelectAll={handleSelectAll}
+          onDeselectAll={handleDeselectAll}
+        />
+        <MessagePreview event={event} recipient={lastSelectedRecipient} />
+      </S.SendSection>
+      <S.ButtonSection>
+        <Button as={Link} to={`/events/${eventId}/records`} variant="secondary" fontWeight="semibold">
+          이전
+        </Button>
+        <Button onClick={handleSendClick} variant="primary" fontWeight="semibold">
+          전송
+        </Button>
+      </S.ButtonSection>
+      <AlertModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="감사장 전송"
+        message={
+          isPending
+            ? '감사장을 전송하고 있습니다.'
+            : `확인 클릭 시 ${selectedRecipients.length}명에게 감사장이 전송됩니다. 진행하시겠습니까?`
+        }
+        onConfirm={isPending ? () => {} : handleSubmit}
+      />
     </S.Main>
   );
 };
