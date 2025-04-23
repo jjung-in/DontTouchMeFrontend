@@ -4,7 +4,7 @@ const fadeInOut = keyframes`
   0% {
     opacity: 0;
   }
-  20%, 80% {
+  20% {
     opacity: 1;
   }
   100% {
@@ -22,7 +22,7 @@ export const Container = styled.div<{ $type: string }>`
   align-items: center;
   gap: 10px;
 
-  padding: 10px 20px;
+  padding: 10px 15px;
   border-radius: 6px;
   background-color: white;
   box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
