@@ -1,14 +1,14 @@
-import { useDeleteEvent, useEventDetail } from '@_hooks/useEvents';
-import { useNavigate, useParams } from 'react-router-dom';
-import * as S from './EventDetail.styles';
+import PageTitle from '@_components/Common/PageTitle/PageTitle';
 import Spinner from '@_components/Common/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
 import EventForm from '@_components/Event/EventForm/EventForm';
-import { useState } from 'react';
 import AlertModal from '@_components/Modal/AlertModal/AlertModal';
-import PageTitle from '@_components/Common/PageTitle/PageTitle';
-import BackButton from '@_components/Common/BackButton/BackButton';
-import { EmptyBoxStyle } from '@_styles/common';
+import { useDeleteEvent, useEventDetail } from '@_hooks/useEvents';
+import { useAuthStore } from '@_store/authStore';
+import { useToastStore } from '@_store/toastStore';
+import { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import * as S from './EventDetail.styles';
 
 const EVENT_DETAIL_TITLE = {
   title: '이벤트 상세 정보',
@@ -18,7 +18,7 @@ const EVENT_DETAIL_TITLE = {
 
 const EventDetail = () => {
   const navigate = useNavigate();
-  const memberId = 1;
+  const { memberId } = useAuthStore();
   const eventId = Number(useParams().eventId);
   const { data, isFetching } = useEventDetail(eventId);
   const { mutate: deleteEvent } = useDeleteEvent(memberId);
@@ -30,6 +30,7 @@ const EventDetail = () => {
       {
         onSuccess: () => {
           navigate(`/events`);
+          useToastStore.getState().showToast('이벤트가 삭제되었습니다.');
         },
       },
     );

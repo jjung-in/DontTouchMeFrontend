@@ -6,7 +6,7 @@ position: absolute;
 width: 240px;
 height: 80px;
 
-background: #FFFFFF;
+background: ${({ theme }) => theme.color.primary[50]};
 border-radius: 12px;
 border: none;
 
@@ -16,5 +16,5 @@ font-weight: 500;
 font-size: 32px;
 line-height: 20px;
 text-align: center;
-color: #3959A5;
+color: ${({ theme }) => theme.text.primary};
 `;

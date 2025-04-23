@@ -16,18 +16,12 @@ const Header = () => {
   return (
     <S.HeaderWrapper>
       <S.HeaderInner>
-        <S.Logo to="/">
+        <S.Logo to={isLoggedIn ? 'events' : '/'}>
           <img src={logo} alt="PAYble 로고" />
           <img src={textLogo} alt="PAYble 텍스트 로고" />
         </S.Logo>
         <S.Nav>
-          <S.AnchorLink
-            href="https://sleet-literature-5ab.notion.site/PAYble-1c4b4128bae2808ba3ace5b11679a509"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            About
-          </S.AnchorLink>
+          <S.NavLink to="/">About</S.NavLink>
           <S.NavLink to="/events">Event</S.NavLink>
           {isLoggedIn ? (
             <>

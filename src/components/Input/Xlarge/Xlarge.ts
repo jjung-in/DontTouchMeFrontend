@@ -7,13 +7,13 @@ export const Input = styled.textarea`
   resize: none;
   outline: none;
 
-  background: #ffffff;
-  border: 1px solid #d9d9d9;
+  background: ${({ theme }) => theme.color.primary[50]};
+  border: 1px solid ${({ theme }) => theme.color.gray[100]};
   border-radius: 5px;
 
   font-family: 'Inter';
   font-style: normal;
   font-weight: 300;
   font-size: 14px;
-  color: #9d9d9d;
+  color: ${({ theme }) => theme.text.gray};
 `;

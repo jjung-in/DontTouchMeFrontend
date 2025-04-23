@@ -4,7 +4,7 @@ export const Button = styled.button`
   position: absolute;
   width: 311px;
   height: 41px;
-  background: #3959a5;
+  background: ${({ theme }) => theme.color.primary[500]};
   border-radius: 5px;
   border: none;
 
@@ -14,5 +14,5 @@ export const Button = styled.button`
   font-size: 13px;
   line-height: 20px;
   text-align: center;
-  color: #ffffff;
+  color: ${({ theme }) => theme.text.white};
 `;

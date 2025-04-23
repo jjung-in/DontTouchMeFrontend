@@ -4,7 +4,7 @@ export const Button = styled.button`
     width: 87px;
     height: 41px;
     background: #FFFFFF;
-    border: 1px solid #000000;
+    border: 1px solid ${({ theme }) => theme.color.gray[300]};
     border-radius: 5px;
 
     font-family: 'Inter', sans-serif;
@@ -13,5 +13,5 @@ export const Button = styled.button`
     font-size: 13px;
     line-height: 20px;
     text-align: center;
-    color: #000000;
+    color: ${({ theme }) => theme.text.black};
 `;

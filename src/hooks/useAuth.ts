@@ -1,16 +1,18 @@
-import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
-import { postSignUp, PostLogIn, checkEmailDuplicate, sendEmailCode, verifyEmailCode } from '@_api/auth';
-import { LogInFormValues, TSignUpFormValues, TSignUpFormErrors } from '@_types/auth.type';
+import { PostLogIn, checkEmailDuplicate, postSignUp, sendEmailCode, verifyEmailCode } from '@_api/auth';
 import { useAuthStore } from '@_store/authStore';
-import { useNavigate } from 'react-router-dom';
+import { useToastStore } from '@_store/toastStore';
+import { LogInFormValues, TSignUpFormErrors, TSignUpFormValues } from '@_types/auth.type';
+import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const useLogInFlow = () => {
   const [formValues, setFormValues] = useState<LogInFormValues>({
     email: '',
     password: '',
   });
+  const [formErrors, setFormErrors] = useState<Partial<LogInFormValues>>({});
 
   const navigate = useNavigate();
   const setAuth = useAuthStore((state) => state.setAuth);
@@ -20,6 +22,7 @@ export const useLogInFlow = () => {
     onSuccess: ({ accessToken, memberId }) => {
       setAuth(accessToken, Number(memberId));
       navigate('/');
+      useToastStore.getState().showToast('로그인되었습니다.');
     },
     onError: (error) => {
       const err = error as AxiosError<{ message?: string }>;
@@ -31,25 +34,41 @@ export const useLogInFlow = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormValues((prev) => ({ ...prev, [name]: value }));
+    setFormErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
   const handleLogIn = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const { email, password } = formValues;
+    const errors: Partial<LogInFormValues> = {};
 
-    if (!email || !password) {
-      console.log('모든 필드를 입력해주세요.');
+    if (!email.trim()) errors.email = '이메일을 입력해주세요.';
+    if (!password.trim()) errors.password = '비밀번호를 입력해주세요.';
+
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
       return;
     }
 
     logInMutation.mutate(formValues);
   };
 
+  const handleGoogleClick = () => {
+    window.location.href = `http://13.209.40.51:8080/oauth2/authorization/google`;
+  };
+
+  const handleNaverClick = () => {
+    window.location.href = 'http://13.209.40.51:8080/oauth2/authorization/naver';
+  };
+
   return {
     formValues,
+    formErrors,
     handleChange,
     handleLogIn,
+    handleNaverClick,
+    handleGoogleClick,
     isPending: logInMutation.isPending,
     isError: logInMutation.isError,
     error: logInMutation.error,
@@ -57,6 +76,8 @@ export const useLogInFlow = () => {
 };
 
 export const useSignUpFlow = () => {
+  const navigate = useNavigate();
+
   const [formValues, setFormValues] = useState<TSignUpFormValues>({
     name: '',
     email: '',
@@ -84,7 +105,11 @@ export const useSignUpFlow = () => {
     if (!formValues.email.trim()) errors.email = '이메일을 입력해주세요.';
     if (!formValues.verificationCode.trim()) errors.verificationCode = '인증번호를 입력해주세요.';
     if (!formValues.password.trim()) errors.password = '비밀번호를 입력해주세요.';
-    else if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(formValues.password))
+    else if (
+      !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/.test(
+        formValues.password,
+      )
+    )
       errors.password = '비밀번호는 영문, 숫자, 특수문자를 포함한 8자 이상이어야 합니다.';
     if (!formValues.confirmPassword.trim()) errors.confirmPassword = '비밀번호를 다시 입력해주세요.';
     else if (formValues.password !== formValues.confirmPassword)
@@ -145,6 +170,7 @@ export const useSignUpFlow = () => {
     mutationFn: postSignUp,
     onSuccess: (result) => {
       console.log('회원가입 성공', result);
+      navigate('/auth/success');
     },
     onError: (error) => {
       console.error('회원가입 오류', error);
@@ -259,4 +285,18 @@ export const useSignUpFlow = () => {
     isError: signUpMutation.isError,
     error: signUpMutation.error,
   };
+};
+
+export const useRequireAuth = () => {
+  const navigate = useNavigate();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      alert('로그인 후 이용할 수 있습니다.');
+      navigate('/login');
+    }
+  }, [isLoggedIn, navigate]);
+
+  return isLoggedIn;
 };

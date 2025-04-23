@@ -1,8 +1,9 @@
 import { create } from 'zustand';
+import { useToastStore } from './toastStore';
 
 interface AuthState {
   accessToken: string | null;
-  memberId: number | null;
+  memberId: number;
   isLoggedIn: boolean;
   setAuth: (accessToken: string, memberId: number) => void;
   logout: () => void;
@@ -10,7 +11,7 @@ interface AuthState {
 
 export const useAuthStore = create<AuthState>((set) => ({
   accessToken: localStorage.getItem('accessToken'),
-  memberId: localStorage.getItem('memberId') ? Number(localStorage.getItem('memberId')) : null,
+  memberId: localStorage.getItem('memberId') ? Number(localStorage.getItem('memberId')) : 0,
   isLoggedIn: !!localStorage.getItem('accessToken'),
 
   setAuth: (accessToken, memberId) => {
@@ -22,6 +23,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('memberId');
-    set({ accessToken: null, memberId: null, isLoggedIn: false });
+    set({ accessToken: null, memberId: 0, isLoggedIn: false });
+    useToastStore.getState().showToast('로그아웃되었습니다.');
   },
 }));

@@ -1,13 +1,12 @@
-import { useEventList } from '@_hooks/useEvents';
-import { useIntersectionObserver } from '@_hooks/observer/useIntersectionObserver';
-import * as S from './EventList.styles';
+import PageTitle from '@_components/Common/PageTitle/PageTitle';
 import Spinner from '@_components/Common/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
-import PageTitle from '@_components/Common/PageTitle/PageTitle';
-import { InfiniteScrollObserverStyle } from '@_styles/common';
 import EventCard from '@_components/Event/EventCard/EventCard';
-import Button from '@_components/Common/Button/Button';
-import { Link } from 'react-router-dom';
+import { useIntersectionObserver } from '@_hooks/observer/useIntersectionObserver';
+import { useEventList } from '@_hooks/useEvents';
+import { useAuthStore } from '@_store/authStore';
+import { InfiniteScrollObserverStyle } from '@_styles/common';
+import * as S from './EventList.styles';
 
 const EVENT_LIST_TITLE = {
   title: '이벤트 목록',
@@ -17,7 +16,7 @@ const EVENT_LIST_TITLE = {
 const PAGE_SIZE = 9;
 
 const EventList = () => {
-  const memberId = 1;
+  const { memberId } = useAuthStore();
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useEventList(memberId, PAGE_SIZE);
   const { observerRef } = useIntersectionObserver({
     onIntersect: () => {

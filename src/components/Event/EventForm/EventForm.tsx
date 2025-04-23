@@ -1,22 +1,22 @@
-import { TEventDetailResponse, TEventFormValues, TEventFormErrors } from '@_types/events.type';
-import { useParams } from 'react-router-dom';
-import * as S from './EventForm.styles';
-import { useState } from 'react';
-import AddressModal from '@_components/Modal/AddressModal/AddressModal';
-import TagInput from '@_components/Common/TagInput/TagInput';
 import Input from '@_components/Common/Input/Input';
-import ThumbnailUploader from '../ThumbnailUploader/ThumbnailUploader';
+import TagInput from '@_components/Common/TagInput/TagInput';
+import AddressModal from '@_components/Modal/AddressModal/AddressModal';
 import { useThumbnailUploader } from '@_hooks/custom/useThumbnailUploader';
+import { ErrorTextStyle } from '@_styles/event';
+import { TEventDetailResponse, TEventFormErrors, TEventFormValues } from '@_types/events.type';
+import { validateEventForm } from '@_utils/events';
+import { useState } from 'react';
+import { useParams } from 'react-router-dom';
+import EventDateField from '../EventDateField/EventDateField';
 import EventFormButtons from '../EventFormButtons/EventFormButtons';
+import EventInfoBoxField from '../EventInfoBoxField/EventInfoBoxField';
 import EventInputField from '../EventInputField/EventInputField';
+import EventNumberField from '../EventNumberField/EventNumberField';
+import EventSwitchField from '../EventSwitchField/EventSwitchField';
 import EventTextField from '../EventTextField/EventTextField';
 import EventTypeField from '../EventTypeField/EventTypeField';
-import EventDateField from '../EventDateField/EventDateField';
-import EventNumberField from '../EventNumberField/EventNumberField';
-import EventInfoBoxField from '../EventInfoBoxField/EventInfoBoxField';
-import EventSwitchField from '../EventSwitchField/EventSwitchField';
-import { ErrorTextStyle } from '@_styles/event';
-import { validateEventForm } from '@_utils/events';
+import ThumbnailUploader from '../ThumbnailUploader/ThumbnailUploader';
+import * as S from './EventForm.styles';
 
 interface Props {
   mode: 'create' | 'update' | 'read';

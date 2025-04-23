@@ -1,11 +1,13 @@
 import { uploadImage } from '@_api/image';
 import { getGeocode } from '@_api/map';
+import PageTitle from '@_components/Common/PageTitle/PageTitle';
 import EventForm from '@_components/Event/EventForm/EventForm';
 import { useCreateEvent } from '@_hooks/useEvents';
+import { useAuthStore } from '@_store/authStore';
+import { useToastStore } from '@_store/toastStore';
 import { TEventFormValues } from '@_types/events.type';
 import { useNavigate } from 'react-router-dom';
 import * as S from './EventCreate.styles';
-import PageTitle from '@_components/Common/PageTitle/PageTitle';
 
 const EVENT_CREATE_TITLE = {
   title: '이벤트 만들기',
@@ -15,7 +17,7 @@ const EVENT_CREATE_TITLE = {
 
 const EventCreate = () => {
   const navigate = useNavigate();
-  const memberId = 1;
+  const { memberId } = useAuthStore();
   const { mutate: createEvent } = useCreateEvent(memberId);
 
   const handleSubmit = async (formValues: TEventFormValues, thumbnailFile: File | null) => {
@@ -63,6 +65,7 @@ const EventCreate = () => {
       {
         onSuccess: () => {
           navigate('/events');
+          useToastStore.getState().showToast('이벤트가 생성되었습니다.');
         },
       },
     );
