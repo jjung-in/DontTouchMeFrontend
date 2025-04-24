@@ -4,7 +4,6 @@ import PageTitle from '@_components/Common/PageTitle/PageTitle';
 import EventForm from '@_components/Event/EventForm/EventForm';
 import { useCreateEvent } from '@_hooks/useEvents';
 import { useAuthStore } from '@_store/authStore';
-import { useToastStore } from '@_store/toastStore';
 import { TEventFormValues } from '@_types/events.type';
 import { useNavigate } from 'react-router-dom';
 import * as S from './EventCreate.styles';
@@ -65,7 +64,6 @@ const EventCreate = () => {
       {
         onSuccess: () => {
           navigate('/events');
-          useToastStore.getState().showToast('이벤트가 생성되었습니다.');
         },
       },
     );

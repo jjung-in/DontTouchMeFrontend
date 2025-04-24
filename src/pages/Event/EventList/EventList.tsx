@@ -1,3 +1,4 @@
+import Button from '@_components/Common/Button/Button';
 import PageTitle from '@_components/Common/PageTitle/PageTitle';
 import Spinner from '@_components/Common/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
@@ -6,6 +7,7 @@ import { useIntersectionObserver } from '@_hooks/observer/useIntersectionObserve
 import { useEventList } from '@_hooks/useEvents';
 import { useAuthStore } from '@_store/authStore';
 import { InfiniteScrollObserverStyle } from '@_styles/common';
+import { Link } from 'react-router-dom';
 import * as S from './EventList.styles';
 
 const EVENT_LIST_TITLE = {

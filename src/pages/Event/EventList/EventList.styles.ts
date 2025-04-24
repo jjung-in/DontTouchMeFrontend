@@ -28,5 +28,6 @@ export const FetchingBox = styled.div`
 
 export const EmptyBox = styled(EmptyBoxStyle)`
   width: 100%;
+  min-height: 300px;
   background-color: ${({ theme }) => theme.color.primary[200]};
 `;

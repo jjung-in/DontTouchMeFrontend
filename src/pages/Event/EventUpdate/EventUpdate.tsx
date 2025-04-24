@@ -1,11 +1,12 @@
 import { uploadImage } from '@_api/image';
 import { getGeocode } from '@_api/map';
+import BackButton from '@_components/Common/BackButton/BackButton';
 import PageTitle from '@_components/Common/PageTitle/PageTitle';
 import Spinner from '@_components/Common/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
 import EventForm from '@_components/Event/EventForm/EventForm';
 import { useEventDetail, useUpdateEvent } from '@_hooks/useEvents';
-import { useToastStore } from '@_store/toastStore';
+import { EmptyBoxStyle } from '@_styles/common';
 import { TEventFormValues } from '@_types/events.type';
 import { useNavigate, useParams } from 'react-router-dom';
 import * as S from './EventUpdate.styles';
@@ -68,27 +69,34 @@ const EventUpdate = () => {
       {
         onSuccess: () => {
           navigate(`/events/${eventId}`);
-          useToastStore.getState().showToast('이벤트 정보가 수정되었습니다.');
         },
       },
     );
   };
 
-  return (
-    <S.Main $isEmpty={isFetching || !data}>
-      {isFetching ? (
+  if (isFetching) {
+    return (
+      <S.Main $isEmpty={true}>
         <Spinner />
-      ) : data ? (
-        <>
-          <PageTitle {...EVENT_UPDATE_TITLE} />
-          <EventForm mode="update" event={data} onSubmit={handleSubmit} />
-        </>
-      ) : (
+      </S.Main>
+    );
+  }
+
+  if (!data) {
+    return (
+      <S.Main $isEmpty={true}>
         <EmptyBoxStyle>
           <EmptyState />
           <BackButton />
         </EmptyBoxStyle>
-      )}
+      </S.Main>
+    );
+  }
+
+  return (
+    <S.Main>
+      <PageTitle {...EVENT_UPDATE_TITLE} />
+      <EventForm mode="update" event={data} onSubmit={handleSubmit} />
     </S.Main>
   );
 };
