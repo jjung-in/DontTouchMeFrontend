@@ -9,8 +9,8 @@ export const useEventList = (memberId: number, pageSize: number) => {
       queryKey: ['events', memberId],
       queryFn: ({ pageParam }) => getEventList({ memberId, lastEventId: pageParam, pageSize }),
       staleTime: 1000 * 60 * 60,
-      initialPageParam: null,
       refetchOnWindowFocus: true,
+      initialPageParam: null,
       getNextPageParam: (lastPage) => {
         return lastPage.events.length > 0 ? lastPage.lastEventId : undefined;
       },
@@ -38,7 +38,7 @@ export const useCreateEvent = (memberId: number) => {
       useToastStore.getState().showToast('이벤트가 생성되었습니다.');
     },
     onError: () => {
-      useToastStore.getState().showToast('이벤트가 생성에 실패했습니다.', 'error');
+      useToastStore.getState().showToast('이벤트 생성에 실패했습니다.', 'error');
     },
   });
 };
@@ -70,7 +70,7 @@ export const useDeleteEvent = (memberId: number) => {
       useToastStore.getState().showToast('이벤트가 삭제되었습니다.');
     },
     onError: () => {
-      useToastStore.getState().showToast('이벤트가 삭제에 실패했습니다.', 'error');
+      useToastStore.getState().showToast('이벤트 삭제에 실패했습니다.', 'error');
     },
   });
 };
