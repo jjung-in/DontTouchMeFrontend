@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import * as S from './AgreementSection.styles';
+import TermsModal from '@_components/Auth/TermsModal/TermsModal';
 
 interface Props {
   values: {
@@ -12,13 +14,18 @@ interface Props {
 }
 
 const AgreementSection = ({ values, onChange }: Props) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <S.Wrapper>
       <S.Header>
         <p>이용 약관 및 수신 동의</p>
-        <a href="#" target="_blank" rel="noopener noreferrer">
+        <button type="button" onClick={openModal}>
           약관보기
-        </a>
+        </button>
       </S.Header>
       <S.AgreementList>
         <S.AgreementItem $isChecked={values.service}>
@@ -56,6 +63,8 @@ const AgreementSection = ({ values, onChange }: Props) => {
           </label>
         </S.AgreementItem>
       </S.AgreementList>
+
+      <TermsModal isOpen={isModalOpen} onClose={closeModal} />
     </S.Wrapper>
   );
 };

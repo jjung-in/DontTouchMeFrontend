@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
 export const HeaderWrapper = styled.header`
-  position: absolute;
+  position: fixed;
   top: 50px;
   width: 100%;
   height: 100px;
@@ -22,6 +22,7 @@ export const HeaderInner = styled.div`
   padding-right: 40px;
   background-color: #ffffff;
   border-radius: 12px;
+  border: 2px solid rgba(187, 218, 242, 0.4);
 `;
 
 export const Logo = styled(Link)`

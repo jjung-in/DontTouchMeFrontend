@@ -18,6 +18,7 @@ const color = {
     white: '#ffffff',
     gray: '#9d9d9d',
     black: '#000000',
+    red: '#ff3a44',
   },
   plus: {
     green: '#61f52c',
