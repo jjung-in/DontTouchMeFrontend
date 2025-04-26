@@ -2,6 +2,7 @@ import { downloadExcelTemplate, exportExcelFile, importExcelFile } from '@_api/e
 import BackButton from '@_components/Common/BackButton/BackButton';
 import Button from '@_components/Common/Button/Button';
 import { downloadBlobFile, isExcelFile } from '@_utils/excel';
+import { useQueryClient } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
 import * as S from './RecordFormButtons.styles';
 
@@ -13,6 +14,7 @@ interface Props {
 
 const RecordFormButtons = ({ mode, eventId, onSubmit }: Props) => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const handleDownloadExcel = async () => {
     try {
@@ -47,7 +49,8 @@ const RecordFormButtons = ({ mode, eventId, onSubmit }: Props) => {
 
     try {
       await importExcelFile(eventId, selectedFile);
-      alert('엑셀 데이터가 성공적으로 업로드되었습니다!');
+      queryClient.invalidateQueries({ queryKey: ['records', eventId] });
+      alert('엑셀 데이터가 성공적으로 업로드되었습니다.');
       navigate(`/events/${eventId}/records`);
     } catch {
       alert('엑셀 업로드 중 오류가 발생했습니다.');
