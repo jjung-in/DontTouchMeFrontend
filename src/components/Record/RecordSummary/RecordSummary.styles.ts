@@ -16,6 +16,7 @@ export const Box = styled.div`
   background-color: ${({ theme }) => theme.color.primary[50]};
   border: 1px solid ${({ theme }) => theme.color.gray[100]};
   border-radius: 10px;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
 `;
 
 export const Text = styled.span`
