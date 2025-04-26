@@ -3,6 +3,7 @@ import PageTitle from '@_components/Common/PageTitle/PageTitle';
 import Spinner from '@_components/Common/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
 import RecordForm from '@_components/Record/RecordForm/RecordForm';
+import RecordSummary from '@_components/Record/RecordSummary/RecordSummary';
 import { useIntersectionObserver } from '@_hooks/observer/useIntersectionObserver';
 import { useEventDetail } from '@_hooks/useEvents';
 import { useRecordList } from '@_hooks/useRecords';
@@ -40,7 +41,10 @@ const RecordList = () => {
         <>
           <PageTitle {...RECORD_LIST_TITLE} />
           {event && records.length > 0 ? (
-            <RecordForm mode="read" event={event} records={records} />
+            <>
+              <RecordSummary />
+              <RecordForm mode="read" event={event} records={records} />
+            </>
           ) : (
             <S.EmptyBox>
               <EmptyState message="등록된 내역이 없습니다." />
