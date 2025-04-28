@@ -3,6 +3,7 @@ import {
   TRecordDetailResponse,
   TRecordListRequest,
   TRecordListResponse,
+  TRecordSummaryResponse,
   TUpdateRecordRequest,
 } from '@_types/records.type';
 import { instance } from './instance';
@@ -34,4 +35,9 @@ export const updateRecord = async ({
 
 export const deleteRecord = async ({ recordId }: { recordId: number }): Promise<void> => {
   await instance.delete(`/event/detail/${recordId}`);
+};
+
+export const getRecordSummary = async (eventId: number): Promise<TRecordSummaryResponse> => {
+  const { data } = await instance.get(`/event/detail/amount/${eventId}`);
+  return data;
 };

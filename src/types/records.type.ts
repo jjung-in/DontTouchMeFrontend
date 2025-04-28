@@ -40,3 +40,8 @@ export interface TRecordListResponse {
   eventDetails: TRecordItem[];
   lastEventDetailId: number;
 }
+
+export interface TRecordSummaryResponse {
+  totalDeposit: number;
+  totalWithdrawal: number;
+}

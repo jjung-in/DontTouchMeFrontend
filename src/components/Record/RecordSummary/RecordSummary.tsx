@@ -1,8 +1,13 @@
+import { TRecordSummaryResponse } from '@_types/records.type';
 import * as S from './RecordSummary.styles';
 
-const RecordSummary = () => {
-  const incomeTotal = 100000;
-  const expenseTotal = 100000;
+interface Props {
+  summary: TRecordSummaryResponse;
+}
+
+const RecordSummary = ({ summary }: Props) => {
+  const incomeTotal = summary.totalDeposit;
+  const expenseTotal = summary.totalWithdrawal;
 
   return (
     <S.Container>

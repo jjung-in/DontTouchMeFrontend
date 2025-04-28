@@ -6,7 +6,7 @@ import RecordForm from '@_components/Record/RecordForm/RecordForm';
 import RecordSummary from '@_components/Record/RecordSummary/RecordSummary';
 import { useIntersectionObserver } from '@_hooks/observer/useIntersectionObserver';
 import { useEventDetail } from '@_hooks/useEvents';
-import { useRecordList } from '@_hooks/useRecords';
+import { useRecordList, useRecordSummary } from '@_hooks/useRecords';
 import { InfiniteScrollObserverStyle } from '@_styles/common';
 import { Link, useParams } from 'react-router-dom';
 import * as S from './RecordList.styles';
@@ -22,6 +22,7 @@ const PAGE_SIZE = 10;
 const RecordList = () => {
   const eventId = Number(useParams().eventId);
   const { data: event, isFetching } = useEventDetail(eventId);
+  const { data: summary, isFetching: isSummaryFetching } = useRecordSummary(eventId);
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useRecordList(eventId, PAGE_SIZE);
   const records = data?.pages.flatMap((page) => page.eventDetails) || [];
   const { observerRef } = useIntersectionObserver({
@@ -34,15 +35,15 @@ const RecordList = () => {
   });
 
   return (
-    <S.Main $isEmpty={isLoading || isFetching}>
-      {isLoading || isFetching ? (
+    <S.Main $isEmpty={isLoading || isFetching || isSummaryFetching}>
+      {isLoading || isFetching || isSummaryFetching ? (
         <Spinner />
       ) : (
         <>
           <PageTitle {...RECORD_LIST_TITLE} />
-          {event && records.length > 0 ? (
+          {event && summary && records.length > 0 ? (
             <>
-              <RecordSummary />
+              <RecordSummary summary={summary} />
               <RecordForm mode="read" event={event} records={records} />
             </>
           ) : (

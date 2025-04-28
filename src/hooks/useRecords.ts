@@ -1,6 +1,18 @@
-import { createRecord, deleteRecord, getRecordDetail, getRecordList, updateRecord } from '@_api/records';
+import {
+  createRecord,
+  deleteRecord,
+  getRecordDetail,
+  getRecordList,
+  getRecordSummary,
+  updateRecord,
+} from '@_api/records';
 import { useToastStore } from '@_store/toastStore';
-import { TCreateRecordRequest, TRecordDetailResponse, TRecordListResponse } from '@_types/records.type';
+import {
+  TCreateRecordRequest,
+  TRecordDetailResponse,
+  TRecordListResponse,
+  TRecordSummaryResponse,
+} from '@_types/records.type';
 import { InfiniteData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const useRecordList = (eventId: number, pageSize: number) => {
@@ -76,5 +88,12 @@ export const useDeleteRecord = (eventId: number) => {
     onError: () => {
       useToastStore.getState().showToast('입출금 내역 삭제에 실패했습니다.', 'error');
     },
+  });
+};
+
+export const useRecordSummary = (eventId: number) => {
+  return useQuery<TRecordSummaryResponse, Error>({
+    queryKey: ['records', 'summary', eventId],
+    queryFn: () => getRecordSummary(eventId),
   });
 };
