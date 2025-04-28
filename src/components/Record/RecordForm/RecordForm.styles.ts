@@ -13,9 +13,3 @@ export const GridCell = styled.div<{ $isHeader?: boolean }>`
   padding: ${({ $isHeader }) => ($isHeader ? '10px 10px 15px' : '10px 5px')};
   font-weight: ${({ $isHeader }) => ($isHeader ? '600' : 'normal')};
 `;
-
-export const ButtonArea = styled.div`
-  display: flex;
-  gap: 20px;
-  margin-top: 50px;
-`;

@@ -1,5 +1,18 @@
-import { createRecord, deleteRecord, getRecordDetail, getRecordList, updateRecord } from '@_api/records';
-import { TCreateRecordRequest, TRecordDetailResponse, TRecordListResponse } from '@_types/records.type';
+import {
+  createRecord,
+  deleteRecord,
+  getRecordDetail,
+  getRecordList,
+  getRecordSummary,
+  updateRecord,
+} from '@_api/records';
+import { useToastStore } from '@_store/toastStore';
+import {
+  TCreateRecordRequest,
+  TRecordDetailResponse,
+  TRecordListResponse,
+  TRecordSummaryResponse,
+} from '@_types/records.type';
 import { InfiniteData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export const useRecordList = (eventId: number, pageSize: number) => {
@@ -12,6 +25,8 @@ export const useRecordList = (eventId: number, pageSize: number) => {
   >({
     queryKey: ['records', eventId],
     queryFn: ({ pageParam }) => getRecordList({ eventId, lastEventDetailId: pageParam, pageSize }),
+    staleTime: 1000 * 60 * 60,
+    refetchOnWindowFocus: true,
     initialPageParam: null,
     getNextPageParam: (lastPage) => {
       return lastPage.eventDetails.length > 0 ? lastPage.lastEventDetailId : undefined;
@@ -26,10 +41,20 @@ export const useRecordDetail = (recordId: number) => {
   });
 };
 
-export const useCreateRecordsBatch = () => {
+export const useCreateRecordsBatch = (eventId: number) => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (records: TCreateRecordRequest[]) => {
       return await Promise.all(records.map((record) => createRecord(record)));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['records', eventId],
+      });
+      useToastStore.getState().showToast('입출금 내역이 등록되었습니다.');
+    },
+    onError: () => {
+      useToastStore.getState().showToast('입출금 내역 등록에 실패했습니다.', 'error');
     },
   });
 };
@@ -42,9 +67,10 @@ export const useUpdateRecord = (eventId: number) => {
       queryClient.invalidateQueries({
         queryKey: ['records', eventId],
       });
+      useToastStore.getState().showToast('입출금 내역이 수정되었습니다.');
     },
-    onError: (error) => {
-      console.error('Error updating record:', error);
+    onError: () => {
+      useToastStore.getState().showToast('입출금 내역 수정에 실패했습니다.', 'error');
     },
   });
 };
@@ -57,9 +83,17 @@ export const useDeleteRecord = (eventId: number) => {
       queryClient.invalidateQueries({
         queryKey: ['records', eventId],
       });
+      useToastStore.getState().showToast('입출금 내역이 삭제되었습니다.');
     },
-    onError: (error) => {
-      console.error('Error deleting record:', error);
+    onError: () => {
+      useToastStore.getState().showToast('입출금 내역 삭제에 실패했습니다.', 'error');
     },
+  });
+};
+
+export const useRecordSummary = (eventId: number) => {
+  return useQuery<TRecordSummaryResponse, Error>({
+    queryKey: ['records', 'summary', eventId],
+    queryFn: () => getRecordSummary(eventId),
   });
 };

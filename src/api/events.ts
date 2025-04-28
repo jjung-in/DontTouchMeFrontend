@@ -1,6 +1,5 @@
 import {
   TCreateEventRequest,
-  TCreateEventResponse,
   TEventDetailResponse,
   TEventListRequest,
   TEventListResponse,
@@ -18,7 +17,7 @@ export const getEventDetail = async (eventId: number): Promise<TEventDetailRespo
   return data;
 };
 
-export const createEvent = async (eventData: TCreateEventRequest): Promise<TCreateEventResponse> => {
+export const createEvent = async (eventData: TCreateEventRequest): Promise<number> => {
   const { data } = await instance.post('/event', eventData);
   return data;
 };
@@ -30,11 +29,9 @@ export const updateEvent = async ({
   eventId: number;
   eventData: TUpdateEventRequest;
 }): Promise<void> => {
-  const { data } = await instance.patch(`/event/${eventId}`, eventData);
-  return data;
+  await instance.patch(`/event/${eventId}`, eventData);
 };
 
 export const deleteEvent = async ({ eventId }: { eventId: number }): Promise<void> => {
-  const { data } = await instance.delete(`/event/${eventId}`);
-  return data;
+  await instance.delete(`/event/${eventId}`);
 };

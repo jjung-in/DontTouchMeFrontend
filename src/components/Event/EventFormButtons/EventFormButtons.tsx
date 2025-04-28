@@ -1,6 +1,7 @@
+import BackButton from '@_components/Common/BackButton/BackButton';
 import Button from '@_components/Common/Button/Button';
-import * as S from './EventFormButtons.styles';
 import { Link } from 'react-router-dom';
+import * as S from './EventFormButtons.styles';
 
 /**
  * EventFormButtons 컴포넌트 (이벤트 폼 하단에 표시되는 공통 버튼 컴포넌트)
@@ -21,8 +22,8 @@ const EventFormButtons = ({ mode, eventId, onSubmit, onDelete }: Props) => {
   if (mode === 'read') {
     return (
       <S.Wrapper>
-        <Button as={Link} to="/events" variant="secondary" fontWeight="semibold">
-          이전
+        <Button as={Link} to={`/events`} variant="secondary" fontWeight="semibold">
+          목록
         </Button>
         <Button as={Link} to={`/events/${eventId}/update`} variant="primary" fontWeight="semibold">
           수정
@@ -41,14 +42,7 @@ const EventFormButtons = ({ mode, eventId, onSubmit, onDelete }: Props) => {
   }
   return (
     <S.Wrapper>
-      <Button
-        as={Link}
-        to={mode === 'create' ? '/events' : `/events/${eventId}`}
-        variant="secondary"
-        fontWeight="semibold"
-      >
-        이전
-      </Button>
+      <BackButton />
       <Button onClick={onSubmit} variant="primary" fontWeight="semibold">
         저장
       </Button>

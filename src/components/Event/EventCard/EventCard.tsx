@@ -1,15 +1,10 @@
-import { TEventItem } from '@_types/events.type';
-import * as S from './EventCard.styles';
-import { getEventStatus } from '@_utils/events';
-import Button from '@_components/Common/Button/Button';
-import { Link, useNavigate } from 'react-router-dom';
-import { BoldTextStyle } from '@_styles/common';
 import noimage from '@_assets/images/noimage.png';
-
-/**
- * EventCard 컴포넌트 (이벤트 목록 페이지에서 각 이벤트를 카드 형태로 표시하는 컴포넌트)
- * @param event - 카드에 표시할 이벤트 정보 객체
- */
+import Button from '@_components/Common/Button/Button';
+import { BoldTextStyle } from '@_styles/common';
+import { TEventItem } from '@_types/events.type';
+import { getEventStatus } from '@_utils/events';
+import { Link, useNavigate } from 'react-router-dom';
+import * as S from './EventCard.styles';
 
 interface Props {
   event: TEventItem;

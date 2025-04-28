@@ -1,5 +1,11 @@
 import { TEventFormValues, TEventFormErrors } from '@_types/events.type';
 
+/**
+ * 이벤트 날짜를 기준으로 현재 날짜와 비교하여 상태를 반환
+ * @param eventDate - 이벤트 날짜 (YYYY-MM-DD 형식의 문자열)
+ * @returns
+ *  - '예정' | '진행중' | '완료'
+ */
 export const getEventStatus = (eventDate: string): '예정' | '진행중' | '완료' => {
   const today = new Date();
   const event = new Date(eventDate);
@@ -20,7 +26,6 @@ export const getEventStatus = (eventDate: string): '예정' | '진행중' | '완
  * @returns
  *  - errors: 입력값이 유효하지 않은 경우 해당 필드명에 에러 메시지를 포함한 객체
  */
-
 export const validateEventForm = (formValues: TEventFormValues): TEventFormErrors => {
   const errors: TEventFormErrors = {};
 

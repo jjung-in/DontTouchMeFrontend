@@ -12,8 +12,8 @@ import noimage from '@_assets/images/noimage.png';
 
 interface Props {
   thumbnailPreview: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onReset: () => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onReset?: () => void;
   isReadonly?: boolean;
 }
 

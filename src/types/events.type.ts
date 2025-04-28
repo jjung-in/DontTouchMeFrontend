@@ -1,36 +1,26 @@
-export interface TEventItem {
-  eventId: number;
-  eventName: string;
-  eventDate: string;
-  eventType: string;
+export interface TEventFormValues {
   thumbnailUrl: string;
+  eventName: string;
+  eventType: string;
+  otherEventType: string;
+  eventDate: string;
   address: string;
-}
-
-export interface TEventListRequest {
-  memberId: number;
-  lastEventId: number | null;
-  pageSize: number;
-}
-
-export interface TEventListResponse {
-  events: TEventItem[];
-  lastEventId: number;
-}
-
-export interface TEventDetailResponse extends TEventItem {
-  participants: number;
-  tags: string[];
-  targets: string[];
+  participants: number | '';
+  isName: boolean;
+  isTag: boolean;
+  tags: string[] | null;
+  isImage: boolean;
+  isTarget: boolean;
+  targets: string[] | null;
+  isSend: boolean;
   sendType: 'EMAIL' | 'PHONE' | null;
-  eventInfoItems: string[];
 }
+
+export type TEventFormErrors = Partial<Record<keyof TEventFormValues, string>>;
 
 export interface TCreateEventRequest extends TUpdateEventRequest {
   memberId: number;
 }
-
-export type TCreateEventResponse = number;
 
 export interface TUpdateEventRequest {
   thumbnailUrl: string;
@@ -53,22 +43,30 @@ export interface TUpdateEventRequest {
   sendTypeValid: boolean;
 }
 
-export interface TEventFormValues {
-  thumbnailUrl: string;
+export interface TEventItem {
+  eventId: number;
   eventName: string;
-  eventType: string;
-  otherEventType: string;
   eventDate: string;
+  eventType: string;
+  thumbnailUrl: string;
   address: string;
-  participants: number | '';
-  isName: boolean;
-  isTag: boolean;
-  tags: string[] | null;
-  isImage: boolean;
-  isTarget: boolean;
-  targets: string[] | null;
-  isSend: boolean;
-  sendType: 'EMAIL' | 'PHONE' | null;
 }
 
-export type TEventFormErrors = Partial<Record<keyof TEventFormValues, string>>;
+export interface TEventDetailResponse extends TEventItem {
+  participants: number;
+  tags: string[];
+  targets: string[];
+  sendType: 'EMAIL' | 'PHONE' | null;
+  eventInfoItems: string[];
+}
+
+export interface TEventListRequest {
+  memberId: number;
+  lastEventId: number | null;
+  pageSize: number;
+}
+
+export interface TEventListResponse {
+  events: TEventItem[];
+  lastEventId: number;
+}

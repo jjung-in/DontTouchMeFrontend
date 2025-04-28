@@ -1,29 +1,32 @@
-import { useEventDetail } from '@_hooks/useEvents';
-import { useCreateRecordsBatch } from '@_hooks/useRecords';
-import { TCreateRecordRequest } from '@_types/records.type';
-import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import * as S from './RecordCreate.styles';
+import Button from '@_components/Common/Button/Button';
+import PageTitle from '@_components/Common/PageTitle/PageTitle';
 import Spinner from '@_components/Common/Spinner/Spinner';
 import EmptyState from '@_components/EmptyState/EmptyState';
-import RecordForm from '@_components/Form/RecordForm/RecordForm';
-import Button from '@_components/Common/Button/Button';
-import { Link } from 'react-router-dom';
+import RecordForm from '@_components/Record/RecordForm/RecordForm';
+import { useEventDetail } from '@_hooks/useEvents';
+import { useCreateRecordsBatch } from '@_hooks/useRecords';
+import { TCreateRecordRequest, TRecordFormErrors, TRecordFormValues } from '@_types/records.type';
 import { validateRecordForm } from '@_utils/records';
-import PageTitle from '@_components/Common/PageTitle/PageTitle';
+import { useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import * as S from './RecordCreate.styles';
+
+const RECORD_CREATE_TITLE = {
+  title: '입출금 내역',
+  highlight: '입출금 내역',
+  subtitle: '등록된 이벤트에 대한 입출금 내역을 조회합니다.',
+};
 
 const RecordCreate = () => {
   const navigate = useNavigate();
-
   const eventId = Number(useParams().eventId);
   const { data, isFetching } = useEventDetail(eventId);
-  const { mutate: createRecordsBatch } = useCreateRecordsBatch();
+  const { mutate: createRecordsBatch } = useCreateRecordsBatch(eventId);
 
-  const [rows, setRows] = useState<{ id: number; values: TCreateRecordRequest }[]>([
+  const [rows, setRows] = useState<{ id: number; values: TRecordFormValues }[]>([
     {
       id: Date.now(),
       values: {
-        eventId: eventId,
         type: '입금',
         history: '',
         price: '',
@@ -35,7 +38,7 @@ const RecordCreate = () => {
       },
     },
   ]);
-  const [errors, setErrors] = useState<Record<number, (keyof TCreateRecordRequest)[]>>({});
+  const [errors, setErrors] = useState<Record<number, TRecordFormErrors>>({});
 
   const handleChange = (rowId: number, key: keyof TCreateRecordRequest, value: string | number | string[] | null) => {
     setRows((prev) =>
@@ -45,11 +48,8 @@ const RecordCreate = () => {
 
   const handleSubmit = async () => {
     const invalidMap = validateRecordForm(rows);
-    if (Object.keys(invalidMap).length > 0) {
-      setErrors(invalidMap);
-      return;
-    }
-    setErrors({});
+    setErrors(invalidMap);
+    if (Object.keys(invalidMap).length > 0) return;
 
     const records: TCreateRecordRequest[] = rows.map((row) => {
       const filteredRecord: TCreateRecordRequest = {
@@ -73,9 +73,6 @@ const RecordCreate = () => {
       onSuccess: () => {
         navigate(`/events/${eventId}/records`);
       },
-      onError: (error) => {
-        console.error('Error creating records:', error);
-      },
     });
   };
 
@@ -85,11 +82,7 @@ const RecordCreate = () => {
         <Spinner />
       ) : data ? (
         <>
-          <PageTitle
-            title="입출금 내역 등록"
-            highlight="입출금 내역 등록"
-            subtitle="등록된 이벤트에 대한 입출금 내역을 등록합니다."
-          />
+          <PageTitle {...RECORD_CREATE_TITLE} />
           <RecordForm
             mode="create"
             event={data}

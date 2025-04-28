@@ -1,9 +1,9 @@
 import {
   TCreateRecordRequest,
-  TCreateRecordResponse,
   TRecordDetailResponse,
   TRecordListRequest,
   TRecordListResponse,
+  TRecordSummaryResponse,
   TUpdateRecordRequest,
 } from '@_types/records.type';
 import { instance } from './instance';
@@ -18,7 +18,7 @@ export const getRecordDetail = async (recordId: number): Promise<TRecordDetailRe
   return data;
 };
 
-export const createRecord = async (recordData: TCreateRecordRequest): Promise<TCreateRecordResponse> => {
+export const createRecord = async (recordData: TCreateRecordRequest): Promise<number> => {
   const { data } = await instance.post('/event/detail', recordData);
   return data;
 };
@@ -30,11 +30,14 @@ export const updateRecord = async ({
   recordId: number;
   recordData: TUpdateRecordRequest;
 }): Promise<void> => {
-  const { data } = await instance.patch(`/event/detail/${recordId}`, recordData);
-  return data;
+  await instance.patch(`/event/detail/${recordId}`, recordData);
 };
 
 export const deleteRecord = async ({ recordId }: { recordId: number }): Promise<void> => {
-  const { data } = await instance.delete(`/event/detail/${recordId}`);
+  await instance.delete(`/event/detail/${recordId}`);
+};
+
+export const getRecordSummary = async (eventId: number): Promise<TRecordSummaryResponse> => {
+  const { data } = await instance.get(`/event/detail/amount/${eventId}`);
   return data;
 };
