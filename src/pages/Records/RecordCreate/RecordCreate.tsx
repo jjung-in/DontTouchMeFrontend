@@ -41,13 +41,18 @@ const RecordCreate = () => {
   const [errors, setErrors] = useState<Record<number, TRecordFormErrors>>({});
 
   const handleChange = (rowId: number, key: keyof TCreateRecordRequest, value: string | number | string[] | null) => {
+    if (key === 'contact' && data?.sendType === 'PHONE' && typeof value === 'string') {
+      const onlyNumbers = value.replace(/[^0-9]/g, '');
+      value = onlyNumbers;
+    }
+
     setRows((prev) =>
       prev.map((row) => (row.id === rowId ? { ...row, values: { ...row.values, [key]: value } } : row)),
     );
   };
 
   const handleSubmit = async () => {
-    const invalidMap = validateRecordForm(rows);
+    const invalidMap = validateRecordForm(rows, data?.sendType);
     setErrors(invalidMap);
     if (Object.keys(invalidMap).length > 0) return;
 

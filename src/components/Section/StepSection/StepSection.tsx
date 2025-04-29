@@ -44,7 +44,7 @@ const StepSection = () => {
             <S.StepContent>
               <S.StepLabel>{step.step}</S.StepLabel>
               <S.StepTitle>{step.title}</S.StepTitle>
-              <S.StepDesc key={index} dangerouslySetInnerHTML={{ __html: step.desc }} />
+              <S.StepDesc dangerouslySetInnerHTML={{ __html: step.desc }} />
             </S.StepContent>
             {index < steps.length - 1 && (
               <S.CurveImg>

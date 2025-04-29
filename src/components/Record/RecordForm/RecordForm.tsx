@@ -58,12 +58,17 @@ const RecordForm = ({ mode, event, records, rows, setRows, errors, handleSubmit,
   };
 
   const handleUpdateChange = (key: keyof TRecordFormValues, value: string | number | string[]) => {
+    if (key === 'contact' && event.sendType === 'PHONE' && typeof value === 'string') {
+      const onlyNumbers = value.replace(/[^0-9]/g, '');
+      value = onlyNumbers;
+    }
+
     setUpdateValue((prev) => (prev ? { ...prev, [key]: value } : prev));
   };
 
   const handleUpdateRecord = (record: TRecordItem) => {
     if (updatedRecordId === record.eventDetailId && updatedValue) {
-      const invalidFields = validateSingleRecord(updatedValue);
+      const invalidFields = validateSingleRecord(updatedValue, event.sendType);
       setUpdateError(invalidFields);
       if (Object.keys(invalidFields).length > 0) return;
 

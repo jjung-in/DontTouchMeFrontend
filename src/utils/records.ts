@@ -94,12 +94,14 @@ export const formatNumber = (value: number | string): string => {
  * @param record - 단일 입출금 입력값 객체
  * @returns 유효하지 않은 필드명을 key로 가지는 객체 (각 값은 true)
  */
-export const validateSingleRecord = (record: TRecordFormValues): TRecordFormErrors => {
+export const validateSingleRecord = (record: TRecordFormValues, sendType?: string | null): TRecordFormErrors => {
   const errors: TRecordFormErrors = {};
 
   if (!record.type) errors.type = true;
   if (!record.history?.trim()) errors.history = true;
   if (!record.price) errors.price = true;
+  if (sendType === 'EMAIL' && record.contact && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(record.contact))
+    errors.contact = true;
 
   return errors;
 };
@@ -113,11 +115,12 @@ export const validateSingleRecord = (record: TRecordFormValues): TRecordFormErro
  */
 export const validateRecordForm = (
   rows: { id: number; values: TRecordFormValues }[],
+  sendType?: string | null,
 ): Record<number, TRecordFormErrors> => {
   const result: Record<number, TRecordFormErrors> = {};
 
   for (const row of rows) {
-    const errors = validateSingleRecord(row.values);
+    const errors = validateSingleRecord(row.values, sendType);
     if (Object.keys(errors).length > 0) {
       result[row.id] = errors;
     }
