@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
-export const HeaderWrapper = styled.header`
-  position: fixed;
+export const HeaderWrapper = styled.header<{ $isFixed: boolean }>`
+  position: ${({ $isFixed }) => ($isFixed ? 'fixed' : 'absolute')};
   top: 50px;
   width: 100%;
   height: 100px;

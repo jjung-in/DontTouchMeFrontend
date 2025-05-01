@@ -2,10 +2,11 @@ import * as S from './Header.ts';
 import logo from '@_assets/images/Logo.png';
 import textLogo from '@_assets/images/TextLogo.png';
 import { useAuthStore } from '@_store/authStore.ts';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { isLoggedIn, logout } = useAuthStore();
 
   const handleLogout = () => {
@@ -14,7 +15,7 @@ const Header = () => {
   };
 
   return (
-    <S.HeaderWrapper>
+    <S.HeaderWrapper $isFixed={pathname === "/"}>
       <S.HeaderInner>
         <S.Logo to={isLoggedIn ? 'events' : '/'}>
           <img src={logo} alt="PAYble 로고" />
