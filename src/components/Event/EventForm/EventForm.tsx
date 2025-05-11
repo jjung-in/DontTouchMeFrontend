@@ -37,6 +37,7 @@ const EventForm = ({ mode, event, onSubmit, onEventDelete }: Props) => {
           isImage: event.eventInfoItems.includes('사진 첨부'),
           isTarget: event.eventInfoItems.includes('입금대상'),
           isSend: event.eventInfoItems.includes('감사장'),
+          sendType: event.sendType || 'EMAIL',
         }
       : {
           thumbnailUrl: '',
