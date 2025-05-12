@@ -17,7 +17,7 @@ export const ModalBox = styled.div`
   width: 1400px;
   height: 800px;
   background-color: #ffffff;
-  padding: 3rem;
+  padding: 5rem;
   border-radius: 12px;
   overflow-y: auto;
   position: relative;
