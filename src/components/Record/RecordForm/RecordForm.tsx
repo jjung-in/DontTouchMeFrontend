@@ -136,7 +136,12 @@ const RecordForm = ({ mode, event, records, rows, setRows, errors, handleSubmit,
             />
           ))}
       </S.Grid>
-      <RecordFormButtons mode={mode} eventId={eventId} onSubmit={handleSubmit} />
+      <RecordFormButtons
+        mode={mode}
+        eventId={eventId}
+        onSubmit={handleSubmit}
+        isSendAvailable={event.sendType === 'EMAIL' || event.sendType === 'PHONE'}
+      />
       {isDeleteModalOpen && deletedRecordId !== null && (
         <AlertModal
           isOpen={isDeleteModalOpen}

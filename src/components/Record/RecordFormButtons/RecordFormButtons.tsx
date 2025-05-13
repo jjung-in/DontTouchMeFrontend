@@ -10,9 +10,10 @@ interface Props {
   mode: 'create' | 'update' | 'read';
   eventId: number;
   onSubmit?: () => void;
+  isSendAvailable?: boolean;
 }
 
-const RecordFormButtons = ({ mode, eventId, onSubmit }: Props) => {
+const RecordFormButtons = ({ mode, eventId, onSubmit, isSendAvailable }: Props) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -74,9 +75,11 @@ const RecordFormButtons = ({ mode, eventId, onSubmit }: Props) => {
         <Button onClick={handleExcelExport} variant="primary" fontWeight="semibold">
           엑셀 다운로드
         </Button>
-        <Button as={Link} to={`/events/${eventId}/card`} variant="primary" fontWeight="semibold">
-          감사장 전송
-        </Button>
+        {isSendAvailable && (
+          <Button as={Link} to={`/events/${eventId}/card`} variant="primary" fontWeight="semibold">
+            감사장 전송
+          </Button>
+        )}
       </S.Wrapper>
     );
   }
