@@ -9,4 +9,5 @@ export const Title = styled.p`
 export const Message = styled.p`
   font-size: 20px;
   margin-bottom: 80px;
+  white-space: pre-line;
 `;
