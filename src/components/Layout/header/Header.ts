@@ -57,6 +57,16 @@ export const CreateLink = styled(Link)`
   border-radius: 12px;
 `;
 
+export const AnchorButton = styled.a`
+  padding: 18px 20px;
+  font-size: 20px;
+  font-weight: 600;
+  color: ${({ theme }) => theme.color.text.white};
+  background: ${({ theme }) => theme.color.primary[500]};
+  border: 1px solid ${({ theme }) => theme.color.primary[500]};
+  border-radius: 12px;
+`;
+
 const BaseButtonStyle = css`
   padding: 14px 20px;
   font-size: 20px;
