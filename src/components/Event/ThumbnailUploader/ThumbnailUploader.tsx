@@ -7,7 +7,7 @@ import noimage from '@_assets/images/noimage.png';
  * @param thumbnailPreview - 미리보기로 보여줄 이미지 URL
  * @param onChange - 파일 input의 onChange 핸들러
  * @param onReset - 업로드된 썸네일을 초기화하는 핸들러
- * @param thumbnailUrl - true일 경우 이미지 업로드/취소 버튼을 숨김김
+ * @param thumbnailUrl - true일 경우 이미지 업로드/취소 버튼을 숨김
  */
 
 interface Props {
@@ -26,7 +26,7 @@ const ThumbnailUploader = ({ thumbnailPreview, onChange, onReset, isReadonly }: 
       {!isReadonly &&
         (thumbnailPreview ? (
           <Button onClick={onReset} variant="primary">
-            취소
+            업로드 취소
           </Button>
         ) : (
           <label htmlFor="thumbnail">
