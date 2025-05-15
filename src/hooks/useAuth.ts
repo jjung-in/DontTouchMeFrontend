@@ -54,6 +54,14 @@ export const useLogInFlow = () => {
     logInMutation.mutate(formValues);
   };
 
+  const handleTestLogIn = () => {
+    const testCredentials = {
+      email: import.meta.env.VITE_TEST_EMAIL,
+      password: import.meta.env.VITE_TEST_PASSWORD,
+    };
+    logInMutation.mutate(testCredentials);
+  };
+
   const handleGoogleClick = () => {
     window.location.href = `http://13.209.40.51:8080/oauth2/authorization/google`;
   };
@@ -67,6 +75,7 @@ export const useLogInFlow = () => {
     formErrors,
     handleChange,
     handleLogIn,
+    handleTestLogIn,
     handleNaverClick,
     handleGoogleClick,
     isPending: logInMutation.isPending,
