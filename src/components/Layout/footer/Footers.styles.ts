@@ -15,3 +15,11 @@ export const FooterInner = styled.div`
   color: #b4b9c9;
   background-color: #ffffff;
 `;
+
+export const TermsButton = styled.span`
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;

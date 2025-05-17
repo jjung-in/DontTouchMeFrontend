@@ -1,3 +1,4 @@
+import { uploadImage } from '@_api/image';
 import AlertModal from '@_components/Modal/AlertModal/AlertModal';
 import { useDeleteRecord, useUpdateRecord } from '@_hooks/useRecords';
 import { TEventDetailResponse } from '@_types/events.type';
@@ -20,7 +21,7 @@ interface Props {
   setRows?: React.Dispatch<React.SetStateAction<{ id: number; values: TRecordFormValues }[]>>;
   errors?: Record<number, TRecordFormErrors>;
   handleSubmit?: () => void;
-  handleChange?: (id: number, key: keyof TCreateRecordRequest, value: string | number | string[] | null) => void;
+  handleChange?: (id: number, key: keyof TCreateRecordRequest, value: string | number | string[] | File | null) => void;
 }
 
 const RecordForm = ({ mode, event, records, rows, setRows, errors, handleSubmit, handleChange }: Props) => {
@@ -30,7 +31,7 @@ const RecordForm = ({ mode, event, records, rows, setRows, errors, handleSubmit,
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deletedRecordId, setDeletedRecordId] = useState<number | null>(null);
   const [updatedRecordId, setUpdatedRecordId] = useState<number | null>(null);
-  const [updatedValue, setUpdateValue] = useState<TRecordFormValues | null>(null);
+  const [updatedValue, setUpdatedValue] = useState<TRecordFormValues | null>(null);
   const [updateError, setUpdateError] = useState<TRecordFormErrors | null>(null);
 
   const handleAddRow = () => {
@@ -57,26 +58,36 @@ const RecordForm = ({ mode, event, records, rows, setRows, errors, handleSubmit,
     setRows?.((prev) => prev.filter((row) => row.id !== id));
   };
 
-  const handleUpdateChange = (key: keyof TRecordFormValues, value: string | number | string[]) => {
+  const handleUpdateChange = (key: keyof TRecordFormValues, value: string | number | string[] | File | null) => {
     if (key === 'contact' && event.sendType === 'PHONE' && typeof value === 'string') {
       const onlyNumbers = value.replace(/[^0-9]/g, '');
       value = onlyNumbers;
     }
 
-    setUpdateValue((prev) => (prev ? { ...prev, [key]: value } : prev));
+    setUpdatedValue((prev) => (prev ? { ...prev, [key]: value } : prev));
   };
 
-  const handleUpdateRecord = (record: TRecordItem) => {
+  const handleUpdateRecord = async (record: TRecordItem) => {
     if (updatedRecordId === record.eventDetailId && updatedValue) {
       const invalidFields = validateSingleRecord(updatedValue, event.sendType);
       setUpdateError(invalidFields);
       if (Object.keys(invalidFields).length > 0) return;
 
+      if (updatedValue.imageFile) {
+        let imageUrl = '';
+        try {
+          imageUrl = await uploadImage(updatedValue.imageFile);
+          updatedValue.imageUrl = imageUrl;
+        } catch {
+          console.warn('이미지 업로드에 실패했습니다.');
+        }
+      }
+
       updateRecord({ recordId: record.eventDetailId, recordData: updatedValue });
       setUpdatedRecordId(null);
     } else {
       setUpdatedRecordId(record.eventDetailId);
-      setUpdateValue({
+      setUpdatedValue({
         type: record.type,
         history: record.history,
         price: record.price,
@@ -147,7 +158,7 @@ const RecordForm = ({ mode, event, records, rows, setRows, errors, handleSubmit,
           isOpen={isDeleteModalOpen}
           onClose={() => setIsDeleteModalOpen(false)}
           title="입출금 내역 삭제"
-          message="확인 클릭 시 입출금 내역이 영구 삭제됩니다. 진행하시겠습니까?"
+          message={`확인 클릭 시 입출금 내역이 영구 삭제됩니다.\n진행하시겠습니까?`}
           onConfirm={() => handleDeleteRecord(deletedRecordId)}
         />
       )}

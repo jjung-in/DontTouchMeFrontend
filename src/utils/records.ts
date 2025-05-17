@@ -49,7 +49,7 @@ export const recordConfig: Record<string, TRecordConfig> = {
     type: 'imageUrl',
     label: '사진 첨부',
     element: 'file',
-    width: '120px',
+    width: '170px',
   },
   입금대상: {
     type: 'target',

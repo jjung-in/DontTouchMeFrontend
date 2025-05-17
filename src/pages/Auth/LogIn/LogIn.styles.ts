@@ -45,12 +45,12 @@ export const FieldContainer = styled(FieldContainerStyle)`
 export const FieldLabel = styled(FieldLabelStyle)``;
 
 export const ButtonArea = styled.div`
+  margin-bottom: 20px;
   padding-right: 110px;
 `;
 
 export const SignUpLinkArea = styled.div`
   padding-right: 110px;
-  margin-top: 20px;
   display: flex;
   gap: 10px;
   font-size: 14px;
