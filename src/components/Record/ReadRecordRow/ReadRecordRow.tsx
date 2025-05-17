@@ -40,7 +40,9 @@ const ReadRecordRow = ({ event, record }: Props) => {
             <Input as="span" variant="recordtext" fullWidth={true}>
               {config.type === 'price' && (typeof value === 'number' || typeof value === 'string')
                 ? formatNumber(value)
-                : value}
+                : typeof value !== 'object'
+                  ? value
+                  : ''}
             </Input>
           </S.GridCell>
         );
