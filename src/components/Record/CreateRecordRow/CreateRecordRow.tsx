@@ -2,6 +2,7 @@ import Button from '@_components/Common/Button/Button';
 import CustomSelect from '@_components/Common/CustomSelect/CustomSelect';
 import Input from '@_components/Common/Input/Input';
 import TagSelect from '@_components/Common/TagSelect/TagSelect';
+import FileInput from '@_components/FileInput/FileInput';
 import { TEventDetailResponse } from '@_types/events.type';
 import { TRecordFormErrors, TRecordFormValues } from '@_types/records.type';
 import { recordConfig } from '@_utils/records';
@@ -12,7 +13,7 @@ interface Props {
   row: { id: number; values: TRecordFormValues };
   errors: Record<number, TRecordFormErrors>;
   isFirstRow: boolean;
-  onChange: (id: number, key: keyof TRecordFormValues, value: string | number | string[] | null) => void;
+  onChange: (id: number, key: keyof TRecordFormValues, value: string | number | string[] | File | null) => void;
   onAddRow: () => void;
   onDeleteRow: (id: number) => void;
 }
@@ -49,7 +50,7 @@ const CreateRecordRow = ({ event, row, errors, isFirstRow, onChange, onAddRow, o
           );
         }
 
-        if (element === 'text') {
+        if (element === 'text' && typeof value !== 'object') {
           return (
             <S.GridCell key={key}>
               <Input
@@ -72,6 +73,14 @@ const CreateRecordRow = ({ event, row, errors, isFirstRow, onChange, onAddRow, o
                 value={Array.isArray(value) ? value : []}
                 onChange={(val) => onChange(id, type, val)}
               />
+            </S.GridCell>
+          );
+        }
+
+        if (element === 'file') {
+          return (
+            <S.GridCell key={key}>
+              <FileInput onChange={(e) => onChange(id, 'imageFile', e.target.files?.[0] ?? null)} />
             </S.GridCell>
           );
         }

@@ -5,6 +5,7 @@ export interface TRecordFormValues {
   name?: string;
   tags?: string[];
   imageUrl?: string;
+  imageFile?: File | null;
   target?: string;
   sendType?: string;
   contact?: string;

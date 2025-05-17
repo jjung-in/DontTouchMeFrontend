@@ -2,6 +2,7 @@ import Button from '@_components/Common/Button/Button';
 import CustomSelect from '@_components/Common/CustomSelect/CustomSelect';
 import Input from '@_components/Common/Input/Input';
 import TagSelect from '@_components/Common/TagSelect/TagSelect';
+import FileInput from '@_components/FileInput/FileInput';
 import { TEventDetailResponse } from '@_types/events.type';
 import { TRecordFormErrors, TRecordFormValues, TRecordItem } from '@_types/records.type';
 import { formatNumber, recordConfig } from '@_utils/records';
@@ -13,7 +14,7 @@ interface Props {
   errors: TRecordFormErrors | null;
   activeRow: number | null;
   updatedValue: TRecordFormValues | null;
-  onChange: (key: keyof TRecordFormValues, value: string | number | string[]) => void;
+  onChange: (key: keyof TRecordFormValues, value: string | number | string[] | File | null) => void;
   onUpdate: (record: TRecordItem) => void;
   onDelete: () => void;
 }
@@ -49,7 +50,9 @@ const UpdateRecordRow = ({ event, record, errors, activeRow, updatedValue, onCha
               <Input as="span" variant="recordtext" fullWidth={true}>
                 {config.type === 'price' && (typeof value === 'number' || typeof value === 'string')
                   ? formatNumber(value)
-                  : value}
+                  : typeof value !== 'object'
+                    ? value
+                    : ''}
               </Input>
             </S.GridCell>
           );
@@ -71,7 +74,7 @@ const UpdateRecordRow = ({ event, record, errors, activeRow, updatedValue, onCha
           );
         }
 
-        if (element === 'text') {
+        if (element === 'text' && typeof value !== 'object') {
           return (
             <S.GridCell key={key}>
               <Input
@@ -94,6 +97,14 @@ const UpdateRecordRow = ({ event, record, errors, activeRow, updatedValue, onCha
                 value={Array.isArray(value) ? value : []}
                 onChange={(val) => onChange(type, val)}
               />
+            </S.GridCell>
+          );
+        }
+
+        if (element === 'file') {
+          return (
+            <S.GridCell key={key}>
+              <FileInput onChange={(e) => onChange('imageFile', e.target.files?.[0] ?? null)} />
             </S.GridCell>
           );
         }

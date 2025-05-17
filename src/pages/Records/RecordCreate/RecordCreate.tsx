@@ -10,6 +10,7 @@ import { validateRecordForm } from '@_utils/records';
 import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import * as S from './RecordCreate.styles';
+import { uploadImage } from '@_api/image';
 
 const RECORD_CREATE_TITLE = {
   title: '입출금 내역',
@@ -33,6 +34,7 @@ const RecordCreate = () => {
         name: '',
         tags: [],
         imageUrl: '',
+        imageFile: null,
         target: '',
         contact: '',
       },
@@ -40,7 +42,11 @@ const RecordCreate = () => {
   ]);
   const [errors, setErrors] = useState<Record<number, TRecordFormErrors>>({});
 
-  const handleChange = (rowId: number, key: keyof TCreateRecordRequest, value: string | number | string[] | null) => {
+  const handleChange = (
+    rowId: number,
+    key: keyof TCreateRecordRequest,
+    value: string | number | string[] | File | null,
+  ) => {
     if (key === 'contact' && data?.sendType === 'PHONE' && typeof value === 'string') {
       const onlyNumbers = value.replace(/[^0-9]/g, '');
       value = onlyNumbers;
@@ -56,23 +62,33 @@ const RecordCreate = () => {
     setErrors(invalidMap);
     if (Object.keys(invalidMap).length > 0) return;
 
-    const records: TCreateRecordRequest[] = rows.map((row) => {
-      const filteredRecord: TCreateRecordRequest = {
-        eventId,
-        type: row.values.type,
-        history: row.values.history,
-        price: row.values.price,
-        contact: row.values.contact,
-      };
+    const records: TCreateRecordRequest[] = await Promise.all(
+      rows.map(async (row) => {
+        const filteredRecord: TCreateRecordRequest = {
+          eventId,
+          type: row.values.type,
+          history: row.values.history,
+          price: row.values.price,
+          contact: row.values.contact,
+        };
 
-      if (row.values.name) filteredRecord.name = row.values.name;
-      if (row.values.tags?.length) filteredRecord.tags = row.values.tags;
-      if (row.values.imageUrl) filteredRecord.imageUrl = row.values.imageUrl;
-      if (row.values.target) filteredRecord.target = row.values.target;
-      if (row.values.sendType) filteredRecord.sendType = row.values.sendType;
+        if (row.values.name) filteredRecord.name = row.values.name;
+        if (row.values.tags?.length) filteredRecord.tags = row.values.tags;
+        if (row.values.target) filteredRecord.target = row.values.target;
+        if (row.values.sendType) filteredRecord.sendType = row.values.sendType;
+        if (row.values.imageFile) {
+          let imageUrl = '';
+          try {
+            imageUrl = await uploadImage(row.values.imageFile);
+            filteredRecord.imageUrl = imageUrl;
+          } catch {
+            console.warn('이미지 업로드에 실패했습니다.');
+          }
+        }
 
-      return filteredRecord;
-    });
+        return filteredRecord;
+      }),
+    );
 
     createRecordsBatch(records, {
       onSuccess: () => {
