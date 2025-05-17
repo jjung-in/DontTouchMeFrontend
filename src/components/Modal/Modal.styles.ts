@@ -15,8 +15,9 @@ export const Overlay = styled.div`
 
 export const Container = styled.div`
   position: relative;
-  width: 750px;
-  padding: 70px 40px 40px;
+  width: 100%;
+  max-width: 580px;
+  padding: 70px 40px 45px;
   border: 1px solid #000000;
   border-radius: 10px;
   background: #ffffff;
@@ -30,7 +31,7 @@ export const CloseButton = styled.button`
   cursor: pointer;
 
   img {
-    width: 30px;
-    height: 30px;
+    width: 24px;
+    height: 24px;
   }
 `;
