@@ -1,19 +1,18 @@
-import React from 'react';
+import Button from '@_components/Common/Button/Button';
+import Modal from '@_components/Modal/Modal';
 import * as S from './TermsModal.styles';
-import close from '@_assets/icons/close.png';
 
 interface TermsModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const TermsModal: React.FC<TermsModalProps> = ({ isOpen, onClose }) => {
+const TermsModal = ({ isOpen, onClose }: TermsModalProps) => {
   if (!isOpen) return null;
 
   return (
-    <S.Overlay onClick={onClose}>
-      <S.ModalBox onClick={(e) => e.stopPropagation()}>
-        <S.CloseImg src={close} alt="close" onClick={onClose} />
+    <Modal size="lg" isOpen={isOpen} onClose={onClose}>
+      <S.TermsContent>
         <S.TextContainer>
           <S.Title>서비스 이용 약관</S.Title>
 
@@ -135,11 +134,11 @@ const TermsModal: React.FC<TermsModalProps> = ({ isOpen, onClose }) => {
           </S.OrderedTermsList>
         </S.TextContainer>
 
-        <S.ButtonContainer>
-          <S.CloseButton onClick={onClose}>창닫기</S.CloseButton>
-        </S.ButtonContainer>
-      </S.ModalBox>
-    </S.Overlay>
+        <Button onClick={onClose} variant="primary" fontWeight="semibold">
+          창닫기
+        </Button>
+      </S.TermsContent>
+    </Modal>
   );
 };
 
