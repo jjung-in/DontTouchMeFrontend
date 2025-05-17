@@ -80,7 +80,7 @@ const CreateRecordRow = ({ event, row, errors, isFirstRow, onChange, onAddRow, o
         if (element === 'file') {
           return (
             <S.GridCell key={key}>
-              <FileInput onChange={(e) => onChange(id, 'imageFile', e.target.files?.[0] ?? null)} />
+              <FileInput imageUrl="" onChange={(e) => onChange(id, 'imageFile', e.target.files?.[0] ?? null)} />
             </S.GridCell>
           );
         }

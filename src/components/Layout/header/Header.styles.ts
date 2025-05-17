@@ -34,7 +34,7 @@ export const Logo = styled(Link)`
 export const Nav = styled.nav`
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 25px;
 `;
 
 export const NavLink = styled(Link)`
@@ -49,7 +49,7 @@ export const AnchorLink = styled.a`
 
 export const CreateLink = styled(Link)`
   padding: 18px 20px;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   color: #6d758f;
   background: #ffffff;
@@ -59,7 +59,7 @@ export const CreateLink = styled(Link)`
 
 export const AnchorButton = styled.a`
   padding: 18px 20px;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 600;
   color: ${({ theme }) => theme.color.text.white};
   background: ${({ theme }) => theme.color.primary[500]};
@@ -69,7 +69,7 @@ export const AnchorButton = styled.a`
 
 const BaseButtonStyle = css`
   padding: 14px 20px;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: #6d758f;
   background: #f8faff;

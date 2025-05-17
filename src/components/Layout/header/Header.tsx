@@ -1,8 +1,8 @@
-import * as S from './Header.ts';
 import logo from '@_assets/images/Logo.png';
 import textLogo from '@_assets/images/TextLogo.png';
 import { useAuthStore } from '@_store/authStore.ts';
 import { useLocation, useNavigate } from 'react-router-dom';
+import * as S from './Header.styles.ts';
 
 const Header = () => {
   const navigate = useNavigate();
