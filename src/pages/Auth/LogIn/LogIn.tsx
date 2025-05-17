@@ -119,7 +119,7 @@ const LogIn = () => {
           isOpen={isTestModalOpen}
           onClose={() => setTestModalOpen(false)}
           title="테스트 계정 사용"
-          message={`테스트 계정을 사용하여 로그인 시 일부 기능이 제한될 수 있습니다.\n\n진행하시겠습니까?`}
+          message={`테스트 계정을 사용하여 로그인 시 일부 기능이 제한될 수 있습니다.\n진행하시겠습니까?`}
           onConfirm={handleConfirmTestLogin}
         />
       )}

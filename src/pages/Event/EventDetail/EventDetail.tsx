@@ -64,7 +64,7 @@ const EventDetail = () => {
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         title="이벤트 삭제"
-        message="확인 클릭 시 이벤트가 영구 삭제됩니다. 진행하시겠습니까?"
+        message={`확인 클릭 시 이벤트가 영구 삭제됩니다.\n진행하시겠습니까?`}
         onConfirm={confirmDelete}
       />
     </S.Main>

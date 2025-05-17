@@ -147,7 +147,7 @@ const RecordForm = ({ mode, event, records, rows, setRows, errors, handleSubmit,
           isOpen={isDeleteModalOpen}
           onClose={() => setIsDeleteModalOpen(false)}
           title="입출금 내역 삭제"
-          message="확인 클릭 시 입출금 내역이 영구 삭제됩니다. 진행하시겠습니까?"
+          message={`확인 클릭 시 입출금 내역이 영구 삭제됩니다.\n진행하시겠습니까?`}
           onConfirm={() => handleDeleteRecord(deletedRecordId)}
         />
       )}
