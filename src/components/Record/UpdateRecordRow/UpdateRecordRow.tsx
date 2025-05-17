@@ -6,6 +6,7 @@ import FileInput from '@_components/FileInput/FileInput';
 import { TEventDetailResponse } from '@_types/events.type';
 import { TRecordFormErrors, TRecordFormValues, TRecordItem } from '@_types/records.type';
 import { formatNumber, recordConfig } from '@_utils/records';
+import ImagePreviewCell from '../ImagePreviewCell/ImagePreviewCell';
 import * as S from './UpdateRecordRow.styles';
 
 interface Props {
@@ -41,6 +42,14 @@ const UpdateRecordRow = ({ event, record, errors, activeRow, updatedValue, onCha
             return (
               <S.GridCell key={key}>
                 <TagSelect options={[]} value={Array.isArray(value) ? value : []} isReadOnly={true} />
+              </S.GridCell>
+            );
+          }
+
+          if (element === 'file') {
+            return (
+              <S.GridCell key={key}>
+                <ImagePreviewCell imageUrl={record.image} />
               </S.GridCell>
             );
           }
@@ -104,7 +113,10 @@ const UpdateRecordRow = ({ event, record, errors, activeRow, updatedValue, onCha
         if (element === 'file') {
           return (
             <S.GridCell key={key}>
-              <FileInput onChange={(e) => onChange('imageFile', e.target.files?.[0] ?? null)} />
+              <FileInput
+                imageUrl={typeof value === 'string' ? value : ''}
+                onChange={(e) => onChange('imageFile', e.target.files?.[0] ?? null)}
+              />
             </S.GridCell>
           );
         }

@@ -3,6 +3,7 @@ import TagSelect from '@_components/Common/TagSelect/TagSelect';
 import { TEventDetailResponse } from '@_types/events.type';
 import { TRecordItem } from '@_types/records.type';
 import { formatNumber, recordConfig } from '@_utils/records';
+import ImagePreviewCell from '../ImagePreviewCell/ImagePreviewCell';
 import * as S from './ReadRecordRow.styles';
 
 interface Props {
@@ -31,6 +32,14 @@ const ReadRecordRow = ({ event, record }: Props) => {
           return (
             <S.GridCell key={key}>
               <TagSelect options={[]} value={Array.isArray(value) ? value : []} isReadOnly={true} />
+            </S.GridCell>
+          );
+        }
+
+        if (element === 'file') {
+          return (
+            <S.GridCell key={key}>
+              <ImagePreviewCell imageUrl={record.image} />
             </S.GridCell>
           );
         }
