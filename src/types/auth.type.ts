@@ -66,8 +66,15 @@ export interface TCheckPasswordRequest {
   currentPassword: string;
 }
 
-export interface ProfileEditRequest {
+export interface TProfileEditRequest {
   name: string;
   newPassword: string;
+  contact: string;
+}
+
+export interface TProfileEditResponse {
+  id: number;
+  name: string;
+  email: string;
   contact: string;
 }
