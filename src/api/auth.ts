@@ -9,6 +9,8 @@ import {
   TSignUpResponse,
   TVerifyEmailCodeRequest,
   TVerifyEmailCodeResponse,
+  TProfileEditRequest,
+  TProfileEditResponse,
 } from '@_types/auth.type';
 import { parseAccessToken } from '@_utils/auth';
 import { AxiosError } from 'axios';
@@ -116,4 +118,9 @@ export const checkPassword = async (params: TCheckPasswordRequest): Promise<void
 
 export const withdrawMember = async (): Promise<void> => {
   await instance.delete('/member/withdraw');
+};
+
+export const editInformation = async (EditData: TProfileEditRequest): Promise<TProfileEditResponse> => {
+  const { data } = await instance.patch('/member/me',EditData);
+  return data;
 };
