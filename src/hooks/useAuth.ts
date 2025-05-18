@@ -36,6 +36,7 @@ export const useLogInFlow = () => {
       const err = error as AxiosError<{ message?: string }>;
       const message = err.response?.data?.message ?? '로그인 중 오류가 발생했습니다.';
       console.error('로그인 실패:', message);
+      useToastStore.getState().showToast('로그인에 실패했습니다.', 'error');
     },
   });
 
