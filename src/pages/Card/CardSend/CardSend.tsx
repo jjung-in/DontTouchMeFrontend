@@ -14,6 +14,7 @@ import {
   useSendSMS,
 } from '@_hooks/useCards';
 import { useEventDetail } from '@_hooks/useEvents';
+import { useAuthStore } from '@_store/authStore';
 import { TSendEmailRequest, TSendSMSRequest } from '@_types/cards.type';
 import { getEventStatus } from '@_utils/events';
 import { useState } from 'react';
@@ -29,6 +30,7 @@ const CARD_SEND_TITLE = {
 const CardSend = () => {
   const navigate = useNavigate();
   const eventId = Number(useParams().eventId);
+  const { isTestUser } = useAuthStore();
 
   const { data: event, isFetching: isEventFetching } = useEventDetail(eventId);
   const { data: recipients, isFetching: isRecipientsFetching } = useGetRecipients(eventId);
@@ -44,6 +46,11 @@ const CardSend = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleSendClick = () => {
+    if (isTestUser) {
+      alert('테스트 계정으로는 감사장 전송 기능을 이용할 수 없습니다.');
+      return;
+    }
+
     if (!event?.eventName) {
       alert('감사장을 전송할 수 없습니다.');
       return;
