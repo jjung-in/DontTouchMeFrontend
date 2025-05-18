@@ -2,7 +2,7 @@ import Layout from '@_components/Layout/Layout';
 import Home from '@_pages/Home';
 import SignUp from '@_pages/Auth/SignUp/SignUp';
 import LogIn from '@_pages/Auth/LogIn/LogIn';
-import NotFound from '@_pages/NotFound/NotFound';
+import AuthSuccess from '@_pages/Auth/Success/AuthSuccess';
 import EventList from '@_pages/Event/EventList/EventList';
 import EventCreate from '@_pages/Event/EventCreate/EventCreate';
 import EventDetail from '@_pages/Event/EventDetail/EventDetail';
@@ -10,10 +10,14 @@ import EventUpdate from '@_pages/Event/EventUpdate/EventUpdate';
 import RecordList from '@_pages/Records/RecordList/RecordList';
 import RecordCreate from '@_pages/Records/RecordCreate/RecordCreate';
 import RecordUpdate from '@_pages/Records/RecordUpdate/RecordUpdate';
-import PrivateRoute from './PrivateRoute';
-import AuthSuccess from '@_pages/Auth/Success/AuthSuccess';
 import CardSend from '@_pages/Card/CardSend/CardSend';
 import CardComplete from '@_pages/Card/CardComplete/CardComplete';
+import MypageMain from '@_pages/Auth/Mypage/MypageMain/MypageMain';
+import ProfileEdit from '@_pages/Auth/Mypage/ProfileEdit/ProfileEdit';
+import Goodbye from '@_pages/Auth/Mypage/Goodbye/Goodbye';
+import PasswordCheck from '@_pages/Auth/Mypage/PasswordCheck/PasswordCheck';
+import NotFound from '@_pages/NotFound/NotFound';
+import PrivateRoute from './PrivateRoute';
 
 export const routes = [
   {
@@ -105,6 +109,38 @@ export const routes = [
         element: (
           <PrivateRoute>
             <CardComplete />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: '/mypage',
+        element: (
+          <PrivateRoute>
+            <MypageMain />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: '/mypage/confirm',
+        element: (
+          <PrivateRoute>
+            <PasswordCheck />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: '/mypage/edit',
+        element: (
+          <PrivateRoute>
+            <ProfileEdit />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: '/mypage/goodbye',
+        element: (
+          <PrivateRoute>
+            <Goodbye />
           </PrivateRoute>
         ),
       },
