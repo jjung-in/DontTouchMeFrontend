@@ -347,6 +347,10 @@ export const useCheckPassword = () => {
     onSuccess: () => {
       navigate('/mypage/goodbye');
     },
+    onError: () => {
+      setIsModalOpen(false);
+      useToastStore.getState().showToast('회원 탈퇴에 실패했습니다.', 'error');
+    },
   });
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
