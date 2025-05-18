@@ -115,5 +115,5 @@ export const checkPassword = async (params: TCheckPasswordRequest): Promise<void
 };
 
 export const withdrawMember = async (): Promise<void> => {
-  await instance.delete('/member/widthdraw');
+  await instance.delete('/member/withdraw');
 };

@@ -137,12 +137,8 @@ export const routes = [
         ),
       },
       {
-        path: '/mypage/goodbye',
-        element: (
-          <PrivateRoute>
-            <Goodbye />
-          </PrivateRoute>
-        ),
+        path: '/goodbye',
+        element: <Goodbye />,
       },
     ],
   },
