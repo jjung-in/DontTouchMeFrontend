@@ -6,10 +6,17 @@ import {
   sendEmailCode,
   verifyEmailCode,
   withdrawMember,
+  profileEdit,
 } from '@_api/auth';
 import { useAuthStore } from '@_store/authStore';
 import { useToastStore } from '@_store/toastStore';
-import { LogInFormValues, TCheckPasswordRequest, TSignUpFormErrors, TSignUpFormValues } from '@_types/auth.type';
+import {
+  LogInFormValues,
+  TCheckPasswordRequest,
+  TSignUpFormErrors,
+  TSignUpFormValues,
+  TProfileEditFormValue,
+} from '@_types/auth.type';
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
@@ -384,5 +391,91 @@ export const useCheckPassword = () => {
     handleWithdraw,
     isPasswordChecking: checkPasswordMutation.isPending,
     isWithdrawLoading: withdrawMutation.isPending,
+  };
+};
+
+export const useProfileEdit = () => {
+  const [formValues, setFormValues] = useState<TProfileEditFormValue>({
+    name: '',
+    newPassword: '',
+    contact: '',
+    confirmPassword: '',
+  });
+
+  const [formErrors, setFormErrors] = useState<Partial<TProfileEditFormValue>>({});
+
+  const validateProfileForm = () => {
+    const errors: Partial<TProfileEditFormValue> = {};
+
+    if (!formValues.name.trim()) errors.name = '이름을 입력해주세요.';
+    if (!formValues.newPassword.trim()) {
+      errors.newPassword = '비밀번호를 입력해주세요.';
+    } else if (
+      !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/.test(
+        formValues.newPassword,
+      )
+    ) {
+      errors.newPassword = '비밀번호는 영문, 숫자, 특수문자를 포함한 8자 이상이어야 합니다.';
+    }
+    if (!formValues.contact.trim()) errors.contact = '연락처를 입력해주세요.';
+
+    return errors;
+  };
+
+  const profileEditMutation = useMutation({
+    mutationFn: profileEdit,
+    onSuccess: (result) => {
+      console.log('회원정보 수정 성공',result);
+    },
+    onError: (error) => {
+      console.error('회원정보 수정 오류', error);
+    },
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setFormErrors((prev) => ({
+      ...prev,
+      [name]: '',
+    }));
+
+    if (name === 'contact') {
+      const numeric = value.replace(/[^0-9]/g, '').slice(0, 11);
+      let formatted = numeric;
+      if (numeric.length > 3 && numeric.length <= 7) {
+        formatted = `${numeric.slice(0, 3)}-${numeric.slice(3)}`;
+      } else if (numeric.length > 7) {
+        formatted = `${numeric.slice(0, 3)}-${numeric.slice(3, 7)}-${numeric.slice(7, 11)}`;
+      }
+      setFormValues((prev) => ({ ...prev, [name]: formatted }));
+      return;
+    }
+
+    setFormValues((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const errors = validateProfileForm();
+    setFormErrors(errors);
+    if (Object.keys(errors).length > 0) return;
+
+    profileEditMutation.mutate({
+      name: formValues.name,
+      newPassword: formValues.newPassword,
+      contact: formValues.contact,
+    });
+  };
+
+  return {
+    formValues,
+    formErrors,
+    handleChange,
+    handleSubmit,
+    isPending: profileEditMutation.isPending,
+    isError: profileEditMutation.isError,
+    error: profileEditMutation.error,
   };
 };

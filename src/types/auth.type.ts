@@ -72,6 +72,13 @@ export interface TProfileEditRequest {
   contact: string;
 }
 
+export interface TProfileEditFormValue {
+  name: string;
+  newPassword: string;
+  confirmPassword: string;
+  contact: string;
+}
+
 export interface TProfileEditResponse {
   id: number;
   name: string;
