@@ -1,5 +1,7 @@
 import PageTitle from '@_components/Common/PageTitle/PageTitle';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import * as S from './MypageMain.styles';
+import { useAuthStore } from '@_store/authStore';
 
 const MYPAGE_TITLE = {
   title: '마이페이지',
@@ -8,14 +10,21 @@ const MYPAGE_TITLE = {
 };
 
 const MypageMain = () => {
+  const navigate = useNavigate();
+  const { isTestUser } = useAuthStore();
+
   return (
-    <main>
+    <S.Main>
       <PageTitle {...MYPAGE_TITLE} />
-      <div>
-        <Link to="/mypage/confirm?type=edit">회원 정보 수정</Link>
-        <Link to="/mypage/confirm?type=unregister">회원 탈퇴</Link>
-      </div>
-    </main>
+      <S.ButtonArea>
+        <S.Button onClick={() => navigate('/mypage/confirm?type=edit')} disabled={isTestUser}>
+          회원 정보 수정
+        </S.Button>
+        <S.Button onClick={() => navigate('/mypage/confirm?type=unregister')} disabled={isTestUser}>
+          회원 탈퇴
+        </S.Button>
+      </S.ButtonArea>
+    </S.Main>
   );
 };
 

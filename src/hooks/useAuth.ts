@@ -345,7 +345,8 @@ export const useCheckPassword = () => {
   const withdrawMutation = useMutation({
     mutationFn: withdrawMember,
     onSuccess: () => {
-      navigate('/mypage/goodbye');
+      useAuthStore.getState().logout();
+      navigate('/goodbye');
     },
     onError: () => {
       setIsModalOpen(false);
