@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { MainStyle } from '@_styles/common';
+import { FieldContainerStyle, FieldLabelStyle } from '@_styles/event';
 
 export const Main = styled.main<{ $isEmpty?: boolean }>`
   ${MainStyle}
@@ -25,3 +26,13 @@ export const FieldArea = styled.div`
 `;
 
 export const ButtonArea = styled.div``;
+
+export const FieldContainer = styled(FieldContainerStyle)<{ $hasButton?: boolean }>``;
+
+export const FieldLabel = styled(FieldLabelStyle)<{ $hasButton?: boolean }>`
+  padding-right: ${({ $hasButton }) => ($hasButton ? '110px' : '0')};
+`;
+
+export const HintText = styled.p`
+  color: ${({ theme }) => theme.color.gray[200]};
+`;
