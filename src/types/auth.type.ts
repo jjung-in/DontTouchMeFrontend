@@ -65,3 +65,9 @@ export interface TokenReissueResponse {
 export interface TCheckPasswordRequest {
   currentPassword: string;
 }
+
+export interface ProfileEditRequest {
+  name: string;
+  newPassword: string;
+  contact: string;
+}
