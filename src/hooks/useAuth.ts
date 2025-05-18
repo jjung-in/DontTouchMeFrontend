@@ -1,4 +1,12 @@
-import { PostLogIn, checkEmailDuplicate, checkPassword, postSignUp, sendEmailCode, verifyEmailCode } from '@_api/auth';
+import {
+  PostLogIn,
+  checkEmailDuplicate,
+  checkPassword,
+  postSignUp,
+  sendEmailCode,
+  verifyEmailCode,
+  withdrawMember,
+} from '@_api/auth';
 import { useAuthStore } from '@_store/authStore';
 import { useToastStore } from '@_store/toastStore';
 import { LogInFormValues, TCheckPasswordRequest, TSignUpFormErrors, TSignUpFormValues } from '@_types/auth.type';
@@ -317,12 +325,16 @@ export const useCheckPassword = () => {
 
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const checkPasswordMutation = useMutation<void, Error, TCheckPasswordRequest>({
     mutationFn: checkPassword,
     onSuccess: () => {
-      const next = type === 'unregister' ? '/mypage/goodbye' : '/mypage/edit';
-      navigate(next);
+      if (type === 'edit') {
+        navigate('/mypage/edit');
+      } else if (type === 'unregister') {
+        setIsModalOpen(true);
+      }
       setError('');
     },
     onError: () => {
@@ -330,7 +342,14 @@ export const useCheckPassword = () => {
     },
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const withdrawMutation = useMutation({
+    mutationFn: withdrawMember,
+    onSuccess: () => {
+      navigate('/mypage/goodbye');
+    },
+  });
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
     setError('');
   };
@@ -346,11 +365,19 @@ export const useCheckPassword = () => {
     checkPasswordMutation.mutate({ currentPassword: password });
   };
 
+  const handleWithdraw = () => {
+    withdrawMutation.mutate();
+  };
+
   return {
     password,
     error,
-    handleChange,
+    isModalOpen,
+    setIsModalOpen,
+    handlePasswordChange,
     handleSubmit,
-    isPending: checkPasswordMutation.isPending,
+    handleWithdraw,
+    isPasswordChecking: checkPasswordMutation.isPending,
+    isWithdrawLoading: withdrawMutation.isPending,
   };
 };

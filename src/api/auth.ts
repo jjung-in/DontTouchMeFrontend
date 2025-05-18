@@ -113,3 +113,8 @@ export const checkPassword = async (params: TCheckPasswordRequest): Promise<void
   const { data } = await instance.get('/member/check-password', { params });
   return data;
 };
+
+export const withdrawMember = async (): Promise<void> => {
+  const { data } = await instance.get('/member/widthdraw');
+  return data;
+};
