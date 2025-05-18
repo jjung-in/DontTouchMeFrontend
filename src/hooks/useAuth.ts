@@ -1,11 +1,11 @@
-import { PostLogIn, checkEmailDuplicate, postSignUp, sendEmailCode, verifyEmailCode } from '@_api/auth';
+import { PostLogIn, checkEmailDuplicate, checkPassword, postSignUp, sendEmailCode, verifyEmailCode } from '@_api/auth';
 import { useAuthStore } from '@_store/authStore';
 import { useToastStore } from '@_store/toastStore';
-import { LogInFormValues, TSignUpFormErrors, TSignUpFormValues } from '@_types/auth.type';
+import { LogInFormValues, TCheckPasswordRequest, TSignUpFormErrors, TSignUpFormValues } from '@_types/auth.type';
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 export const useLogInFlow = () => {
   const [formValues, setFormValues] = useState<LogInFormValues>({
@@ -308,4 +308,49 @@ export const useRequireAuth = () => {
   }, [isLoggedIn, navigate]);
 
   return isLoggedIn;
+};
+
+export const useCheckPassword = () => {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const type = searchParams.get('type') ?? 'edit';
+
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const checkPasswordMutation = useMutation<void, Error, TCheckPasswordRequest>({
+    mutationFn: checkPassword,
+    onSuccess: () => {
+      const next = type === 'unregister' ? '/mypage/goodbye' : '/mypage/edit';
+      navigate(next);
+      setError('');
+    },
+    onError: () => {
+      setError('비밀번호가 일치하지 않습니다.');
+    },
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    setError('');
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!password.trim()) {
+      setError('비밀번호를 입력해주세요.');
+      return;
+    }
+
+    checkPasswordMutation.mutate({ currentPassword: password });
+  };
+
+  return {
+    password,
+    error,
+    handleChange,
+    handleSubmit,
+    isPending: checkPasswordMutation.isPending,
+  };
 };

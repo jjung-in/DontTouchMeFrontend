@@ -61,3 +61,7 @@ export interface TokenReissueResponse {
   accessToken: string;
   memberId: number;
 }
+
+export interface TCheckPasswordRequest {
+  currentPassword: string;
+}

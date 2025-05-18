@@ -1,17 +1,18 @@
 import {
   LogInRequest,
   LogInResponse,
+  TCheckPasswordRequest,
+  TEmailDuplicateCheckResponse,
   TokenReissueResponse,
+  TSendEmailCodeResponse,
   TSignUpRequest,
   TSignUpResponse,
-  TEmailDuplicateCheckResponse,
-  TSendEmailCodeResponse,
   TVerifyEmailCodeRequest,
   TVerifyEmailCodeResponse,
 } from '@_types/auth.type';
-import { instance } from './instance';
 import { parseAccessToken } from '@_utils/auth';
 import { AxiosError } from 'axios';
+import { instance } from './instance';
 
 export const postSignUp = async (signUpData: TSignUpRequest): Promise<TSignUpResponse> => {
   const { data } = await instance.post(`/member/sign-up`, signUpData);
@@ -106,4 +107,9 @@ export const GetTemporaryPassword = async (email: string): Promise<string> => {
     console.error('TemporaryPassword Error', error);
     throw new Error('임시 비밀번호 발급 오류');
   }
+};
+
+export const checkPassword = async (params: TCheckPasswordRequest): Promise<void> => {
+  const { data } = await instance.get('/member/check-password', { params });
+  return data;
 };
