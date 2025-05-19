@@ -420,8 +420,11 @@ export const useProfileEdit = () => {
     }
     if (!formValues.contact.trim()) errors.contact = '연락처를 입력해주세요.';
 
-    if (!formValues.confirmPassword.trim()) error.confirmPassword = '비밀번호를 다시 입력해주세요';
-    else if (formValues.newPassword !== formValues.confirmPassword) error.confirmPassword = '비밀번호가 일치하지 않습니다.'
+    if (!formValues.confirmPassword.trim()) {
+      errors.confirmPassword = '비밀번호를 다시 입력해주세요';
+    } else if (formValues.newPassword !== formValues.confirmPassword) {
+      errors.confirmPassword = '비밀번호가 일치하지 않습니다.';
+    }
 
     return errors;
   };
@@ -429,7 +432,7 @@ export const useProfileEdit = () => {
   const profileEditMutation = useMutation({
     mutationFn: profileEdit,
     onSuccess: (result) => {
-      console.log('회원정보 수정 성공',result);
+      console.log('회원정보 수정 성공', result);
     },
     onError: (error) => {
       console.error('회원정보 수정 오류', error);
