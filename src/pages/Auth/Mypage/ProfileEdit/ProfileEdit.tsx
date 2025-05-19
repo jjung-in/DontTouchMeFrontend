@@ -43,7 +43,7 @@ const ProfileEdit = () => {
               이메일
               <img src={required} alt="필수 입력" />
             </S.FieldLabel>
-            <Input placeholder="이메일을 입력하세요" />
+            <Input placeholder="이메일은 수정할수 없습니다." disabled />
             {formErrors.email && <ErrorTextStyle>{formErrors.email}</ErrorTextStyle>}
           </S.FieldContainer>
 
