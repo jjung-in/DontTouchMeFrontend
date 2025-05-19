@@ -81,7 +81,7 @@ const ProfileEdit = () => {
               onChange={handleChange}
               maxLength={20}
               placeholder="비밀번호를 다시 입력하세요"
-              autoComplete="new-password"
+              autoComplete="confirm-password"
               state={formErrors.confirmPassword ? 'error' : 'default'}
             />
             {formErrors.confirmPassword && <ErrorTextStyle>{formErrors.confirmPassword}</ErrorTextStyle>}

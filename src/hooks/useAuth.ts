@@ -420,6 +420,9 @@ export const useProfileEdit = () => {
     }
     if (!formValues.contact.trim()) errors.contact = '연락처를 입력해주세요.';
 
+    if (!formValues.confirmPassword.trim()) error.confirmPassword = '비밀번호를 다시 입력해주세요';
+    else if (formValues.newPassword !== formValues.confirmPassword) error.confirmPassword = '비밀번호가 일치하지 않습니다.'
+
     return errors;
   };
 
