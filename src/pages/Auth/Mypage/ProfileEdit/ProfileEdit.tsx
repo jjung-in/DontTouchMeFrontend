@@ -1,81 +1,118 @@
-import Input from '@_components/Common/Input/Input';
-import Button from '@_components/Common/Button/Button';
-import PageTitle from '@_components/Common/PageTitle/PageTitle';
-import * as S from './ProfileEdit.styles';
-import { ErrorTextStyle, FieldContainerStyle, FieldLabelStyle } from '@_styles/event';
 import required from '@_assets/images/required.png';
+import Button from '@_components/Common/Button/Button';
+import Input from '@_components/Common/Input/Input';
+import PageTitle from '@_components/Common/PageTitle/PageTitle';
+import { useProfileEdit } from '@_hooks/useAuth';
+import { ErrorTextStyle } from '@_styles/event';
+import * as S from './ProfileEdit.styles';
 
-
-const EDIT_TITLE = {
+const PROFILE_EDIT_TITLE = {
   title: '회원 정보 수정',
   highlight: '회원 정보 수정',
-  subtitle: '회원가입시 입력한 정보를 수정하세요!'
-}
+  subtitle: '회원가입 시 입력한 정보를 수정하세요!',
+};
+
 const ProfileEdit = () => {
+  const { formValues, formErrors, handleChange, handleSubmit, isPending } = useProfileEdit();
+
   return (
     <S.Main>
-      <PageTitle {...EDIT_TITLE}/>
-      <S.Form>
+      <PageTitle {...PROFILE_EDIT_TITLE} />
+      <S.Form onSubmit={handleSubmit}>
         <S.FieldArea>
-          <FieldContainerStyle>
-            <FieldLabelStyle>
+          <S.FieldContainer>
+            <S.FieldLabel>
               이름
               <img src={required} alt="필수 입력" />
-            </FieldLabelStyle>
+            </S.FieldLabel>
             <Input
+              type="text"
+              name="name"
+              value={formValues.name}
+              onChange={handleChange}
+              maxLength={10}
               placeholder="이름을 입력하세요"
+              autoComplete="off"
+              state={formErrors.name ? 'error' : 'default'}
             />
-            <ErrorTextStyle></ErrorTextStyle>
-          </FieldContainerStyle>
-          <FieldContainerStyle>
-            <FieldLabelStyle>
+            {formErrors.name && <ErrorTextStyle>{formErrors.name}</ErrorTextStyle>}
+          </S.FieldContainer>
+
+          <S.FieldContainer>
+            <S.FieldLabel>
               이메일
               <img src={required} alt="필수 입력" />
-            </FieldLabelStyle>
-            <Input
-              placeholder="이메일을 입력하세요"
-            />
-            <ErrorTextStyle></ErrorTextStyle>
-          </FieldContainerStyle>
-          <FieldContainerStyle>
-            <FieldLabelStyle>
+            </S.FieldLabel>
+            <Input placeholder="이메일은 수정할 수 없습니다." disabled />
+          </S.FieldContainer>
+
+          <S.FieldContainer>
+            <S.FieldLabel>
               비밀번호
               <img src={required} alt="필수 입력" />
-            </FieldLabelStyle>
+            </S.FieldLabel>
             <Input
-              placeholder="비밀번호를 입력하세요"
+              type="password"
+              name="newPassword"
+              value={formValues.newPassword}
+              onChange={handleChange}
+              maxLength={20}
+              placeholder="새 비밀번호를 입력하세요"
+              autoComplete="new-password"
+              state={formErrors.newPassword ? 'error' : 'default'}
             />
-            <ErrorTextStyle></ErrorTextStyle>
-          </FieldContainerStyle>
-          <FieldContainerStyle>
-            <FieldLabelStyle>
+            {formErrors.newPassword ? (
+              <ErrorTextStyle>{formErrors.newPassword}</ErrorTextStyle>
+            ) : (
+              <S.HintText>비밀번호는 영문, 숫자, 특수문자를 포함한 8자 이상이어야 합니다.</S.HintText>
+            )}
+          </S.FieldContainer>
+
+          <S.FieldContainer>
+            <S.FieldLabel>
               비밀번호 확인
               <img src={required} alt="필수 입력" />
-            </FieldLabelStyle>
+            </S.FieldLabel>
             <Input
-              placeholder="비밀번호를 한번 더 입력하세요"
+              type="password"
+              name="confirmPassword"
+              value={formValues.confirmPassword}
+              onChange={handleChange}
+              maxLength={20}
+              placeholder="비밀번호를 다시 입력하세요"
+              autoComplete="new-password"
+              state={formErrors.confirmPassword ? 'error' : 'default'}
             />
-            <ErrorTextStyle></ErrorTextStyle>
-          </FieldContainerStyle>
-          <FieldContainerStyle>
-            <FieldLabelStyle>
+            {formErrors.confirmPassword && <ErrorTextStyle>{formErrors.confirmPassword}</ErrorTextStyle>}
+          </S.FieldContainer>
+
+          <S.FieldContainer>
+            <S.FieldLabel>
               연락처
               <img src={required} alt="필수 입력" />
-            </FieldLabelStyle>
+            </S.FieldLabel>
             <Input
+              type="tel"
+              name="contact"
+              value={formValues.contact}
+              onChange={handleChange}
+              maxLength={20}
               placeholder="연락처를 입력하세요"
+              autoComplete="off"
+              state={formErrors.contact ? 'error' : 'default'}
             />
-            <ErrorTextStyle></ErrorTextStyle>
-          </FieldContainerStyle>
+            {formErrors.contact && <ErrorTextStyle>{formErrors.contact}</ErrorTextStyle>}
+          </S.FieldContainer>
         </S.FieldArea>
+
         <S.ButtonArea>
-          <Button type="submit" variant="primary" fontWeight="semibold" fullWidth={true}>
+          <Button type="submit" variant="primary" fontWeight="semibold" fullWidth disabled={isPending}>
             저장
           </Button>
         </S.ButtonArea>
       </S.Form>
     </S.Main>
-  )
-}
+  );
+};
 
-export default ProfileEdit
+export default ProfileEdit;

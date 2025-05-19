@@ -66,6 +66,15 @@ export interface TCheckPasswordRequest {
   currentPassword: string;
 }
 
+export interface TProfileEditFormValues {
+  name: string;
+  newPassword: string;
+  confirmPassword: string;
+  contact: string;
+}
+
+export type TProfileEditFormErrors = Partial<Record<keyof TProfileEditFormValues, string>>;
+
 export interface TProfileEditRequest {
   name: string;
   newPassword: string;
