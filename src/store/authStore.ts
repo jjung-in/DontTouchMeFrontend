@@ -13,7 +13,7 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set) => {
   const accessToken = localStorage.getItem('accessToken');
   const memberId = localStorage.getItem('memberId') ? Number(localStorage.getItem('memberId')) : 0;
-  const isTestUser = memberId === 2;
+  const isTestUser = memberId === 1;
 
   return {
     accessToken,
@@ -22,7 +22,8 @@ export const useAuthStore = create<AuthState>((set) => {
     isTestUser,
 
     setAuth: (accessToken, memberId) => {
-      const isTestUser = memberId === 2;
+      console.log(memberId);
+      const isTestUser = memberId === 1;
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('memberId', String(memberId));
       set({ accessToken, memberId, isLoggedIn: true, isTestUser });
