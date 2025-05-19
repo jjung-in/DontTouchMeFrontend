@@ -120,7 +120,7 @@ export const withdrawMember = async (): Promise<void> => {
   await instance.delete('/member/withdraw');
 };
 
-export const profileEdit = async (EditData: TProfileEditRequest): Promise<TProfileEditResponse> => {
-  const { data } = await instance.patch('/member/me',EditData);
+export const profileEdit = async (editData: TProfileEditRequest): Promise<TProfileEditResponse> => {
+  const { data } = await instance.patch('/member/me', editData);
   return data;
 };

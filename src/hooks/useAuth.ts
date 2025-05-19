@@ -3,19 +3,20 @@ import {
   checkEmailDuplicate,
   checkPassword,
   postSignUp,
+  profileEdit,
   sendEmailCode,
   verifyEmailCode,
   withdrawMember,
-  profileEdit,
 } from '@_api/auth';
 import { useAuthStore } from '@_store/authStore';
 import { useToastStore } from '@_store/toastStore';
 import {
   LogInFormValues,
   TCheckPasswordRequest,
+  TProfileEditFormErrors,
+  TProfileEditFormValues,
   TSignUpFormErrors,
   TSignUpFormValues,
-  TProfileEditFormValue,
 } from '@_types/auth.type';
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
@@ -396,65 +397,63 @@ export const useCheckPassword = () => {
 };
 
 export const useProfileEdit = () => {
-  const [formValues, setFormValues] = useState<TProfileEditFormValue>({
+  const [formValues, setFormValues] = useState<TProfileEditFormValues>({
     name: '',
     newPassword: '',
     contact: '',
     confirmPassword: '',
   });
-
-  const [formErrors, setFormErrors] = useState<Partial<TProfileEditFormValue>>({});
+  const [formErrors, setFormErrors] = useState<TProfileEditFormErrors>({});
 
   const validateProfileForm = () => {
-    const errors: Partial<TProfileEditFormValue> = {};
+    const errors: TProfileEditFormErrors = {};
 
     if (!formValues.name.trim()) errors.name = '이름을 입력해주세요.';
-    if (!formValues.newPassword.trim()) {
-      errors.newPassword = '비밀번호를 입력해주세요.';
-    } else if (
+    if (!formValues.newPassword.trim()) errors.newPassword = '비밀번호를 입력해주세요.';
+    else if (
       !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]{8,}$/.test(
         formValues.newPassword,
       )
-    ) {
+    )
       errors.newPassword = '비밀번호는 영문, 숫자, 특수문자를 포함한 8자 이상이어야 합니다.';
-    }
-    if (!formValues.contact.trim()) errors.contact = '연락처를 입력해주세요.';
-
-    if (!formValues.confirmPassword.trim()) {
-      errors.confirmPassword = '비밀번호를 다시 입력해주세요';
-    } else if (formValues.newPassword !== formValues.confirmPassword) {
+    if (!formValues.confirmPassword.trim()) errors.confirmPassword = '비밀번호를 다시 입력해주세요.';
+    else if (formValues.newPassword !== formValues.confirmPassword)
       errors.confirmPassword = '비밀번호가 일치하지 않습니다.';
-    }
+    if (!formValues.contact.trim()) errors.contact = '연락처를 입력해주세요.';
 
     return errors;
   };
 
   const profileEditMutation = useMutation({
     mutationFn: profileEdit,
-    onSuccess: (result) => {
-      console.log('회원정보 수정 성공', result);
+    onSuccess: () => {
+      useToastStore.getState().showToast('회원정보가 수정되었습니다.');
     },
-    onError: (error) => {
-      console.error('회원정보 수정 오류', error);
+    onError: () => {
+      useToastStore.getState().showToast('회원정보 수정에 실패했습니다.', 'error');
     },
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    const key = name as keyof TProfileEditFormValues;
 
-    setFormErrors((prev) => ({
-      ...prev,
-      [name]: '',
-    }));
+    setFormErrors((prev) => {
+      if (!prev[key]) return prev;
+      const { [key]: _, ...rest } = prev;
+      return rest;
+    });
 
     if (name === 'contact') {
       const numeric = value.replace(/[^0-9]/g, '').slice(0, 11);
+
       let formatted = numeric;
       if (numeric.length > 3 && numeric.length <= 7) {
         formatted = `${numeric.slice(0, 3)}-${numeric.slice(3)}`;
       } else if (numeric.length > 7) {
         formatted = `${numeric.slice(0, 3)}-${numeric.slice(3, 7)}-${numeric.slice(7, 11)}`;
       }
+
       setFormValues((prev) => ({ ...prev, [name]: formatted }));
       return;
     }

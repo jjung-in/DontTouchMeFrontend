@@ -22,7 +22,6 @@ export const useAuthStore = create<AuthState>((set) => {
     isTestUser,
 
     setAuth: (accessToken, memberId) => {
-      console.log(memberId);
       const isTestUser = memberId === 1;
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('memberId', String(memberId));

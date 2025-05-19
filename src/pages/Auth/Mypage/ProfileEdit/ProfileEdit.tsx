@@ -1,12 +1,12 @@
-import { useProfileEdit } from '@_hooks/useAuth';
-import * as S from './ProfileEdit.styles';
 import required from '@_assets/images/required.png';
-import PageTitle from '@_components/Common/PageTitle/PageTitle';
-import { ErrorTextStyle } from '@_styles/event';
-import Input from '@_components/Common/Input/Input';
 import Button from '@_components/Common/Button/Button';
+import Input from '@_components/Common/Input/Input';
+import PageTitle from '@_components/Common/PageTitle/PageTitle';
+import { useProfileEdit } from '@_hooks/useAuth';
+import { ErrorTextStyle } from '@_styles/event';
+import * as S from './ProfileEdit.styles';
 
-const EDIT_TITLE = {
+const PROFILE_EDIT_TITLE = {
   title: '회원 정보 수정',
   highlight: '회원 정보 수정',
   subtitle: '회원가입 시 입력한 정보를 수정하세요!',
@@ -17,7 +17,7 @@ const ProfileEdit = () => {
 
   return (
     <S.Main>
-      <PageTitle {...EDIT_TITLE} />
+      <PageTitle {...PROFILE_EDIT_TITLE} />
       <S.Form onSubmit={handleSubmit}>
         <S.FieldArea>
           <S.FieldContainer>
@@ -43,8 +43,7 @@ const ProfileEdit = () => {
               이메일
               <img src={required} alt="필수 입력" />
             </S.FieldLabel>
-            <Input placeholder="이메일은 수정할수 없습니다." disabled />
-            {formErrors.email && <ErrorTextStyle>{formErrors.email}</ErrorTextStyle>}
+            <Input placeholder="이메일은 수정할 수 없습니다." disabled />
           </S.FieldContainer>
 
           <S.FieldContainer>
@@ -81,7 +80,7 @@ const ProfileEdit = () => {
               onChange={handleChange}
               maxLength={20}
               placeholder="비밀번호를 다시 입력하세요"
-              autoComplete="confirm-password"
+              autoComplete="new-password"
               state={formErrors.confirmPassword ? 'error' : 'default'}
             />
             {formErrors.confirmPassword && <ErrorTextStyle>{formErrors.confirmPassword}</ErrorTextStyle>}

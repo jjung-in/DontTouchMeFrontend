@@ -25,14 +25,12 @@ export const FieldArea = styled.div`
   gap: 30px;
 `;
 
-export const ButtonArea = styled.div``;
+export const FieldContainer = styled(FieldContainerStyle)``;
 
-export const FieldContainer = styled(FieldContainerStyle)<{ $hasButton?: boolean }>``;
-
-export const FieldLabel = styled(FieldLabelStyle)<{ $hasButton?: boolean }>`
-  padding-right: ${({ $hasButton }) => ($hasButton ? '110px' : '0')};
-`;
+export const FieldLabel = styled(FieldLabelStyle)``;
 
 export const HintText = styled.p`
   color: ${({ theme }) => theme.color.gray[200]};
 `;
+
+export const ButtonArea = styled.div``;
