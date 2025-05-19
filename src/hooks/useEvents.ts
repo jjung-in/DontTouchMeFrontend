@@ -12,7 +12,7 @@ export const useEventList = (memberId: number, pageSize: number) => {
       refetchOnWindowFocus: true,
       initialPageParam: null,
       getNextPageParam: (lastPage) => {
-        return lastPage.events.length > 0 ? lastPage.lastEventId : undefined;
+        return lastPage.events.length === pageSize ? lastPage.lastEventId : undefined;
       },
     },
   );
