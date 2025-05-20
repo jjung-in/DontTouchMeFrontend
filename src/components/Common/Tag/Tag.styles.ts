@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const TagContainer = styled.span`
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   padding: 5px 10px;
