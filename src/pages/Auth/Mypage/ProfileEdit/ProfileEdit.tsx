@@ -5,6 +5,9 @@ import PageTitle from '@_components/Common/PageTitle/PageTitle';
 import { useProfileEdit } from '@_hooks/useAuth';
 import { ErrorTextStyle } from '@_styles/event';
 import * as S from './ProfileEdit.styles';
+import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '@_store/authStore';
+import { useEffect } from 'react';
 
 const PROFILE_EDIT_TITLE = {
   title: '회원 정보 수정',
@@ -13,7 +16,15 @@ const PROFILE_EDIT_TITLE = {
 };
 
 const ProfileEdit = () => {
+  const navigate = useNavigate();
+  const { isCheckedPassword } = useAuthStore();
   const { formValues, formErrors, handleChange, handleSubmit, isPending } = useProfileEdit();
+
+  useEffect(() => {
+    if (!isCheckedPassword) {
+      navigate('/mypage/confirm');
+    }
+  }, [isCheckedPassword, navigate]);
 
   return (
     <S.Main>

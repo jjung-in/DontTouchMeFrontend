@@ -339,6 +339,7 @@ export const useCheckPassword = () => {
   const checkPasswordMutation = useMutation<void, Error, TCheckPasswordRequest>({
     mutationFn: checkPassword,
     onSuccess: () => {
+      useAuthStore.getState().setIsCheckedPassword(true);
       if (type === 'edit') {
         navigate('/mypage/edit');
       } else if (type === 'unregister') {
@@ -397,6 +398,7 @@ export const useCheckPassword = () => {
 };
 
 export const useProfileEdit = () => {
+  const navigate = useNavigate();
   const [formValues, setFormValues] = useState<TProfileEditFormValues>({
     name: '',
     newPassword: '',
@@ -428,6 +430,7 @@ export const useProfileEdit = () => {
     mutationFn: profileEdit,
     onSuccess: () => {
       useToastStore.getState().showToast('회원정보가 수정되었습니다.');
+      navigate('/mypage');
     },
     onError: () => {
       useToastStore.getState().showToast('회원정보 수정에 실패했습니다.', 'error');

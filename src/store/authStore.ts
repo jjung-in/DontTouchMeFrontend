@@ -6,6 +6,8 @@ interface AuthState {
   memberId: number;
   isLoggedIn: boolean;
   isTestUser: boolean;
+  isCheckedPassword: boolean;
+  setIsCheckedPassword: (value: boolean) => void;
   setAuth: (accessToken: string, memberId: number) => void;
   logout: () => void;
 }
@@ -20,6 +22,10 @@ export const useAuthStore = create<AuthState>((set) => {
     memberId,
     isLoggedIn: !!accessToken,
     isTestUser,
+    isCheckedPassword: false,
+
+    setIsCheckedPassword: (value) => {
+      set({ isCheckedPassword: value })},
 
     setAuth: (accessToken, memberId) => {
       const isTestUser = memberId === 1;
