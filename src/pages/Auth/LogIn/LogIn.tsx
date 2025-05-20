@@ -1,3 +1,5 @@
+// import google from '@_assets/icons/google.png';
+// import naver from '@_assets/icons/naver.png';
 import Button from '@_components/Common/Button/Button';
 import Input from '@_components/Common/Input/Input';
 import PageTitle from '@_components/Common/PageTitle/PageTitle';
@@ -21,6 +23,8 @@ const LogIn = () => {
     handleChange,
     handleLogIn,
     handleTestLogIn,
+    // handleNaverClick,
+    // handleGoogleClick,
     isPending,
   } = useLogInFlow();
   const navigate = useNavigate();
@@ -98,6 +102,16 @@ const LogIn = () => {
               회원가입
             </Button>
           </S.SignUpLinkArea>
+
+          {/* <S.SocialLoginWrapper>
+            <S.SocialLoginDivider>
+              <span>소셜 로그인</span>
+            </S.SocialLoginDivider>
+            <S.SocialIconContainer>
+              <img src={google} alt="google login" onClick={handleGoogleClick} />
+              <img src={naver} alt="naver login" onClick={handleNaverClick} />
+            </S.SocialIconContainer>
+          </S.SocialLoginWrapper> */}
         </S.LogInForm>
       </S.Main>
       {isTestModalOpen && (

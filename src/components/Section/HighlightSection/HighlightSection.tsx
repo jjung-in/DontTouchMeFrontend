@@ -1,7 +1,7 @@
 import * as S from './HighlightSection.styles';
 import avatar from '@_assets/images/boy.png';
-import naver from '@_assets/images/naver.png';
-import google from '@_assets/images/google.png';
+// import naver from '@_assets/images/naver.png';
+// import google from '@_assets/images/google.png';
 import FadeInUp from '@_components/Animation/FadeInUp/FadeInUp';
 import Floating from '@_components/Animation/Floating/Floating';
 
@@ -37,7 +37,7 @@ const HighlightSection = () => {
             페이블과 함께 <span>스마트</span>한 비용 관리
           </S.Title>
         </FadeInUp>
-        <S.SignUpBlock>
+        {/* <S.SignUpBlock>
           <S.SocialButtonGroup>
             <S.SocialButton>
               <img src={naver} />
@@ -47,7 +47,7 @@ const HighlightSection = () => {
             </S.SocialButton>
           </S.SocialButtonGroup>
           <S.SignUpText>간편 회원가입 하러가기</S.SignUpText>
-        </S.SignUpBlock>
+        </S.SignUpBlock> */}
       </S.Info>
     </S.Section>
   );
