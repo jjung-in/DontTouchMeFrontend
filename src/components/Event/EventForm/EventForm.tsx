@@ -234,7 +234,7 @@ const EventForm = ({ mode, event, onSubmit, onEventDelete }: Props) => {
                   onChange={(e) => handleChange('sendType', e.target.value)}
                 >
                   <option value="EMAIL">이메일</option>
-                  <option value="PHONE">문자</option>
+                  <option value="PHONE" disabled>문자</option>
                 </Input>
               )}
             </EventSwitchField>
