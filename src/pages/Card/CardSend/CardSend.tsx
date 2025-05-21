@@ -168,7 +168,7 @@ const CardSend = () => {
         message={
           isEmailPending || isSMSPending
             ? '감사장을 전송하고 있습니다.'
-            : `확인 클릭 시 ${selectedRecipients.length}명에게 감사장이 전송됩니다.\n진행하시겠습니까?`
+            : `확인 클릭 시 ${selectedRecipients.length}명에게 감사장이 전송됩니다.\n(이메일 정보가 잘못된 경우 감사장이 전송되지 않을 수 있습니다.)\n진행하시겠습니까?`
         }
         onConfirm={isEmailPending || isSMSPending ? () => {} : handleSubmit}
       />
